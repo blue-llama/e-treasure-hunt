@@ -1,0 +1,120 @@
+body {
+  color: #fff;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  width: 100%;
+  margin: 0px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  overflow-y: hidden;
+  text-align: center;
+}
+
+@media only screen and (max-height: 800px) {
+  .top { height: 80px !important; }
+  h1 { margin-bottom: 30px !important; }
+}
+
+@media only screen and (max-height: 450px) {
+  .top { height: 50px !important; }
+  h1 { margin-bottom: 10px !important; }
+  .gobutton { padding: 15px !important; }
+  .right { padding-right: 15px !important; }
+}
+
+.top {
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+}
+
+.top a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.right {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding-right: 30px;
+  justify-content:flex-end;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 1.8rem;
+  padding: 0px 5vw;
+}
+
+.gobutton {
+  margin: 15px;
+  padding: 25px;
+  border-radius: 10px;
+  background-color: #d9184e;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.2em;
+}
+
+.gobutton:hover {
+  background-color: #e63768;
+}
+
+.form-label {
+  display: flex;
+  justify-content: center;
+}
+
+.form-field input {
+    border: none;
+    height: 2.1em;
+    width: 9em;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    background-color: #fff;
+    text-align: center;
+    color: #345;
+    font-size: 0.9em;
+}
+
+.submit {
+  display: flex;
+  justify-content: center;
+}
+
+.submit input {
+  margin: 15px;
+  padding: 15px 25px;
+  border-radius: 10px;
+  background-color: #d9184e;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.2em;
+  border: none;
+}
+
+.submit input:hover {
+  background-color: #e63768;
+}

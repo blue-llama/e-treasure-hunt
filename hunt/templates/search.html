@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Search by Coordinates</h1>
+
+<form action="/do-search" method="get">
+  <div class="label">Lat</div><input class="numinput" name="lat" type="text">
+  <div class="label">Long</div><input class="numinput" name="long" type="text">
+  {% if lvl %}
+    <input name="lvl" type="hidden" value="{{ lvl }}">
+  {% endif %}
+  <div><input class="gobutton" style="padding: 15px;" type="submit" value="SUBMIT"></div>
+</form>
+
+{% endblock %}

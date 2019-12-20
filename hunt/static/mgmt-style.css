@@ -1,0 +1,148 @@
+body {
+  color: #567;
+  font-family: Montserrat, sans-serif;
+  width: 100%;
+  margin: 0px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-top: 50px;
+  margin-bottom: 10px;
+}
+
+.top {
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  background-color: #fdb;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  white-space: nowrap;
+}
+
+.top a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.left {
+  display: flex;
+  flex-direction: row;
+  padding-left: 30px;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+}
+
+.right {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding-right: 30px;
+  justify-content:flex-end;
+}
+
+.content {
+  padding-top: 100px;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.label {
+  margin-top: 50px;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.heading {
+  margin-top: 20px;
+  padding: 0px 5vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  margin-top: 40px;
+  margin-bottom: 5px;
+  font-size: 1.6rem;
+}
+
+.success {
+  width: 100%;
+  color: green;
+  padding-top: 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.fail {
+  width: 100%;
+  color: red;
+  padding-top: 40px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.numinput {
+    border: 2px solid #bbb;
+    height: 2.1em;
+    width: 5em;
+    border-radius: 5px;
+    background-color: #fff;
+    padding-left: 1em;
+    text-align: center;
+    color: #345;
+    font-size: 1.2em;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  justify-content: center;
+}
+
+.buttons .gobutton {
+  margin: 15px;
+}
+
+.gobutton {
+  margin: 50px 15px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #d9184e;
+  font-size: 0.8em;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.2em;
+  border: none;
+}
+
+.gobutton:hover {
+  background-color: #e63768;
+}
+
+.gobutton-disabled {
+  margin: 15px;
+  padding: 25px;
+  border-radius: 10px;
+  background-color: #dddddd;
+  font-size: 0.8em;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 0.2em;
+}

@@ -1,0 +1,194 @@
+body {
+  color: #567;
+  font-family: 'Montserrat', sans-serif;
+  width: 100%;
+  margin: 0px;
+  text-align: center;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+.top {
+  z-index: 1;
+  position: fixed;
+  width: 100%;
+  height: 100px;
+  background-color: #fdb;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  white-space: nowrap;
+  border-bottom: 1px solid #888;
+}
+
+.top a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.left {
+  display: flex;
+  flex-direction: row;
+  padding-left: 30px;
+  font-weight: bold;
+  letter-spacing: 0.2em;
+}
+
+.right {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding-right: 30px;
+  justify-content:flex-end;
+}
+
+.gobutton {
+  margin: 15px;
+  padding: 25px;
+  border-radius: 10px;
+  background-color: #d9184e;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+  letter-spacing: 0.2em;
+  border: none;
+  z-index: 20;
+}
+
+.gobutton:hover {
+  background-color: #e63768;
+}
+
+.disabled {
+  background-color: #dddddd !important;
+  cursor: default;
+}
+
+.label {
+  margin-top: 10px;
+}
+
+section.special {
+  height: 100%;
+  padding-top: 101px;
+  box-sizing: border-box;
+}
+
+#map {
+  height: 100%;
+}
+
+#description {
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.gm-style-iw-a {
+  display: none;
+}
+
+.gm-style-mtc div {
+  font-size: 14px !important;
+  width: fit-content;
+  padding: 8px 10px !important;
+  margin-left: 10px !important;
+}
+
+.gmnoprint {
+  margin: 5px 10px 10px 5px !important;
+}
+
+#autocomplete {
+  background-color: #fff;
+  font-family: Roboto;
+  font-size: 15px;
+  font-weight: 300;
+  padding: 10px 5px 10px 15px;
+  text-overflow: ellipsis;
+  width: 500px;
+  max-width: 95%;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin: 10px auto 0px auto;
+}
+
+.geocoder-control-input {
+  padding: 5px 30px 5px 5px !important;
+  width: 600px !important;
+  height: auto !important;
+  font-size: 1.2em !important;
+}
+
+.geocoder-control-suggestions {
+  width: 600px !important;
+  box-sizing: border-box !important;
+}
+
+.leaflet-control-container {
+  position: relative !important;
+}
+
+@media only screen and (max-width: 800px) {
+  .gobutton {
+    padding: 15px;
+  }
+  
+  .geocoder-control-input {
+    width: 500px !important;
+  }
+  
+  .geocoder-control-suggestions {
+    width: 500px !important;
+  }
+}
+
+@media only screen and (max-width: 550px) {  
+  .google-gobutton {
+    margin: 30px 10px !important;
+  }
+  
+  .geocoder-control-input {
+    width: 350px !important;
+  }
+  
+  .geocoder-control-suggestions {
+    width: 350px !important;
+  }
+}
+
+@media only screen and (max-height: 600px) {
+  .alt-gobutton {
+    margin: 0px 10px !important;
+  }
+  
+  #autocomplete {
+    margin: 5px auto 0px auto !important;
+  }
+  
+  .gm-bundled-control {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: 400px) {  
+  .geocoder-control-input {
+    width: 200px !important;
+  }
+    
+  .geocoder-control-suggestions {
+    width: 200px !important;
+  }
+}
+
+@media only screen and (max-width: 350px) {  
+  .top .right {
+    display: none !important;
+  }
+}

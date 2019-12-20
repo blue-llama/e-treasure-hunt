@@ -1,0 +1,13 @@
+{% extends 'mgmt-base.html' %}
+
+{% block content %}
+  <h1>Hunt Management</h1>
+  <div class="buttons">
+    <a class="gobutton" href="/hint-mgmt">
+      ADD LEVELS
+    </a>
+    <a class="gobutton" href="/hint-release" onclick="return confirm(' Are you sure you want to release a round of hints?')">
+      RELEASE HINTS
+    </a>
+  </div>
+{% endblock %}

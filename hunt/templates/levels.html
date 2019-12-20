@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Unlocked Levels</h1>
+  <div class="level-list">
+    {% for level in levels %}
+      <a class="gobutton" href="/level/{{ level }}">
+        <div style="display:flex;flex-direction:row;flex-wrap:none"><div class="level-label">LEVEL </div> {{ level }}</div>
+      </a>
+    {% endfor %}
+  </div>
+{% endblock %}

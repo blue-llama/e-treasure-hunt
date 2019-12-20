@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Oops!</h1>
+    <div class="story" style="text-align:left;">
+      <p>
+        You're not supposed to be here. Most likely:
+      </p>
+      <ul>
+        <li>You've been messing around with the URL - probably not a good idea. If the map's not working for you, <a href="/search">try this page</a>.</li>
+        <li>You clicked a link that was out of date.</li>
+      </ul>
+    </div>
+    <a class="gobutton" href="/level/{{ team_level }}">
+      GO BACK TO THE CURRENT LEVEL
+    </a>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% load static %}
+
+<html style="font-size: 17px">
+
+<head>
+  <link rel="stylesheet" href="{% static "welcome-style.css" %}">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat|Raleway&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>eTreasure Hunt</title>
+  <style>
+    body { background-image: url("/static/colors.png") }
+  </style>
+</head>
+
+<body>
+
+<div class="top">
+  <div class="right"><a href="/accounts/logout?next=/">Log out</a></div>
+</div>
+
+<div class="content">
+  <h1>{{ display_name }}</h1>
+  <a class="gobutton" href="/level/{{ team_level }}">
+    LATEST LEVEL
+  </a>
+  <a class="gobutton" href="/levels">
+    LEVEL LIST
+  </a>
+<div>
+
+</body>
+
+</html>

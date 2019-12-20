@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if level_number != team_level %}
+  <div class="banner">Your team is on Level {{ team_level }}! <a href="/level/{{ team_level }}">Join them</a></div>
+  <div class="heading"><h1>{{ level_name }}</h1><h2>Level {{ level_number }}</h2></div>
+{% else %}
+  <div class="heading"><h1>{{ level_name }}</h1><h2>Level {{ level_number }}</h2></div>
+{% endif %}
+
+{% if level_number > 1 %}
+  <h3>{{ latitude }}, {{ longitude }}</h3>
+{% endif %}
+
+<div class="story">
+{% for para in desc_paras %}
+  <p>{{ para }}</p>
+{% endfor %}
+</div>
+
+<div class="hints">
+{% for hint in hints %}
+  <img class="hint" src="{{ hint }}" alt="My image"/>
+{% endfor %}
+</div>
+
+  {% if is_last is not True %}
+    <a class="gobutton" href="/map?lvl={{ level_number }}">
+      SEARCH MAP
+    </a>
+    <a class="gobutton" href="/search?lvl={{ level_number }}">
+      SEARCH CO-ORDINATES
+    </a>
+    
+    {% if level_number != team_level %}
+      <a class="gobutton" href="/level/{{ level_number|add:"1" }}">
+        NEXT LEVEL
+      </a>
+    {% elif allow_hint %}
+      <a class="gobutton" href="/hint?lvl={{ level_number }}" onclick="return confirm(' Are you sure you want to request a hint?')">
+        REQUEST HINT
+      </a>
+    {% else %}
+      <div class="gobutton-disabled" title="{{ reason }}">REQUEST HINT</div>
+      <p class="reason">{{ reason }}</p>
+    {% endif %}
+  {% endif %}
+
+{% endblock %}
