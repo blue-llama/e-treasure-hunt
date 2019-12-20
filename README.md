@@ -24,10 +24,11 @@ Admin initiation:
 - Create HintTime objects for all required hint release windows
 
 Create levels:
-- Use the content of dummy_level as a template
-- about.json contains the name and location for the level (name is displayed when level is solved)
+- You can use the content of dummy_files.zip as a template
+- about.json contains the name and location for the level (the name is displayed on the *next* level page, so can be the location) - tolerance is in meters
 - blurb.txt contains the description for the level (displayed on the next level page)
-- clue is the first image, and hint1-hint4 are the hints, in order (must be JPEG or PNG)
+- clue.png is the first image - the dummy file contains a background
+- hint1.png-hint4.png are the hints, in order - you can use the background from the clue file
 
 Level upload:
 - Navigate to <domain>/mgmt
