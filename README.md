@@ -14,7 +14,8 @@ Setup:
 
 Deploy:
 - Deploy the app to Heroku
-- Run 'heroku run python manage.py createsuperuser' and set up an admin user
+- Use the CLI to run 'heroku run -a <app_name> python manage.py createsuperuser' and set up an admin user
+
 
 Admin initiation:
 - Navigate to <domain>/admin
