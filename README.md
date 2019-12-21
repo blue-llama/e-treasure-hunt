@@ -1,7 +1,8 @@
+
 You will need:
 - Heroku account
-- Dropbox account, with an app set up with read/write permission to a folder to hold the images, and an OAuth key
-- Google Cloud account with maps APIs enabled, and API key
+- Dropbox account, with an app set up with read/write permission to a folder to hold the images, and a correaponding OAuth key
+- Google Cloud account with maps APIs enabled, and API key - ***NOTE: this API key is passed to clients, so you should ensure you have appropriate usage limits configured to avoid being charged. You may also wish to set the allowed redirect URI to your domain.***
 - Heroku CLI installed
 
 Setup:
