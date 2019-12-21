@@ -20,15 +20,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('DJ_KEY','')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS =  [os.environ.get('APP_URL','')]
+DEBUG = True
+ALLOWED_HOSTS =  ['localhost']
 
 # Extra settings from security check
+# Relax these to allow running locally
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 X_FRAME_OPTIONS = 'DENY'
 
 # Close the session when user closes the browser
@@ -99,8 +100,13 @@ LOGGING = {
     },
 }
 
-# Activate Django-Heroku.
-django_heroku.settings(locals(), logging=False)
+# Database for localrun mode
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
