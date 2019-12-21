@@ -1,8 +1,9 @@
+***In general, it is your responsibility to ensure that your accounts are set up to prevent charges/ problems arising if the security credentials you use for this app are compromised. You can search for the name of each setting in the code (see Setup below) if you want to know how these are used.***
 
 You will need:
 - Heroku account
-- Dropbox account, with an app set up with read/write permission to a folder to hold the images, and a correaponding OAuth key
-- Google Cloud account with maps APIs enabled, and API key - ***NOTE: this API key is passed to clients, so you should ensure you have appropriate usage limits configured to avoid being charged. You may also wish to set the allowed redirect URI to your domain.***
+- Dropbox account, with an app set up with read/write permission to a specific folder to hold the level images, and a corresponding OAuth key
+- Google Cloud account with Places and Maps JavaScript APIs enabled, and API key - ***NOTE: this API key is passed to clients, so you should ensure you have appropriate usage limits configured to avoid being charged. You may also wish to set the allowed redirect URI to your domain.***
 - Heroku CLI installed
 
 Setup:
