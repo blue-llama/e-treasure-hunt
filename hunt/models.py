@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 # Team hunt progress info.
 class HuntInfo(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE,  null=True)
-  level = models.IntegerField(default=1)
   hint_requested = models.BooleanField(default=False)
   private_hint_requested = models.BooleanField(default=False)
   private_hints_shown = models.IntegerField(default=0)
@@ -19,16 +18,20 @@ class Level(models.Model):
     description = models.TextField(max_length=5000)
     clues = models.CharField(max_length=500)
 
+# Answer to a level, this needs to be a separate model such that a level can have multiple answers (hence the ForeignKey)
 class Answer(models.Model):
-    level = models.ForeignKey(Level, on_delete=models.CASCADE)
     latitude = models.DecimalField(max_digits=13, decimal_places=7)
     longitude = models.DecimalField(max_digits=13, decimal_places=7)
     tolerance = models.IntegerField()
+    # Which level does this answer apply to
+    level = models.ForeignKey(Level, on_delete=models.CASCASE)
 
-class UserLevel(Level)
+# Each level can be solved independelty by a team
+class UserLevel(models.Model)
     user = models.OneToOneField(User, on_delete=models.CASCADE,  null=True)
     hints_shown = models.IntegerField(default=1)
     hint_requested = models.BooleanField(default=False)
+    active = models.BooleanField(default=False)
     
 # Hint release time (start of 40 minute window, UTC).
 class HintTime(models.Model):
