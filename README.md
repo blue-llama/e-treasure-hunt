@@ -1,6 +1,8 @@
-| **PLEASE NOTE** |
+| **IMPORTANT - PLEASE NOTE** |
 | --- |
-| ***It is your responsibility to ensure that any accounts and credentials used by this app are set up with adequate security and usage caps, such that if they are compromised, no charges or problems will arise. You can check where a given credential is used by searching the code for the name of the environment variable that holds it (see Setup below).*** |
+| **It is your responsibility to ensure that any accounts and credentials used by this app are set up with adequate security measures and usage caps, such that if they are compromised, no charges or problems will arise.** You can check where a given credential is used by searching the code for the name of the environment variable that holds it (see Setup below). |
+
+-----
 
 # Ways to run
 You can either run this app hosted (on Heroku) or locally. 
