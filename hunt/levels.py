@@ -72,14 +72,17 @@ def look_for_level(request):
     if (dist <= level.tolerance):
         # If this wasn't a search for a previous level, advance.
         if (not old_search):
+        # GRT Can't just advance 1 level
             advance_level(request.user, level.number + 1)
             
         # Redirect to the new level.
+        # GRT Won't necessarily redirect to just the next level.
         return "/level/" + str(search_level + 1)
     else:
         # Redirect to a failure page.
         return "/nothing-here?lvl=" + str(search_level)
 
+# GRT - This needs to be updated to determine if a level has been unlocked by the team
 def maybe_load_level(request):
     # Figure out which level is being requested - this is the 
     # number at the end of the URL.

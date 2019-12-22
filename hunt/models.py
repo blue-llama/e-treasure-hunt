@@ -17,10 +17,16 @@ class Level(models.Model):
     number = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=5000)
+    clues = models.CharField(max_length=500)
+
+class Answer(models.Model):
+    level = models.ForeignKey(Level, on_delete=models.CASCADE)
     latitude = models.DecimalField(max_digits=13, decimal_places=7)
     longitude = models.DecimalField(max_digits=13, decimal_places=7)
     tolerance = models.IntegerField()
-    clues = models.CharField(max_length=500)
+
+class UserLevel(Level)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,  null=True)
     hints_shown = models.IntegerField(default=1)
     hint_requested = models.BooleanField(default=False)
     

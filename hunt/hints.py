@@ -12,6 +12,7 @@ def request_hint(request):
     if (lvl == None):
         return "oops"
         
+    # Can have multiple current levels.
     # Check that this a request for the user's current level.
     lvl = int(lvl) 
     hunt_info = HuntInfo.objects.filter(user=request.user)[0]
@@ -91,7 +92,8 @@ def determine_next_hint():
     setting = AppSetting.objects.get(active=True)
     setting.next_hint = hint_time
     setting.save()
-    
+
+# GRT - There's probably something to do in here since this has some quite spurious determination
 def release_hints():    
     # First figure out when we should next do this.
     determine_next_hint()
