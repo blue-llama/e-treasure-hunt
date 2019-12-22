@@ -17,6 +17,8 @@ class Level(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=5000)
     clues = models.CharField(max_length=500)
+    # Effectively has the following fields:
+    # answers - A list of answers to this level
 
 # Answer to a level, this needs to be a separate model such that a level can have multiple answers (hence the ForeignKey)
 class Answer(models.Model):
@@ -24,11 +26,13 @@ class Answer(models.Model):
     longitude = models.DecimalField(max_digits=13, decimal_places=7)
     tolerance = models.IntegerField()
     # Which level does this answer apply to
-    level = models.ForeignKey(Level, on_delete=models.CASCASE)
+    for_level = models.ForeignKey(Level, on_delete=models.CASCADE, null=True, related_name='answers')
+    next_level = models.ForeignKey(Level, on_delete=models.CASCADE, null=True, related_name='+')
 
 # Each level can be solved independelty by a team
-class UserLevel(models.Model)
+class UserLevel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,  null=True)
+    level = models.OneToOneField(Level, on_delete=models.CASCADE, null=True)
     hints_shown = models.IntegerField(default=1)
     hint_requested = models.BooleanField(default=False)
     active = models.BooleanField(default=False)

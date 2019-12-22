@@ -1,4 +1,4 @@
-from hunt.models import HuntInfo, Level, HintTime, AppSetting, HuntEvent
+from hunt.models import HuntInfo, Level, HintTime, AppSetting, HuntEvent, Answer
 from storages.backends.dropbox import DropBoxStorage
 import json
 from uuid import uuid4
@@ -86,9 +86,6 @@ def upload_new_hint(request):
            
     level.name = lvl_info.get('name');
     level.description = lvl_desc;
-    level.latitude = lvl_info.get('latitude');
-    level.longitude = lvl_info.get('longitude');
-    level.tolerance = lvl_info.get('tolerance');
     level.clues = clue_names
     
     # We now pause execution on the main thread by 'joining' all of our started threads.
@@ -100,5 +97,16 @@ def upload_new_hint(request):
         level.save()
     except:
         return fail_str
+
+    for answer in lvl_info.get('answers'):
+        try:
+            create_answer(answer, level)
+        except:
+            return fail_str
     
     return '/hint-mgmt?success=True&next=' + str(int(lvl_num) + 1)
+
+def create_answer(answer, level):
+    answer = Answer(latitude=answer.get('latitude'),longitude=answer.get('longitude'),tolerance=answer.get('tolerance'), from_level=level)
+    answer.save()
+
