@@ -1,0 +1,4 @@
+mydatabase
+static/
+hunt/migrations/
+*/__pycache__

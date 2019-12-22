@@ -17,18 +17,18 @@ import django_heroku
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJ_KEY','')
+SECRET_KEY = 'GEOFF' # os.environ.get('DJ_KEY','')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS =  [os.environ.get('APP_URL','')]
+DEBUG = True
+ALLOWED_HOSTS = ['localhost'] # [os.environ.get('APP_URL','')]
 
 # Extra settings from security check
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 X_FRAME_OPTIONS = 'DENY'
 
 # Close the session when user closes the browser
@@ -37,7 +37,7 @@ CSRF_COOKIE_AGE = 5184000
 
 # DropBox
 DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
-DROPBOX_OAUTH2_TOKEN = os.environ.get('DB_TOKEN','')
+DROPBOX_OAUTH2_TOKEN = 'qI4gVvpdRjEAAAAAAAAKPie4Ov-wKeAUhC78ismbOguWkzYxmL0cgiKJAZ1gvimb' # os.environ.get('DB_TOKEN','')
 DROPBOX_ROOT_PATH = '/'
 
 # Application definition
@@ -100,7 +100,13 @@ LOGGING = {
 }
 
 # Activate Django-Heroku.
-django_heroku.settings(locals(), logging=False)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
+}
+#django_heroku.settings(locals(), logging=False)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
