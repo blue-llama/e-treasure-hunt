@@ -19,6 +19,7 @@ You do not need to use Google Maps. If you choose not to, an alternate map is av
 - Set the DJ_KEY environment variable to a secret string
 - Set the DB_TOKEN environment variable to your DropBox OAuth token
 - If you are using Google Maps: Set the GM_API_KEY environment variable to your Google API key
+- Use pip/ virtualenv to install the dependencies listed in requirements.txt
 
 ## Deploy
 - Run `python manage.py collectstatic` to collect static files
