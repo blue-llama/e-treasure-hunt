@@ -77,7 +77,6 @@ def look_for_answers(request):
     for user_level in active_level_objects:
         for answer in user_level.level.answers:
             if is_correct_answer(latitude, longitude, answer):
-                update_active_levels(answer, hunt)
                 advance_level(answer, hunt)
                 return "/level/" + str(answer.next_level.number)
 
