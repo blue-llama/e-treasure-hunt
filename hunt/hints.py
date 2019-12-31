@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.template import loader
 from hunt.models import *
+from hunt.utilities import get_users_active_levels, get_user_level_for_level
 from datetime import *
 from random import random
 
@@ -10,17 +11,16 @@ def request_hint(request):
     # Request must be for a specific level - not allowed to request hints for old levels.
     lvl = request.GET.get('lvl')
     if (lvl == None):
-        return "oops"
+        return "/oops"
         
-    # Can have multiple current levels.
-    # Check that this a request for the user's current level.
+    # Check that this a request for a level the user has access to.
     lvl = int(lvl) 
-    hunt_info = HuntInfo.objects.filter(user=request.user)[0]
-    if (lvl != hunt_info.level):
+    active_levels = get_users_active_levels(request.user.huntinfo)
+    if (lvl not in active_levels):
         return "/oops"
         
     # Get the level that the hint has been requested for.
-    level = Level.objects.filter(number = lvl)[0]
+    level = Level.objects.get(number = lvl)
     
     # Release hints now if they're due.
     maybe_release_hints()
@@ -42,9 +42,10 @@ def request_hint(request):
     else:
         # Set hint request flags on the user and level, and save.
         hunt_info.hint_requested = True
-        level.hint_requested = True
-        level.save()
         hunt_info.save()
+        user_level = get_user_level_for_level(level, hunt_info)
+        user_level.hint_requested = True
+        user_level.save()
     
     # Redirect back to the level in question.
     return "/level/" + str(lvl)
@@ -93,15 +94,12 @@ def determine_next_hint():
     setting.next_hint = hint_time
     setting.save()
 
-# GRT - There's probably something to do in here since this has some quite spurious determination
-def release_hints():    
-    # First figure out when we should next do this.
-    determine_next_hint()
-        
-    # Now get all the users and levels.
-    levels = Level.objects.all()
+def release_private_hints():
+    """ Release all private hints. """
+    # GRT For now do nothing because it's really hard for private hints when you've no idea what level they need a hint for.
+    return
+
     users = HuntInfo.objects.all()
-    
     # Spin through users first to handle private hints.
     for user in users:
         # Special - maybe redact a private hint if someone else is releasing it now.
@@ -130,38 +128,59 @@ def release_hints():
         elif user.hint_requested:
             user.hint_requested = False
             user.save()
-    
+
+def release_level_hints()
+    # Get all the user levels
+    user_levels = UserLevel.objects.all()
+
     # Release hints for levels where this has been requested, and reset the flag.
-    for level in levels:
-        if level.hint_requested:
-        
+    for user_level in user_levels:
+        if user_level.hint_requested:
             # Log an event to say we're doing this.
             event = HuntEvent()
             event.time = datetime.utcnow()
             event.type = HuntEvent.HINT_REL
-            event.level = level.number
+            event.level = user_level.level.number
             event.save()
             
             # Increment the number of hints and reset the flag.
-            level.hints_shown = level.hints_shown + 1
-            level.hint_requested = False
-            level.save()
-            
+            user_level.hints_shown = user_level.hints_shown + 1
+            user_level.hint_requested = False
+            user_level.save()
+
+def release_rubber_banding_hints():
     # Rubber banding - we release hints for all clues which the most advanced team has passed during the last hint period.
     settings = AppSetting.objects.get(active=True);
     if (settings.last_max_level != settings.max_level):
         for ii in range(settings.last_max_level, settings.max_level):
             rubber_band_lvl = Level.objects.get(number=ii)
-            if (rubber_band_lvl.hints_shown < 2):
-                rubber_band_lvl.hints_shown = 2
-                rubber_band_lvl.save()
-    
+            for user_level in rubber_band_lvl.user_levels:
+                if (user_level.hints_shown < 2):
+                    user_level.hints_shown = 2
+                    user_level.save()
+
+def get_furthest_active_level():
+    max_level = 0
+    hunts = HuntInfo.objects.all()
+    for hunt in hunts:
+        active_levels = get_users_active_levels(hunt)
+        highest_level = active_levels.sort()[-1]
+        if highest_level > max_level:
+            max_level = highest_level
+    return max_level
+
+def update_rubber_banding():
     # Update the last max level to reflect that we've done rubber-banding.
     # Get the current max level and save it off.
     settings.last_max_level = settings.max_level
-    settings.max_level = HuntInfo.objects.order_by('-level')[0].level
-    
-    # Save the settings
+    settings.max_level = get_furthest_active_level()
     settings.save()
-            
+
+def release_hints():    
+    # First figure out when we should next do this.
+    determine_next_hint()
+    release_private_hints()
+    release_level_hints()  
+    release_rubber_banding_hints()
+    update_rubber_banding()
     return True

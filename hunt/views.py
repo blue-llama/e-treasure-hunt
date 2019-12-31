@@ -152,7 +152,7 @@ def do_search(request):
     if (is_working_hours()):
         return HttpResponse(loader.get_template('work-time.html').render({}, request))
 
-    return redirect(look_for_level(request))
+    return redirect(look_for_answers(request))
 
 # Coordinate search page.
 @login_required   

@@ -3,11 +3,14 @@ from django.contrib.auth.models import User
 
 # Team hunt progress info.
 class HuntInfo(models.Model):
-  user = models.OneToOneField(User, on_delete=models.CASCADE,  null=True)
+  user = models.OneToOneField(User, on_delete=models.CASCADE,  null=True, related_name='huntinfo')
   hint_requested = models.BooleanField(default=False)
+  # How do private hints work because you can be working on multiple levels? Do we even still need them?
   private_hint_requested = models.BooleanField(default=False)
   private_hints_shown = models.IntegerField(default=0)
   private_hint_allowed = models.BooleanField(default=False)
+  # Effectively has the following fields:
+  # active_levels - a list of this user's active levels
   def __str__(self):
     return self.user.username + "_hunt"
 
@@ -19,7 +22,16 @@ class Level(models.Model):
     clues = models.CharField(max_length=500)
     # Effectively has the following fields:
     # answers - A list of answers to this level
+    # required - A list of answers requied to advance to this level
+    # user_levels - The user specific portion of this level, one for each hunt/user
 
+# Each level can be solved independently by a team so a different number of hints may be displayed for each and requested by each.
+class UserLevel(models.Model):
+    hunt = models.ForeignKey(HuntInfo, on_delete=models.CASCADE, null=True, related_name='active_levels')
+    level = models.ForeignKey(Level, on_delete=models.CASCADE, null=True, related_name='user_levels')
+    hints_shown = models.IntegerField(default=1)
+    hint_requested = models.BooleanField(default=False)
+    
 # Answer to a level, this needs to be a separate model such that a level can have multiple answers (hence the ForeignKey)
 class Answer(models.Model):
     latitude = models.DecimalField(max_digits=13, decimal_places=7)
@@ -29,14 +41,6 @@ class Answer(models.Model):
     for_level = models.ForeignKey(Level, on_delete=models.CASCADE, null=True, related_name='answers')
     next_level = models.ForeignKey(Level, on_delete=models.CASCADE, null=True, related_name='+')
 
-# Each level can be solved independelty by a team
-class UserLevel(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,  null=True)
-    level = models.OneToOneField(Level, on_delete=models.CASCADE, null=True)
-    hints_shown = models.IntegerField(default=1)
-    hint_requested = models.BooleanField(default=False)
-    active = models.BooleanField(default=False)
-    
 # Hint release time (start of 40 minute window, UTC).
 class HintTime(models.Model):
     time = models.TimeField()
