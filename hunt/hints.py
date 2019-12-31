@@ -129,7 +129,7 @@ def release_private_hints():
             user.hint_requested = False
             user.save()
 
-def release_level_hints()
+def release_level_hints():
     # Get all the user levels
     user_levels = UserLevel.objects.all()
 

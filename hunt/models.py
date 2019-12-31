@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Team hunt progress info.
 class HuntInfo(models.Model):
@@ -34,12 +35,12 @@ class UserLevel(models.Model):
     
 # Answer to a level, this needs to be a separate model such that a level can have multiple answers (hence the ForeignKey)
 class Answer(models.Model):
-    latitude = models.DecimalField(max_digits=13, decimal_places=7)
-    longitude = models.DecimalField(max_digits=13, decimal_places=7)
-    tolerance = models.IntegerField()
+    latitude = models.DecimalField(max_digits=13, decimal_places=7, validators=[MaxValueValidator(90), MinValueValidator(-90)])
+    longitude = models.DecimalField(max_digits=13, decimal_places=7, validators=[MaxValueValidator(180), MinValueValidator(-180)])
+    tolerance = models.IntegerField(validators=[MaxValueValidator(10000)]) # Don't allow a tolerance any greater than 10km
     # Which level does this answer apply to
-    for_level = models.ForeignKey(Level, on_delete=models.CASCADE, null=True, related_name='answers')
-    next_level = models.ForeignKey(Level, on_delete=models.CASCADE, null=True, related_name='+')
+    for_level = models.ForeignKey(Level, on_delete=models.CASCADE, blank=True, null=True, related_name='answers')
+    next_level = models.ForeignKey(Level, on_delete=models.CASCADE, blank=True, null=True, related_name='+')
 
 # Hint release time (start of 40 minute window, UTC).
 class HintTime(models.Model):

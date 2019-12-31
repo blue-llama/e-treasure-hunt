@@ -34,7 +34,7 @@ def clear_private_hints(hunt):
 
 def get_latitude_longitude(request):
     """ Gets the latitude and longitude of this guess. """
-    return request.GET.get('lat'), request.GET.get('long')
+    return request.POST.get('lat'), request.POST.get('long')
 
 def valid_search(request):
     """ Determines if this is a valid search. """
@@ -47,7 +47,7 @@ def get_distance(search_coords, answer_coords):
 
 def is_correct_answer(latitude, longitude, answer):
     """ Determine if a given co-ordinate satisfies an answer. """
-    distance = ((latitude, longitude), (answer.latitude, answer.longitude))
+    distance = get_distance((latitude, longitude), (answer.latitude, answer.longitude))
     if (distance <= answer.tolerance):
         return True
 
