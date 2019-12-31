@@ -2,7 +2,7 @@ from hunt.models import HuntInfo
 import pytest
 
 pytestmark = pytest.mark.django_db
-from factories import AnswerFactory
+from factories import AnswerFactory, LevelFactory
 def test_create_hunt_info(user):
 	HuntInfo.objects.create(user=user)
 	assert len(HuntInfo.objects.all()) == 1
@@ -26,3 +26,15 @@ def test_invalid_answer():
 		AnswerFactory.create(longitude="-180.1")
 	with pytest.raises(RuntimeError):
 		AnswerFactory.create(tolerance=10001)
+
+def test_valid_level():
+	assert LevelFactory.create()
+
+def test_cant_create_multiple_same_level():
+	LevelFactory.create()
+	with pytest.raises(RuntimeError):
+		LevelFactory.create()
+
+def test_create_multiple_levels():
+	LevelFactory.create()
+	assert LevelFactory.create(number=2)

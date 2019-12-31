@@ -72,6 +72,7 @@ def home(request):
     template = loader.get_template('welcome.html')
     
     hunt_info = request.user.huntinfo
+    # GRT This doesn't exist anymore
     team_level = hunt_info.level
     
     # Hack - staff can see all levels.

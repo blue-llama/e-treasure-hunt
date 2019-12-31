@@ -1,5 +1,5 @@
-from hunt.models import Answer, Level
-from factory_djoy import CleanModelFactory
+from hunt.models import Answer, Level, HuntInfo, UserLevel
+from factory_djoy import CleanModelFactory, UserFactory
 from decimal import Decimal
 import factory
 
@@ -9,7 +9,6 @@ class LevelFactory(CleanModelFactory):
 
 	number = 1
 	name = "Test Name"
-	description = "Test Description"
 	clues = "Test Clues"
 
 class AnswerFactory(CleanModelFactory):
@@ -20,6 +19,22 @@ class AnswerFactory(CleanModelFactory):
 	longitude = "1.2345678"
 	latitude = "-1.2345678"
 	tolerance = "100"
+	description = "Test Description"
 	for_level = factory.SubFactory(LevelFactory)
-	next_level = factory.SubFactory(LevelFactory, number=2)
+	next_level = factory.SubFactory(LevelFactory, number=2) # Don't try and create the same level again so create a new one
+
+class HuntFactory(CleanModelFactory):
+	class Meta:
+		model = HuntInfo
+
+	user = factory.SubFactory(UserFactory)
+
+class UserLevelFactory(CleanModelFactory):
+	class Meta:
+		model = UserLevel
+	
+	hunt = factory.SubFactory(HuntFactory)
+	level = factory.SubFactory(LevelFactory)
+
+
 
