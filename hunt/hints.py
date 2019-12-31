@@ -13,10 +13,11 @@ def request_hint(request):
     lvl = request.GET.get('lvl')
     if (lvl == None):
         return "/oops"
-        
+    
+    hunt_info = request.user.huntinfo
     # Check that this a request for a level the user has access to.
     lvl = int(lvl) 
-    active_levels = get_users_active_levels(request.user.huntinfo)
+    active_levels = get_users_active_levels(hunt_info)
     if (lvl not in active_levels):
         return "/oops"
         
@@ -41,11 +42,10 @@ def request_hint(request):
         hunt_info.save()
     else:
         # Set hint request flags on the user and level, and save.
-        hunt_info.save()
-        user_level = get_user_level_for_level(level, hunt_info)
+        user_level = get_user_level_for_level(level, hunt_info.user)
         user_level.hint_requested = True
         user_level.save()
-    
+
     # Redirect back to the level in question.
     return "/level/" + str(lvl)
     
@@ -129,11 +129,8 @@ def release_private_hints():
             user.save()
 
 def release_level_hints():
-    # Get all the user levels
-    user_levels = UserLevel.objects.all()
-
     # Release hints for levels where this has been requested, and reset the flag.
-    for user_level in user_levels:
+    for user_level in UserLevel.objects.all():
         if user_level.hint_requested:
             # Log an event to say we're doing this.
             event = HuntEvent()
