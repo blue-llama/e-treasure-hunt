@@ -10,13 +10,13 @@ from datetime import datetime
 
 from storages.backends.dropbox import DropBoxStorage
 
-def advance_level(answer, hunt):
+def advance_level(hunt, answer):
     """ Carry out all the necessary admin to advance a level. """
-    update_active_levels(answer, hunt)
-    log_level_advance(answer, hunt)
+    update_active_levels(hunt, answer)
+    log_level_advance(hunt, answer)
     clear_private_hints(hunt)
 
-def log_level_advance(answer, hunt):
+def log_level_advance(hunt, answer):
     """ Log an event that a level has been solved. """
     event = HuntEvent()
     event.time = datetime.utcnow()
@@ -27,9 +27,9 @@ def log_level_advance(answer, hunt):
 
 def clear_private_hints(hunt):
     """ Clear any private hint stuff, it's been used. """
-    hunt_info.private_hint_requested = False
-    hunt_info.private_hints_shown = 0
-    hunt_info.save()
+    hunt.private_hint_requested = False
+    hunt.private_hints_shown = 0
+    hunt.save()
 
 def get_latitude_longitude(request):
     """ Gets the latitude and longitude of this guess. """
