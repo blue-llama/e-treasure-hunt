@@ -7,5 +7,4 @@ def get_user_level_for_level(level, user):
         if user_level.hunt.user == user:
             return user_level
 
-    # GRT Too generic an exception???
-    raise Exception("Could not find user level for level")
+    raise RuntimeError("Could not find user level for level")

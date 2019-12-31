@@ -37,6 +37,6 @@ def test_get_user_level():
 	user_level2 = get_user_level_for_level(level, hunt2.user)
 	assert user_level2.hunt == hunt2
 	assert user_level != user_level2
-	with pytest.raises(Exception):
+	with pytest.raises(RuntimeError):
 		get_user_level_for_level(level, 'test')
 
