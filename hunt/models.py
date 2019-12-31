@@ -5,7 +5,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 # Team hunt progress info.
 class HuntInfo(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE,  null=True, related_name='huntinfo')
-  hint_requested = models.BooleanField(default=False)
   # How do private hints work because you can be working on multiple levels? Do we even still need them?
   private_hint_requested = models.BooleanField(default=False)
   private_hints_shown = models.IntegerField(default=0)

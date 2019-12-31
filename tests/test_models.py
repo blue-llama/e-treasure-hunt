@@ -3,8 +3,7 @@ import pytest
 
 pytestmark = pytest.mark.django_db
 from factories import AnswerFactory, LevelFactory
-def test_create_hunt_info(user):
-	HuntInfo.objects.create(user=user)
+def test_create_hunt_info(hunt):
 	assert len(HuntInfo.objects.all()) == 1
 
 def test_valid_answer():

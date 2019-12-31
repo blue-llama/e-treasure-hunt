@@ -7,6 +7,7 @@ from random import random
 
 next_hint_time = None
 
+# GRT Need to fix how private hints work
 def request_hint(request):
     # Request must be for a specific level - not allowed to request hints for old levels.
     lvl = request.GET.get('lvl')
@@ -35,13 +36,11 @@ def request_hint(request):
     
     if (hunt_info.private_hint_allowed):
         # Special - just do a private hint.
-        hunt_info.hint_requested = True
         hunt_info.private_hint_requested = True
         hunt_info.private_hint_allowed = False
         hunt_info.save()
     else:
         # Set hint request flags on the user and level, and save.
-        hunt_info.hint_requested = True
         hunt_info.save()
         user_level = get_user_level_for_level(level, hunt_info)
         user_level.hint_requested = True

@@ -27,7 +27,6 @@ def log_level_advance(answer, hunt):
 
 def clear_private_hints(hunt):
     """ Clear any private hint stuff, it's been used. """
-    hunt_info.hint_requested = False
     hunt_info.private_hint_requested = False
     hunt_info.private_hints_shown = 0
     hunt_info.save()
@@ -52,12 +51,14 @@ def is_correct_answer(latitude, longitude, answer):
         return True
 
     return False
-    
+
+def create_new_user_level(hunt, level):
+    user_level = UserLevel(hunt=hunt, level=level)
+    user_level.save()
+
 def update_active_levels(hunt, answer):
     """ Update the hunt info's list of active levels. """
-    user_level = get_user_level_for_level(answer.next_level, hunt)
-    user_level.hunt = hunt
-    user_level.save()
+    create_new_user_level(hunt, answer.next_level)
 
 def look_for_answers(request):
     """
