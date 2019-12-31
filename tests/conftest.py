@@ -9,21 +9,21 @@ register(AnswerFactory)
 
 @pytest.fixture(scope="function")
 def user():
-	return User.objects.create_user(username="test_user")
+    return User.objects.create_user(username="test_user")
 
 @pytest.fixture(scope="function")
 def answer():
-	return AnswerFactory.create()
+    return AnswerFactory.create()
 
 @pytest.fixture(scope="function")
 def hunt():
-	return HuntFactory.create()
+    return HuntFactory.create()
 
 @pytest.fixture(scope="function")
 def levels():
-	MultipleLevelFactory.reset_sequence(1)
-	return MultipleLevelFactory.create_batch(5)
+    MultipleLevelFactory.reset_sequence(1)
+    return MultipleLevelFactory.create_batch(5)
 
 @pytest.fixture(scope="function")
 def level():
-	return LevelFactory.create()
+    return LevelFactory.create()
