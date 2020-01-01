@@ -5,6 +5,7 @@ from django.template import loader
 from hunt.models import *
 from hunt.levels import *
 from hunt.hints import *
+from hunt.utilities import get_users_active_levels
 from . import hint_mgr
 from django.contrib.auth.models import Permission
 import os
@@ -72,17 +73,15 @@ def home(request):
     template = loader.get_template('welcome.html')
     
     hunt_info = request.user.huntinfo
-    # GRT This doesn't exist anymore
-    team_level = hunt_info.level
+    levels = sorted(get_users_active_levels(request.user), reverse=True)
     
     # Hack - staff can see all levels.
     if (request.user.is_staff):
-        team_level = Level.objects.order_by('-number')[0].number
+        levels = Level.objects.order_by('-number')[0].number
     
     context = {
         'display_name': request.user.get_full_name(),
-        'team_level': team_level,
-        'hint_requested': hunt_info.hint_requested,
+        'levels': get_users_active_levels(request.user),
     }
     return HttpResponse(template.render(context, request))
 
@@ -104,7 +103,7 @@ def oops(request):
     # Shouldn't be here. Show an error page.
     template = loader.get_template('oops.html')
     context = {
-        'team_level': request.user.huntinfo.level
+        'levels': sorted(get_users_active_levels(request.user), reverse=True)
     }
            
     # Return the rendered template.
@@ -177,11 +176,8 @@ def nothing(request):
 
     template = loader.get_template('nothing.html')
     
-    lvl = request.GET.get('lvl')
-    
     context = {
-        'team_level': request.user.huntinfo.level,
-        'search_level': lvl,
+        'levels': sorted(get_users_active_levels(request.user), reverse=True)
     }
     return HttpResponse(template.render(context, request))
 
