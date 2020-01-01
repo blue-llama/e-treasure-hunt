@@ -8,7 +8,6 @@ class LevelFactory(CleanModelFactory):
         model = Level
 
     number = 1
-    name = "Test Name"
     clues = "Test Clues"
 
 class MultipleLevelFactory(CleanModelFactory):
@@ -16,7 +15,6 @@ class MultipleLevelFactory(CleanModelFactory):
         model = Level
 
     number = factory.Sequence(lambda n: n)
-    name = "Test Name"
     clues = "Test Clues"
 
 class AnswerFactory(CleanModelFactory):
@@ -27,9 +25,10 @@ class AnswerFactory(CleanModelFactory):
     longitude = "1.2345678"
     latitude = "-1.2345678"
     tolerance = 100
+    name = "Test Name"
     description = "Test Description"
-    for_level = factory.SubFactory(LevelFactory)
-    next_level = factory.SubFactory(LevelFactory, number=2) # Don't try and create the same level again so create a new one
+    solves_level = factory.SubFactory(LevelFactory)
+    leads_to_level = factory.SubFactory(LevelFactory, number=2) # Don't try and create the same level again so create a new one
 
 class HuntFactory(CleanModelFactory):
     class Meta:

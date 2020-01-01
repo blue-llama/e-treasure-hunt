@@ -160,7 +160,7 @@ def get_furthest_active_level():
     hunts = HuntInfo.objects.all()
     for hunt in hunts:
         active_levels = get_users_active_levels(hunt)
-        highest_level = active_levels.sort()[-1]
+        highest_level = active_levels[0]
         if highest_level > max_level:
             max_level = highest_level
     return max_level

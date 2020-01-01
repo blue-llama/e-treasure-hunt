@@ -73,7 +73,7 @@ def home(request):
     template = loader.get_template('welcome.html')
     
     hunt_info = request.user.huntinfo
-    levels = sorted(get_users_active_levels(request.user), reverse=True)
+    levels = get_users_active_levels(request.user)
     
     # Hack - staff can see all levels.
     if (request.user.is_staff):
@@ -103,7 +103,7 @@ def oops(request):
     # Shouldn't be here. Show an error page.
     template = loader.get_template('oops.html')
     context = {
-        'levels': sorted(get_users_active_levels(request.user), reverse=True)
+        'levels': get_users_active_levels(request.user)
     }
            
     # Return the rendered template.
@@ -168,7 +168,6 @@ def search(request):
     return HttpResponse(template.render(context, request))
 
 # Nothing here.
-# GRT Ugh...
 @login_required   
 def nothing(request):
     if (is_working_hours()):
@@ -177,7 +176,7 @@ def nothing(request):
     template = loader.get_template('nothing.html')
     
     context = {
-        'levels': sorted(get_users_active_levels(request.user), reverse=True)
+        'levels': get_users_active_levels(request.user)
     }
     return HttpResponse(template.render(context, request))
 

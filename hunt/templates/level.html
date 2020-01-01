@@ -1,16 +1,13 @@
-!!!GRT This needs a rework because it'll probably show levels we don't intend
 {% extends 'base.html' %}
 
 {% block content %}
 
-{% if level_number != team_level %}
+{% if current_level != highest_level %}
   <div class="banner">Your team is on Level {{ team_level }}! <a href="/level/{{ team_level }}">Join them</a></div>
-  <div class="heading"><h1>{{ level_name }}</h1><h2>Level {{ level_number }}</h2></div>
-{% else %}
-  <div class="heading"><h1>{{ level_name }}</h1><h2>Level {{ level_number }}</h2></div>
 {% endif %}
+  <div class="heading"><h1>{{ level_name }}</h1><h2>Level {{ current_level }}</h2></div>
 
-{% if level_number > 1 %}
+{% if current_level > 1 %}
   <h3>{{ latitude }}, {{ longitude }}</h3>
 {% endif %}
 
@@ -27,19 +24,19 @@
 </div>
 
   {% if is_last is not True %}
-    <a class="gobutton" href="/map?lvl={{ level_number }}">
+    <a class="gobutton" href="/map?lvl={{ current_level }}">
       SEARCH MAP
     </a>
-    <a class="gobutton" href="/search?lvl={{ level_number }}">
+    <a class="gobutton" href="/search?lvl={{ current_level }}">
       SEARCH CO-ORDINATES
     </a>
     
-    {% if level_number != team_level %}
-      <a class="gobutton" href="/level/{{ level_number|add:"1" }}">
-        NEXT LEVEL
+    {% if current_level != highest_level %}
+      <a class="gobutton" href="/level/{{ highest_level }}">
+        GO TO LEVEL {{ highest_level }}
       </a>
     {% elif allow_hint %}
-      <a class="gobutton" href="/hint?lvl={{ level_number }}" onclick="return confirm(' Are you sure you want to request a hint?')">
+      <a class="gobutton" href="/hint?lvl={{ current_level }}" onclick="return confirm(' Are you sure you want to request a hint?')">
         REQUEST HINT
       </a>
     {% else %}
