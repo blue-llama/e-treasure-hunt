@@ -14,3 +14,7 @@ def test_invalid_search(rf):
     assert not valid_search(request)
     request = rf.get('/search', {'lat': 5.005, 'long': 5.005})
     assert not valid_search(request)
+
+def test_valid_search(rf):
+    request = rf.post('/search?lat=1.0&long=1.0')
+    assert valid_search(request)

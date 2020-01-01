@@ -9,6 +9,7 @@ from hunt.levels import (
 )
 from hunt.models import HuntEvent, UserLevel
 import pytest
+import mock
 
 pytestmark = pytest.mark.django_db
 from factories import AnswerFactory, UserLevelFactory, HuntFactory
@@ -65,3 +66,9 @@ def test_create_new_user_level(hunt, level):
     create_new_user_level(hunt, level)
     assert len(UserLevel.objects.all()) == 1
     assert UserLevel.objects.get(hunt=hunt, level=level)
+
+
+@mock.patch('hunt.levels.validsearch', return_value=False)
+def test_look_for_answers_invalid_search(rf):
+    request = rf.post("/level?lat=1.0&long=1.0")    
+    assert look_for_answers(request) == '/search'
