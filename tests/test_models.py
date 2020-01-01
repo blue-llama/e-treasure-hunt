@@ -3,11 +3,15 @@ import pytest
 
 pytestmark = pytest.mark.django_db
 from factories import AnswerFactory, LevelFactory
+
+
 def test_create_hunt_info(hunt):
     assert len(HuntInfo.objects.all()) == 1
 
+
 def test_valid_answer():
     assert AnswerFactory.create()
+
 
 def test_invalid_answer():
     # Longitude and Latitude use the DecimalField so use strings instead of floats
@@ -26,13 +30,16 @@ def test_invalid_answer():
     with pytest.raises(RuntimeError):
         AnswerFactory.create(tolerance=10001)
 
+
 def test_valid_level():
     assert LevelFactory.create()
+
 
 def test_cant_create_multiple_same_level():
     LevelFactory.create()
     with pytest.raises(RuntimeError):
         LevelFactory.create()
+
 
 def test_create_multiple_levels():
     LevelFactory.create()

@@ -9,7 +9,7 @@ from factories import (
     MultipleLevelFactory,
     LevelFactory,
     UserLevelFactory,
-    MultiAnswerFactory
+    MultiAnswerFactory,
 )
 from collections import namedtuple
 
@@ -46,6 +46,7 @@ def level():
 def user_level():
     return UserLevelFactory.create()
 
+
 @pytest.fixture(scope="function")
 def multi_level_hunt(create_user_levels):
     # Create a hunt
@@ -59,16 +60,32 @@ def multi_level_hunt(create_user_levels):
     # 1 leads to 2, which leads to 3 and 4, which lead back to 5
     answers = []
     MultiAnswerFactory.reset_sequence(1)
-    answers.append(MultiAnswerFactory.create(solves_level=levels[0], leads_to_level=levels[1]))
-    answers.append(MultiAnswerFactory.create(solves_level=levels[1], leads_to_level=levels[2]))
-    answers.append(MultiAnswerFactory.create(solves_level=levels[1], leads_to_level=levels[3]))
-    answers.append(MultiAnswerFactory.create(solves_level=levels[2], leads_to_level=levels[4]))
-    answers.append(MultiAnswerFactory.create(solves_level=levels[3], leads_to_level=levels[4], longitude=40, latitude=40))
+    answers.append(
+        MultiAnswerFactory.create(solves_level=levels[0], leads_to_level=levels[1])
+    )
+    answers.append(
+        MultiAnswerFactory.create(solves_level=levels[1], leads_to_level=levels[2])
+    )
+    answers.append(
+        MultiAnswerFactory.create(solves_level=levels[1], leads_to_level=levels[3])
+    )
+    answers.append(
+        MultiAnswerFactory.create(solves_level=levels[2], leads_to_level=levels[4])
+    )
+    answers.append(
+        MultiAnswerFactory.create(
+            solves_level=levels[3], leads_to_level=levels[4], longitude=40, latitude=40
+        )
+    )
 
     # Create the unlocked levels for this user
     user_levels = []
     for user_level in create_user_levels:
-        user_levels.append(UserLevelFactory.create(hunt=hunt, level=levels[user_level-1]))
+        user_levels.append(
+            UserLevelFactory.create(hunt=hunt, level=levels[user_level - 1])
+        )
 
-    MultiLevelHunt = namedtuple('MutliLevelHunt', 'hunt levels userlevels answers')
-    return MultiLevelHunt(hunt=hunt, levels=levels, userlevels=user_levels, answers=answers)
+    MultiLevelHunt = namedtuple("MutliLevelHunt", "hunt levels userlevels answers")
+    return MultiLevelHunt(
+        hunt=hunt, levels=levels, userlevels=user_levels, answers=answers
+    )

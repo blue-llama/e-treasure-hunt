@@ -1,5 +1,13 @@
 from django.contrib import admin
-from hunt.models import HuntInfo, Level, HintTime, AppSetting, HuntEvent, Answer, UserLevel
+from hunt.models import (
+    HuntInfo,
+    Level,
+    HintTime,
+    AppSetting,
+    HuntEvent,
+    Answer,
+    UserLevel,
+)
 
 # Register your models here.
 admin.site.register(HuntInfo)

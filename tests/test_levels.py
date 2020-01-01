@@ -2,6 +2,7 @@ from hunt.levels import get_latitude_longitude, valid_search, look_for_answers
 import pytest
 import mock
 
+
 def test_get_latitude_longitude(rf):
     request = rf.get("/search", {"lat": 5.005, "long": -9.9})
     latitude, longitude = get_latitude_longitude(request)
@@ -23,13 +24,13 @@ def test_valid_search(rf):
     assert valid_search(request)
 
 
-@mock.patch('hunt.levels.valid_search', return_value=False)
+@mock.patch("hunt.levels.valid_search", return_value=False)
 def test_look_for_answers_invalid_search(rf):
-    request = rf.get("/do-search?lat=1.0&long=1.0")    
-    assert look_for_answers(request) == '/search'
+    request = rf.get("/do-search?lat=1.0&long=1.0")
+    assert look_for_answers(request) == "/search"
 
 
-@mock.patch('hunt.levels.is_correct_answer', return_value=False)
+@mock.patch("hunt.levels.is_correct_answer", return_value=False)
 def test_look_for_answers_incorrect_answer(rf):
-    request = rf.get("/do-search?lat=1.0&long=1.0")    
-    assert look_for_answers(request) == '/nothing-here'
+    request = rf.get("/do-search?lat=1.0&long=1.0")
+    assert look_for_answers(request) == "/nothing-here"

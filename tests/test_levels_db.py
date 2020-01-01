@@ -9,7 +9,7 @@ from hunt.levels import (
     look_for_answers,
     can_request_hint,
     get_level_numbers,
-    get_answer_for_last_level
+    get_answer_for_last_level,
 )
 from hunt.models import HuntEvent, UserLevel
 import pytest
@@ -105,14 +105,14 @@ def test_get_level_numbers(rf, hunt, levels):
     assert get_level_numbers(request) == [5, 4, 3, 2, 1]
 
 
-@mock.patch('hunt.levels.is_correct_answer', return_value=True)
+@mock.patch("hunt.levels.is_correct_answer", return_value=True)
 def test_look_for_answers(rf, hunt, levels):
     request = rf.get("/do-search?lat=1.0&long=1.0")
     request.user = hunt.user
     UserLevelFactory.create(hunt=hunt, level=levels[0])
     answer = AnswerFactory.create(solves_level=levels[0], leads_to_level=levels[1])
     assert look_for_answers(request) == "/level/" + str(levels[1].number)
-    
+
 
 def test_get_answer_for_last_level(hunt, levels):
     answer = AnswerFactory.create(solves_level=levels[0], leads_to_level=levels[1])
