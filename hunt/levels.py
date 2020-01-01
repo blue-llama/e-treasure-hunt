@@ -173,7 +173,6 @@ def maybe_load_level(request):
         # Is this the last level?
         is_last_level = current_level.number == get_max_level_number()
 
-        # GRT This isn't going to work with multiple branches
         # Get the description from the previous level, and split it
         # into paragraphs for display.
         desc_paras = answer_for_last_level.description.splitlines()
@@ -181,7 +180,6 @@ def maybe_load_level(request):
         # By default a hint can be requested.
         allow_hint, reason = can_request_hint(user_level)
 
-        # GRT Some of this context stuff will need updating
         # Prepare the template and context.
         template = loader.get_template("level.html")
         context = {
