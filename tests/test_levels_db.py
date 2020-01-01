@@ -5,7 +5,8 @@ from hunt.levels import (
     advance_level,
     clear_private_hints,
     log_level_advance,
-    create_new_user_level
+    create_new_user_level,
+    look_for_answers
 )
 from hunt.models import HuntEvent, UserLevel
 import pytest
@@ -68,7 +69,3 @@ def test_create_new_user_level(hunt, level):
     assert UserLevel.objects.get(hunt=hunt, level=level)
 
 
-@mock.patch('hunt.levels.validsearch', return_value=False)
-def test_look_for_answers_invalid_search(rf):
-    request = rf.post("/level?lat=1.0&long=1.0")    
-    assert look_for_answers(request) == '/search'

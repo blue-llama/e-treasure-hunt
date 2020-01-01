@@ -32,8 +32,11 @@ def clear_private_hints(hunt):
     hunt.save()
 
 def get_latitude_longitude(request):
-    """ Gets the latitude and longitude of this guess. """
-    return request.POST.get('lat'), request.POST.get('long')
+    """ 
+    Gets the latitude and longitude of this guess.
+    Note, the request is always a GET because the map uses javascripts window.location.href to redirect.
+    """
+    return request.GET.get('lat'), request.GET.get('long')
 
 def valid_search(request):
     """ Determines if this is a valid search. """
