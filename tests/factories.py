@@ -30,6 +30,19 @@ class AnswerFactory(CleanModelFactory):
     solves_level = factory.SubFactory(LevelFactory)
     leads_to_level = factory.SubFactory(LevelFactory, number=2) # Don't try and create the same level again so create a new one
 
+class MultiAnswerFactory(CleanModelFactory):
+    class Meta:
+        model = Answer
+
+    # These are decimal fields, so you can't pass a float, hence use the string
+    longitude = factory.Sequence(lambda n: n * 10)
+    latitude = factory.Sequence(lambda n: n * 10)
+    tolerance = 100
+    name = factory.Faker('name')
+    description = factory.Faker('sentence', nb_words=10)
+    solves_level = factory.SubFactory(LevelFactory)
+    leads_to_level = factory.SubFactory(LevelFactory, number=2) # Don't try and create the same level again so create a new one
+
 class HuntFactory(CleanModelFactory):
     class Meta:
         model = HuntInfo
