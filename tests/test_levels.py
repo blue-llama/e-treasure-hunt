@@ -29,8 +29,7 @@ def test_look_for_answers_invalid_search(rf):
     assert look_for_answers(request) == '/search'
 
 
-@mock.patch('hunt.levels.valid_search', return_value=True)
 @mock.patch('hunt.levels.is_correct_answer', return_value=False)
 def test_look_for_answers_incorrect_answer(rf):
-    request = rf.get("/do-search?lat=1.0&long=1.0&lvl=3")    
-    assert look_for_answers(request) == '/nothing-here?lvl=3'
+    request = rf.get("/do-search?lat=1.0&long=1.0")    
+    assert look_for_answers(request) == '/nothing-here'

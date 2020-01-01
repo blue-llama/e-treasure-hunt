@@ -63,6 +63,9 @@ def update_active_levels(hunt, answer):
     """ Update the hunt info's list of active levels. """
     create_new_user_level(hunt, answer.next_level)
 
+def get_search_level(request):
+    return request.GET.get('lvl')
+
 def look_for_answers(request):
     """
     Look to see if this search matches any answers to levels this user is currently on
@@ -84,7 +87,7 @@ def look_for_answers(request):
                 return "/level/" + str(answer.next_level.number)
 
     # No correct answer found, redirect to a failure page.
-    return "/nothing-here?lvl=" + str(search_level)
+    return "/nothing-here"
 
 # GRT - This needs to be updated to determine if a level has been unlocked by the team
 def maybe_load_level(request):

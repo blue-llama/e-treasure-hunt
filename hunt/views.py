@@ -169,6 +169,7 @@ def search(request):
     return HttpResponse(template.render(context, request))
 
 # Nothing here.
+# GRT Ugh...
 @login_required   
 def nothing(request):
     if (is_working_hours()):
