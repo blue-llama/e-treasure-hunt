@@ -1,6 +1,7 @@
 | **IMPORTANT - PLEASE NOTE** |
 | --- |
 | **It is your responsibility to ensure that any accounts and credentials used by this app are set up with adequate security measures and usage caps, such that if they are compromised, no charges or problems will arise.** You can check where a given credential is used by searching the code for the name of the environment variable that holds it (see Setup below). |
+| Due to the the terms of certain dependencies, this application may **not** be used to generate revenue. |
 
 -----
 
@@ -13,6 +14,7 @@ You do not need to use Google Maps. If you choose not to, an alternate map is av
 # How to deploy using Heroku
 ## Prerequisites
 - Dropbox account, with an app set up with read/write permission to a specific folder to hold the level images, and a corresponding OAuth key
+- Free [ArcGIS for Developers account](https://developers.arcgis.com/en/plans) - if your application will generate more than 1,000,000 requests per month against ArcGIS APIs then you may require a paid subscription instead
 - If you are using Google Maps: Google Cloud account with Places and Maps JavaScript APIs enabled, and API key - ***NOTE: this API key is passed to clients, so you must ensure you have appropriate usage limits configured to avoid being charged if it is mis-used. You may also wish to employ additional security measures e.g. configuring an allowed redirect URI.***
 - Heroku account
 - Heroku CLI installed
