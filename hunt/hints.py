@@ -68,7 +68,6 @@ def determine_next_hint():
 
     # Look for hint times in the future.
     time_now = datetime.utcnow().time()
-    print(time_now)
     future_hints = HintTime.objects.filter(time__gt=time_now)
 
     if len(future_hints) == 0:

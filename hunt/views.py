@@ -242,10 +242,7 @@ def answer_mgmt(request):
         answerformset = AnswerFormSet(request.POST, request.FILES)
         if levelform.is_valid() and answerformset.is_valid():
             try:
-                #level = create_level(levelform, request.FILES)
-                #level = Level.objects.create(number=levelform.cleaned_data.get('number'))
-                level = Level.objects.get(number=1)
-                print(request.FILES)
+                level = create_level(levelform, request.FILES)
                 for answerform in answerformset:
                     create_answer(level, answerform.cleaned_data)
             except:

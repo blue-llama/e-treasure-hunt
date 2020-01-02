@@ -52,9 +52,7 @@ def build_answer_form_data():
 @pytest.fixture(scope="function")
 def answerform():
     answerform = AnswerForm(data=build_answer_form_data(),files=build_answer_form_files())
-    print(answerform.data)
     answerform.is_valid()
-    print(answerform.errors)
     return answerform
 
 
