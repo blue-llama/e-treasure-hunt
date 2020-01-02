@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from hunt.models import Answer, Level
+from hunt.forms import AnswerForm
 import pytest
+import factory
 
 from pytest_factoryboy import register
 from factories import (
@@ -10,6 +13,8 @@ from factories import (
     LevelFactory,
     UserLevelFactory,
     MultiAnswerFactory,
+    MultiLocationFactory,
+    LocationFactory,
 )
 from collections import namedtuple
 
@@ -22,8 +27,35 @@ def user():
 
 
 @pytest.fixture(scope="function")
+def location():
+    return LocationFactory.create()
+
+
+@pytest.fixture(scope="function")
 def answer():
     return AnswerFactory.create()
+
+
+def build_answer_form_files():
+    with open('tests/input/description.txt', 'rb') as file:
+        description = SimpleUploadedFile('description.txt', file.read())
+    with open('tests/input/location.json', 'rb') as file:
+        info = SimpleUploadedFile('location.json', file.read()) 
+    return {
+        'description': description,
+        'info': info,
+    }
+
+def build_answer_form_data():
+    return {'name': "Answer name"}
+
+@pytest.fixture(scope="function")
+def answerform():
+    answerform = AnswerForm(data=build_answer_form_data(),files=build_answer_form_files())
+    print(answerform.data)
+    answerform.is_valid()
+    print(answerform.errors)
+    return answerform
 
 
 @pytest.fixture(scope="function")
@@ -59,7 +91,7 @@ def multi_level_hunt(create_user_levels):
     # Create the answers
     # 1 leads to 2, which leads to 3 and 4, which lead back to 5
     answers = []
-    MultiAnswerFactory.reset_sequence(1)
+    MultiLocationFactory.reset_sequence(1)
     answers.append(
         MultiAnswerFactory.create(solves_level=levels[0], leads_to_level=levels[1])
     )
@@ -72,9 +104,10 @@ def multi_level_hunt(create_user_levels):
     answers.append(
         MultiAnswerFactory.create(solves_level=levels[2], leads_to_level=levels[4])
     )
+    # Answers 4 and 5 (which both lead to level 5 need the same location)
     answers.append(
         MultiAnswerFactory.create(
-            solves_level=levels[3], leads_to_level=levels[4], longitude=40, latitude=40
+            solves_level=levels[3], leads_to_level=levels[4], location=LocationFactory(longitude=40, latitude=40)
         )
     )
 

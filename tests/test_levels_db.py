@@ -20,13 +20,13 @@ pytestmark = pytest.mark.django_db
 from factories import AnswerFactory, UserLevelFactory, HuntFactory
 
 
-def test_correct_answer(answer):
-    assert is_correct_answer(-1.2345678, 1.2345678, answer)
+def test_correct_answer(location):
+    assert is_correct_answer(-1.2345678, 1.2345678, location)
 
 
-def test_incorrect_answer(answer):
-    assert not is_correct_answer(1, -1, answer)
-    assert not is_correct_answer(1.2345678, 180 - 1.2345678, answer)
+def test_incorrect_answer(location):
+    assert not is_correct_answer(1, -1, location)
+    assert not is_correct_answer(1.2345678, 180 - 1.2345678, location)
 
 
 def test_update_active_levels(hunt, levels):

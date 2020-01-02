@@ -33,6 +33,7 @@ urlpatterns = [
     path("events", views.get_hunt_events, name="events"),
     path("mgmt", views.mgmt, name="mgmt"),
     path("hint-mgmt", views.hint_mgmt, name="hint-mgmt"),
-    path("add-hint", views.add_new_hint, name="new-hint"),
+    path("add-level", views.add_new_level, name="add-level"),
+    path("answer-mgmt", views.answer_mgmt, name="answer-mgmt"),
     path("hint-release", views.do_release_hints, name="hint-release"),
 ]

@@ -39,8 +39,10 @@ class UserLevel(models.Model):
     hint_requested = models.BooleanField(default=False)
 
 
-# Answer to a level, this needs to be a separate model such that a level can have multiple answers (hence the ForeignKey)
-class Answer(models.Model):
+class Location(models.Model):
+    """
+    A location for which there can be an answer. This exists so that we can validate creation of these objects
+    """
     latitude = models.DecimalField(
         max_digits=13,
         decimal_places=7,
@@ -54,7 +56,14 @@ class Answer(models.Model):
     tolerance = models.IntegerField(
         validators=[MaxValueValidator(10000)]
     )  # Don't allow a tolerance any greater than 10km
+
+
+# Answer to a level, this needs to be a separate model such that a level can have multiple answers (hence the ForeignKey)
+class Answer(models.Model):
     # The level this answer
+    location = models.OneToOneField(
+        Location, on_delete=models.CASCADE, primary_key=True, related_name="answer"
+    )
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=5000)
     # Which level does this answer apply to
@@ -63,7 +72,7 @@ class Answer(models.Model):
     )
     # Which level should this answer lead to
     leads_to_level = models.ForeignKey(
-        Level, on_delete=models.CASCADE, null=True, related_name="+"
+        Level, on_delete=models.CASCADE, blank=True, null=True, related_name="+"
     )
 
 

@@ -59,10 +59,10 @@ def get_distance(search_coords, answer_coords):
     return distance.distance(search_coords, answer_coords).m
 
 
-def is_correct_answer(latitude, longitude, answer):
+def is_correct_answer(latitude, longitude, location):
     """ Determine if a given co-ordinate satisfies an answer. """
-    distance = get_distance((latitude, longitude), (answer.latitude, answer.longitude))
-    if distance <= answer.tolerance:
+    distance = get_distance((latitude, longitude), (location.latitude, location.longitude))
+    if distance <= location.tolerance:
         return True
 
     return False
@@ -98,7 +98,7 @@ def look_for_answers(request):
     # For each active level, check if this is an answer
     for user_level in active_level_objects:
         for answer in user_level.level.answers.all():
-            if is_correct_answer(latitude, longitude, answer):
+            if is_correct_answer(latitude, longitude, answer.location):
                 advance_level(hunt, answer)
                 return "/level/" + str(answer.leads_to_level.number)
 

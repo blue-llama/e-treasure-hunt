@@ -9,7 +9,9 @@ from django.template import loader
 from hunt.models import *
 from hunt.levels import *
 from hunt.hints import *
+from hunt.hint_mgr import create_level, create_answer
 from hunt.utilities import get_users_active_levels
+from hunt.forms import AnswerFormSet, LevelForm
 from . import hint_mgr
 from django.contrib.auth.models import Permission
 import os
@@ -80,15 +82,10 @@ def home(request):
     template = loader.get_template("welcome.html")
 
     hunt_info = request.user.huntinfo
-    levels = get_users_active_levels(request.user)
-
-    # Hack - staff can see all levels.
-    if request.user.is_staff:
-        levels = Level.objects.order_by("-number")[0].number
 
     context = {
         "display_name": request.user.get_full_name(),
-        "levels": get_users_active_levels(request.user),
+        "highest_level": get_users_active_levels(request.user)[0],
     }
     return HttpResponse(template.render(context, request))
 
@@ -227,11 +224,38 @@ def hint_mgmt(request):
 
 # Upload level endpoint.
 @user_passes_test(lambda u: u.is_staff)
-def add_new_hint(request):
-    return redirect(hint_mgr.upload_new_hint(request))
+def add_new_level(request):
+    return redirect(hint_mgr.upload_new_level(request))
 
 
 # Admin force hint release.
 @user_passes_test(lambda u: u.is_staff)
 def do_release_hints(request):
     return redirect("/mgmt?success=" + str(release_hints()))
+
+
+# Answer uploader page.
+@user_passes_test(lambda u: u.is_staff)
+def answer_mgmt(request):
+    if request.method == "POST":
+        levelform = LevelForm(request.POST, request.FILES)
+        answerformset = AnswerFormSet(request.POST, request.FILES)
+        if levelform.is_valid() and answerformset.is_valid():
+            try:
+                #level = create_level(levelform, request.FILES)
+                #level = Level.objects.create(number=levelform.cleaned_data.get('number'))
+                level = Level.objects.get(number=1)
+                print(request.FILES)
+                for answerform in answerformset:
+                    create_answer(level, answerform.cleaned_data)
+            except:
+                raise
+            return HttpResponse("/thanks/")
+    elif request.method == "GET":
+        # GRT If we already have a level with some answers we should fill that in with them
+        answerformset = AnswerFormSet(request.GET or None)
+        levelform = LevelForm(request.GET or None)
+
+    template = loader.get_template("answer-mgmt.html")
+    context = {"level": levelform, "formset": answerformset}
+    return HttpResponse(template.render(context, request))

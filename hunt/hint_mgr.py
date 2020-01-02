@@ -1,4 +1,12 @@
-from hunt.models import HuntInfo, Level, HintTime, AppSetting, HuntEvent, Answer
+from hunt.models import (
+    HuntInfo,
+    Level,
+    HintTime,
+    AppSetting,
+    HuntEvent,
+    Answer,
+    Location,
+)
 from storages.backends.dropbox import DropBoxStorage
 import json
 from uuid import uuid4
@@ -27,6 +35,80 @@ def clone_uploaded_file(data):
     return data
 
 
+def delete_old_clue_threads(fs, threads, level):
+    if level.clues:
+        old_clues = ast.literal_eval(level.clues)
+        for old_clue in old_clues:
+            if fs.exists(old_clue):
+                process = Thread(target=delete_file, args=[fs, old_clue])
+                process.start()
+                threads.append(process)
+
+
+def create_file_thread(fs, threads, file):
+
+    extension = file.name.split(".")[-1]
+    clue_name = str(uuid4()) + "." + extension
+
+    # Hack - Django keeps closing files. Clone it to keep it open.
+    file_clone = clone_uploaded_file(file)
+
+    process = Thread(target=save_file, args=[fs, file_clone, clue_name])
+    process.start()
+    threads.append(process)
+    return clue_name
+
+
+def create_clues_and_hints(level_number, file_dict):
+    fs = DropBoxStorage()
+    threads = []
+    clue_names = []
+
+    clue_names.extend(create_file_thread(fs, threads, file_dict.get("clue")))
+    for file in file_dict.get("hints"):
+        clue_names.extend(create_file_thread(fs, threads, file))
+
+    # We now pause execution on the main thread by 'joining' all of our started threads.
+    # This ensures that each Dropbox operation completes before we return.
+    for process in threads:
+        process.join()
+
+    return clue_names
+
+
+def create_level(levelform, file_dict):
+    try:
+        level = Level.objects.get(number=levelform.number)
+        delete_old_clue_threads(fs, threads, level)
+    except Level.DoesNotExist:
+        level = Level(number=levelform.number)
+
+    clue_names = create_clues_and_hints(request.FILES)
+    level.clues = clue_names
+
+    level.save()
+    return level
+
+
+def create_answer(level, answerform_data):
+    # Seek to the beginning of the file because the validator may have read the file
+    answerform_data.get("info").file.seek(0)
+    json_data = json.loads(answerform_data.get("info").file.read())
+    description = answerform_data.get("description").file.read()
+    location = Location.objects.create(
+        latitude=json_data.get("latitude"),
+        longitude=json_data.get("longitude"),
+        tolerance=json_data.get("tolerance"),
+    )
+    Answer.objects.create(
+        location=location,
+        solves_level=level,
+        name=answerform_data.get("name"),
+        description=description,
+    )
+
+
+# GRT Ugh, this is so annoying because it expects a single description in a single file
 def upload_new_hint(request):
     if not request.user.has_perm("hunt.add_level"):
         return "/hint-mgmt?success=False"
@@ -38,88 +120,8 @@ def upload_new_hint(request):
     fail_str = "/hint-mgmt?success=False&next=" + str(int(lvl_num))
 
     try:
-        level = Level.objects.get(number=lvl_num)
-    except Level.DoesNotExist:
-        level = Level(number=lvl_num)
-
-    lvl_files = request.FILES.getlist("files")
-    lvl_files.sort(key=lambda x: x.name)
-
-    lvl_info_file = lvl_files[0]
-    lvl_desc_file = lvl_files[1]
-    lvl_photos = lvl_files[2:]
-
-    if (
-        (lvl_desc_file.name != "blurb.txt")
-        or (lvl_info_file.name != "about.json")
-        or (len(lvl_photos) != 5)
-    ):
-        return fail_str
-
-    fs = DropBoxStorage()
-    threads = []
-
-    if (level.clues != None) and level.clues:
-        old_clues = ast.literal_eval(level.clues)
-        for old_clue in old_clues:
-            if fs.exists(old_clue):
-                process = Thread(target=delete_file, args=[fs, old_clue])
-                process.start()
-                threads.append(process)
-
-    clue_names = []
-    for file in lvl_photos:
-        extension = file.name.split(".")[-1]
-        print(file.name)
-        if (extension.lower() != "png") and (extension.lower() != "jpg"):
-            return fail_str
-        clue_name = str(uuid4()) + "." + extension
-        clue_names.append(clue_name)
-
-        # Hack - Django keeps closing files. Clone it to keep it open.
-        file_clone = clone_uploaded_file(file)
-
-        process = Thread(target=save_file, args=[fs, file_clone, clue_name])
-        process.start()
-        threads.append(process)
-
-    lvl_info = json.load(lvl_info_file)
-
-    lvl_desc = ""
-    lvl_desc_lines = lvl_desc_file.readlines()
-    for line_enc in lvl_desc_lines:
-        line = line_enc.decode("cp1251")
-        if line.strip():
-            lvl_desc = lvl_desc + line
-
-    level.name = lvl_info.get("name")
-    level.description = lvl_desc
-    level.clues = clue_names
-
-    # We now pause execution on the main thread by 'joining' all of our started threads.
-    # This ensures that each Dropbox operation completes before we return.
-    for process in threads:
-        process.join()
-
-    try:
-        level.save()
+        create_answers(lvl_info.get("answers"), level)
     except:
         return fail_str
 
-    for answer in lvl_info.get("answers"):
-        try:
-            create_answer(answer, level)
-        except:
-            return fail_str
-
     return "/hint-mgmt?success=True&next=" + str(int(lvl_num) + 1)
-
-
-def create_answer(answer, level):
-    answer = Answer(
-        latitude=answer.get("latitude"),
-        longitude=answer.get("longitude"),
-        tolerance=answer.get("tolerance"),
-        from_level=level,
-    )
-    answer.save()
