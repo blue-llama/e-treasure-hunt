@@ -20,7 +20,7 @@ def test_request_hint_on_non_active_level(rf, hunt, levels):
 
 
 @mock.patch("hunt.hints.maybe_release_hints")
-def test_request_hint(rf, hunt, levels):
+def test_request_hint(mock, rf, hunt, levels):
     user_level = UserLevelFactory.create(hunt=hunt, level=levels[0])
     assert not user_level.hint_requested
     request = rf.get("/hint", {"lvl": 1})

@@ -35,7 +35,9 @@ def clone_uploaded_file(data):
     return data
 
 
-def delete_old_clue_threads(fs, threads, level):
+def delete_old_clue_threads(level):
+    fs = DropBoxStorage()
+    threads = []
     if level.clues:
         old_clues = ast.literal_eval(level.clues)
         for old_clue in old_clues:
@@ -44,9 +46,15 @@ def delete_old_clue_threads(fs, threads, level):
                 process.start()
                 threads.append(process)
 
+    # We now pause execution on the main thread by 'joining' all of our started threads.
+    # This ensures that each Dropbox operation completes before we return.
+    for process in threads:
+        process.join()
+
+    return
+
 
 def create_file_thread(fs, threads, file):
-
     extension = file.name.split(".")[-1]
     clue_name = str(uuid4()) + "." + extension
 
@@ -64,26 +72,30 @@ def create_clues_and_hints(level_number, file_dict):
     threads = []
     clue_names = []
 
-    clue_names.extend(create_file_thread(fs, threads, file_dict.get("clue")))
-    for file in file_dict.get("hints"):
-        clue_names.extend(create_file_thread(fs, threads, file))
+    for file_name in ["clue", "hint1", "hint2", "hint3", "hint4"]:
+        file = file_dict.get(file_name)
+        if file:
+            clue_names.append(create_file_thread(fs, threads, file))
+        else:
+            # If we're not uploading 
+            clue_names.append("")
 
     # We now pause execution on the main thread by 'joining' all of our started threads.
     # This ensures that each Dropbox operation completes before we return.
     for process in threads:
         process.join()
-
     return clue_names
 
 
-def create_level(levelform, file_dict):
+def create_level(levelform_data, file_dict):
+    level_number = levelform_data.get('number')
     try:
-        level = Level.objects.get(number=levelform.number)
-        delete_old_clue_threads(fs, threads, level)
+        level = Level.objects.get(number=level_number)
+        delete_old_clue_threads(level)
     except Level.DoesNotExist:
-        level = Level(number=levelform.number)
+        level = Level(number=level_number)
 
-    clue_names = create_clues_and_hints(request.FILES)
+    clue_names = create_clues_and_hints(level_number, file_dict)
     level.clues = clue_names
 
     level.save()
@@ -94,7 +106,7 @@ def create_answer(level, answerform_data):
     # Seek to the beginning of the file because the validator may have read the file
     answerform_data.get("info").file.seek(0)
     json_data = json.loads(answerform_data.get("info").file.read())
-    description = answerform_data.get("description").file.read()
+    description = answerform_data.get("description").file.read().decode('utf-8')
     location = Location.objects.create(
         latitude=json_data.get("latitude"),
         longitude=json_data.get("longitude"),

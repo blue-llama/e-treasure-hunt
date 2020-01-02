@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from hunt.models import Answer, Level
-from hunt.forms import AnswerForm
+from hunt.forms import AnswerForm, LevelForm
 import pytest
 import factory
 
@@ -37,23 +37,46 @@ def answer():
 
 
 def build_answer_form_files():
-    with open('tests/input/description.txt', 'rb') as file:
-        description = SimpleUploadedFile('description.txt', file.read())
-    with open('tests/input/location.json', 'rb') as file:
-        info = SimpleUploadedFile('location.json', file.read()) 
+    with open("tests/input/description.txt", "rb") as file:
+        description = SimpleUploadedFile("description.txt", file.read())
+    with open("tests/input/location.json", "rb") as file:
+        info = SimpleUploadedFile("location.json", file.read())
     return {
-        'description': description,
-        'info': info,
+        "description": description,
+        "info": info,
     }
 
+
 def build_answer_form_data():
-    return {'name': "Answer name"}
+    return {"name": "Answer name"}
+
 
 @pytest.fixture(scope="function")
 def answerform():
-    answerform = AnswerForm(data=build_answer_form_data(),files=build_answer_form_files())
+    answerform = AnswerForm(
+        data=build_answer_form_data(), files=build_answer_form_files()
+    )
     answerform.is_valid()
     return answerform
+
+
+def build_level_form_files():
+    with open("tests/input/image.png", "rb") as file:
+        image = SimpleUploadedFile("image.png", file.read())
+    return {
+        "clue": image,
+        "hint1": image,
+        "hint2": image,
+        "hint3": image,
+        "hint4": image,
+    }
+
+
+@pytest.fixture(scope="function")
+def levelform():
+    levelform = LevelForm(data={"number": 1}, files=build_level_form_files())
+    levelform.is_valid()
+    return levelform
 
 
 @pytest.fixture(scope="function")
@@ -105,7 +128,9 @@ def multi_level_hunt(create_user_levels):
     # Answers 4 and 5 (which both lead to level 5 need the same location)
     answers.append(
         MultiAnswerFactory.create(
-            solves_level=levels[3], leads_to_level=levels[4], location=LocationFactory(longitude=40, latitude=40)
+            solves_level=levels[3],
+            leads_to_level=levels[4],
+            location=LocationFactory(longitude=40, latitude=40),
         )
     )
 

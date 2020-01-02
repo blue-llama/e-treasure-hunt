@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from hunt.models import Level, Location
+from hunt.models import Level, Location, Answer
 import json
 
 
@@ -21,6 +21,10 @@ def validate_answer_file(value):
         raise ValidationError(f"Answer location is not valid.")
 
 
-def validate_all_hints_provided(value):
-    if len(value != 4):
-        raise ValidationError(f"Must provide 4 hints.")
+def validate_answer_name(value):
+    try:
+        # If an answer with this name already exists we can't create another
+        Answer.objects.get(name=value)
+        raise ValidationError(f"Answer name already exists.")
+    except Answer.DoesNotExist:
+        return

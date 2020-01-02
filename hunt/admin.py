@@ -7,6 +7,7 @@ from hunt.models import (
     HuntEvent,
     Answer,
     UserLevel,
+    Location
 )
 
 # Register your models here.
@@ -17,3 +18,4 @@ admin.site.register(AppSetting)
 admin.site.register(HuntEvent)
 admin.site.register(Answer)
 admin.site.register(UserLevel)
+admin.site.register(Location)

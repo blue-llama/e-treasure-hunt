@@ -1,24 +1,28 @@
 from django import forms
 from django.forms import formset_factory
 from hunt.models import Level, Answer
-from hunt.validators import validate_answer_file, validate_all_hints_provided
+from hunt.validators import (
+    validate_answer_file,
+    validate_answer_name,
+)
 
 
 class LevelForm(forms.Form):
     number = forms.IntegerField(label="Number")
-    clue = forms.ImageField(widget=forms.FileInput, required=False)
-    hints = forms.ImageField(
-        widget=forms.FileInput(attrs={"multiple": True}),
-        #validators=[validate_all_hints_provided],
-        required=False
-    )
+    clue = forms.ImageField(widget=forms.FileInput)
+    hint1 = forms.ImageField(label="Hint 1", widget=forms.FileInput)
+    hint2 = forms.ImageField(label="Hint 2", widget=forms.FileInput)
+    hint3 = forms.ImageField(label="Hint 3", widget=forms.FileInput)
+    hint4 = forms.ImageField(label="Hint 4", widget=forms.FileInput)
     answered_by = forms.ModelMultipleChoiceField(
-        queryset=Answer.objects.all().values_list('name', flat=True), required=False
+        queryset=Answer.objects.all().values_list("name", flat=True), required=False
     )
 
 
 class AnswerForm(forms.Form):
-    name = forms.CharField(label="Name", max_length=100)
+    name = forms.CharField(
+        label="Name", max_length=100, validators=[validate_answer_name]
+    )
     description = forms.FileField(widget=forms.FileInput)
     info = forms.FileField(widget=forms.FileInput, validators=[validate_answer_file])
 

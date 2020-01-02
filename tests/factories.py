@@ -4,13 +4,14 @@ from factory_djoy import CleanModelFactory, UserFactory
 from decimal import Decimal
 import factory
 
+CLUE_NAME = "60bf0f67-14bd-488d-acdb-d677e9067515.png"
 
 class LevelFactory(CleanModelFactory):
     class Meta:
         model = Level
 
     number = 1
-    clues = "Test Clues"
+    clues = str([CLUE_NAME for i in range(5)])
 
 
 class MultipleLevelFactory(CleanModelFactory):
@@ -18,7 +19,7 @@ class MultipleLevelFactory(CleanModelFactory):
         model = Level
 
     number = factory.Sequence(lambda n: n)
-    clues = "Test Clues"
+    clues = str([CLUE_NAME for i in range(5)])
 
 
 class LocationFactory(CleanModelFactory):

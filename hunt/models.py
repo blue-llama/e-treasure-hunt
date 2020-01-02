@@ -62,9 +62,9 @@ class Location(models.Model):
 class Answer(models.Model):
     # The level this answer
     location = models.OneToOneField(
-        Location, on_delete=models.CASCADE, primary_key=True, related_name="answer"
+        Location, on_delete=models.CASCADE, related_name="answer"
     )
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, primary_key=True)
     description = models.TextField(max_length=5000)
     # Which level does this answer apply to
     solves_level = models.ForeignKey(

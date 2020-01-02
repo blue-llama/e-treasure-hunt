@@ -94,6 +94,9 @@ def test_can_request_hint(user_level):
 
 
 def test_get_level_numbers(rf, hunt, levels):
+    """ 
+    Test that a normal user can only get the levels available to them but staff can access all levels.
+    """
     UserLevelFactory.create(hunt=hunt, level=levels[0])
     UserLevelFactory.create(hunt=hunt, level=levels[1])
     request = rf.get("/level/1")
@@ -106,12 +109,19 @@ def test_get_level_numbers(rf, hunt, levels):
 
 
 @mock.patch("hunt.levels.is_correct_answer", return_value=True)
-def test_look_for_answers(rf, hunt, levels):
+def test_look_for_answers(mock, rf, hunt, levels):
     request = rf.get("/do-search?lat=1.0&long=1.0")
     request.user = hunt.user
     UserLevelFactory.create(hunt=hunt, level=levels[0])
     answer = AnswerFactory.create(solves_level=levels[0], leads_to_level=levels[1])
     assert look_for_answers(request) == "/level/" + str(levels[1].number)
+
+
+@mock.patch("hunt.levels.is_correct_answer", return_value=False)
+def test_look_for_answers_incorrect_answer(mock, hunt, rf):
+    request = rf.get("/do-search?lat=1.0&long=1.0")
+    request.user = hunt.user
+    assert look_for_answers(request) == "/nothing-here"
 
 
 def test_get_answer_for_last_level(hunt, levels):

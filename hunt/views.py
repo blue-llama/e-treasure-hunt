@@ -242,16 +242,15 @@ def answer_mgmt(request):
         answerformset = AnswerFormSet(request.POST, request.FILES)
         if levelform.is_valid() and answerformset.is_valid():
             try:
-                level = create_level(levelform, request.FILES)
+                level = create_level(levelform.cleaned_data, request.FILES)
                 for answerform in answerformset:
                     create_answer(level, answerform.cleaned_data)
             except:
                 raise
-            return HttpResponse("/thanks/")
     elif request.method == "GET":
         # GRT If we already have a level with some answers we should fill that in with them
-        answerformset = AnswerFormSet(request.GET or None)
-        levelform = LevelForm(request.GET or None)
+        answerformset = AnswerFormSet()
+        levelform = LevelForm()
 
     template = loader.get_template("answer-mgmt.html")
     context = {"level": levelform, "formset": answerformset}
