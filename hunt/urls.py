@@ -36,4 +36,7 @@ urlpatterns = [
     path("add-level", views.add_new_level, name="add-level"),
     path("answer-mgmt", views.answer_mgmt, name="answer-mgmt"),
     path("hint-release", views.do_release_hints, name="hint-release"),
-]
+    path("level-mgmt", views.level_mgmt, name="level-mgmt"),
+    path("graph", views.graph, name="graph"),
+    path("test", views.test, name="test"),
+]  

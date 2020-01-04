@@ -3,7 +3,7 @@ import factory
 import mock
 from hunt.hint_mgr import create_answer, create_level
 from hunt.models import Answer, Level
-from hunt.forms import AnswerForm
+from hunt.forms import AnswerUploadForm
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 from django.core.files.uploadedfile import SimpleUploadedFile

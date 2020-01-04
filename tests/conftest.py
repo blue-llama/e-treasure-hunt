@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from hunt.models import Answer, Level
-from hunt.forms import AnswerForm, LevelForm
+from hunt.forms import AnswerUploadForm, LevelUploadForm
 import pytest
 import factory
 
@@ -53,7 +53,7 @@ def build_answer_form_data():
 
 @pytest.fixture(scope="function")
 def answerform():
-    answerform = AnswerForm(
+    answerform = AnswerUploadForm(
         data=build_answer_form_data(), files=build_answer_form_files()
     )
     answerform.is_valid()
@@ -74,7 +74,7 @@ def build_level_form_files():
 
 @pytest.fixture(scope="function")
 def levelform():
-    levelform = LevelForm(data={"number": 1}, files=build_level_form_files())
+    levelform = LevelUploadForm(data={"number": 1}, files=build_level_form_files())
     levelform.is_valid()
     return levelform
 

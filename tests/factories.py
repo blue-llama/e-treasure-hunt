@@ -1,5 +1,5 @@
 from hunt.models import Answer, Level, HuntInfo, UserLevel, Location
-from hunt.forms import AnswerForm
+from hunt.forms import AnswerUploadForm
 from factory_djoy import CleanModelFactory, UserFactory
 from decimal import Decimal
 import factory

@@ -11,7 +11,7 @@ from hunt.levels import *
 from hunt.hints import *
 from hunt.hint_mgr import create_level, create_answer
 from hunt.utilities import get_users_active_levels
-from hunt.forms import AnswerFormSet, LevelForm
+from hunt.forms import AnswerUploadFormSet, LevelUploadForm
 from . import hint_mgr
 from django.contrib.auth.models import Permission
 import os
@@ -238,8 +238,8 @@ def do_release_hints(request):
 @user_passes_test(lambda u: u.is_staff)
 def answer_mgmt(request):
     if request.method == "POST":
-        levelform = LevelForm(request.POST, request.FILES)
-        answerformset = AnswerFormSet(request.POST, request.FILES)
+        levelform = LevelUploadForm(request.POST, request.FILES)
+        answerformset = AnswerUploadFormSet(request.POST, request.FILES)
         if levelform.is_valid() and answerformset.is_valid():
             try:
                 level = create_level(levelform.cleaned_data, request.FILES)
@@ -249,9 +249,11 @@ def answer_mgmt(request):
                 raise
     elif request.method == "GET":
         # GRT If we already have a level with some answers we should fill that in with them
-        answerformset = AnswerFormSet()
-        levelform = LevelForm()
+        answerformset = AnswerUploadFormSet()
+        levelform = LevelUploadForm()
 
     template = loader.get_template("answer-mgmt.html")
     context = {"level": levelform, "formset": answerformset}
     return HttpResponse(template.render(context, request))
+
+

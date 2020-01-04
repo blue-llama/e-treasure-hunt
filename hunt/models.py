@@ -23,7 +23,6 @@ class Level(models.Model):
     clues = models.CharField(max_length=500)
     # Effectively has the following fields:
     # answers - A list of answers to this level
-    # required - A list of answers requied to advance to this level
     # user_levels - The user specific portion of this level, one for each hunt/user
 
 
@@ -47,14 +46,17 @@ class Location(models.Model):
         max_digits=13,
         decimal_places=7,
         validators=[MaxValueValidator(90), MinValueValidator(-90)],
+        default=0
     )
     longitude = models.DecimalField(
         max_digits=13,
         decimal_places=7,
         validators=[MaxValueValidator(180), MinValueValidator(-180)],
+        default=0
     )
     tolerance = models.IntegerField(
-        validators=[MaxValueValidator(10000)]
+        validators=[MaxValueValidator(10000)],
+        default=100
     )  # Don't allow a tolerance any greater than 10km
 
 

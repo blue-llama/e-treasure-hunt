@@ -86,6 +86,33 @@ def test_look_for_answers_answer_both(rf, multi_level_hunt):
     assert len(HuntEvent.objects.all()) == 2
 
 
+@pytest.mark.parametrize("create_user_levels", LEVEL_ONE_AND_TWO)
+def test_future_answer(rf, multi_level_hunt):
+    hunt = multi_level_hunt.hunt
+    # Try looking for the answer to level 3 or 4 (at 40,40), this should fail
+    request = rf.get("/do-search?lat=40.0&long=40.0")
+    request.user = hunt.user
+    assert look_for_answers(request) == "/nothing-here"
+    assert get_users_active_levels(hunt) == [2, 1]
+    assert len(UserLevel.objects.all()) == 2
+
+    # Now solve level 2
+    request = rf.get("/do-search?lat=20.0&long=20.0")
+    request.user = hunt.user
+    assert look_for_answers(request) == "/level/3"
+    assert get_users_active_levels(hunt) == [3, 2, 1]
+    assert len(UserLevel.objects.all()) == 3
+    assert len(HuntEvent.objects.all()) == 1
+
+    # Now try the answer to level 3 or 4 again.
+    request = rf.get("/do-search?lat=40.0&long=40.0")
+    request.user = hunt.user
+    assert look_for_answers(request) == "/level/5"
+    assert get_users_active_levels(hunt) == [5, 3, 2, 1]
+    assert len(UserLevel.objects.all()) == 4
+    assert len(HuntEvent.objects.all()) == 2
+
+
 @pytest.mark.parametrize("create_user_levels", HALF_OF_SPLIT_LEVEL)
 def test_look_for_answers_skip_split_level(rf, multi_level_hunt, create_user_levels):
     hunt = multi_level_hunt.hunt

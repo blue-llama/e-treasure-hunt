@@ -61,7 +61,9 @@ def get_distance(search_coords, answer_coords):
 
 def is_correct_answer(latitude, longitude, location):
     """ Determine if a given co-ordinate satisfies an answer. """
-    distance = get_distance((latitude, longitude), (location.latitude, location.longitude))
+    distance = get_distance(
+        (latitude, longitude), (location.latitude, location.longitude)
+    )
     if distance <= location.tolerance:
         return True
 
@@ -148,6 +150,11 @@ def get_level_numbers(request):
 
 
 def get_answer_for_last_level(level_num):
+    """
+    Get the answer for the last level, that is, an answer which leads to this level.
+    
+    There may be multiple levels that lead to this level, assume the first has all the necessary information.
+    """
     return Answer.objects.filter(leads_to_level__number=level_num)[0]
 
 

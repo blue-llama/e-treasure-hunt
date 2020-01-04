@@ -7,7 +7,7 @@ from hunt.validators import (
 )
 
 
-class LevelForm(forms.Form):
+class LevelUploadForm(forms.Form):
     number = forms.IntegerField(label="Number")
     clue = forms.ImageField(widget=forms.FileInput)
     hint1 = forms.ImageField(label="Hint 1", widget=forms.FileInput)
@@ -18,8 +18,7 @@ class LevelForm(forms.Form):
         queryset=Answer.objects.all().values_list("name", flat=True), required=False
     )
 
-
-class AnswerForm(forms.Form):
+class AnswerUploadForm(forms.Form):
     name = forms.CharField(
         label="Name", max_length=100, validators=[validate_answer_name]
     )
@@ -27,4 +26,4 @@ class AnswerForm(forms.Form):
     info = forms.FileField(widget=forms.FileInput, validators=[validate_answer_file])
 
 
-AnswerFormSet = formset_factory(AnswerForm, extra=1)
+AnswerUploadFormSet = formset_factory(AnswerUploadForm, extra=1)
