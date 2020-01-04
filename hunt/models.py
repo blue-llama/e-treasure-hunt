@@ -7,10 +7,6 @@ class HuntInfo(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, null=True, related_name="huntinfo"
     )
-    # How do private hints work because you can be working on multiple levels? Do we even still need them?
-    private_hint_requested = models.BooleanField(default=False)
-    private_hints_shown = models.IntegerField(default=0)
-    private_hint_allowed = models.BooleanField(default=False)
     # Effectively has the following fields:
     # active_levels - a list of this user's active levels
     def __str__(self):

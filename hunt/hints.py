@@ -18,9 +18,10 @@ def log_hint_request(request, level_number):
     event.save()
 
 
-# GRT Need to fix how private hints work
 def request_hint(request):
-    # Request must be for a specific level - not allowed to request hints for old levels.
+    """
+    A request for a hint on a level.
+    """
     lvl = request.GET.get("lvl")
     if lvl == None:
         return "/oops"
@@ -39,16 +40,10 @@ def request_hint(request):
     maybe_release_hints()
     log_hint_request(request, lvl)
 
-    if hunt_info.private_hint_allowed:
-        # Special - just do a private hint.
-        hunt_info.private_hint_requested = True
-        hunt_info.private_hint_allowed = False
-        hunt_info.save()
-    else:
-        # Set hint request flags on the user and level, and save.
-        user_level = get_user_level_for_level(level, hunt_info.user)
-        user_level.hint_requested = True
-        user_level.save()
+    # Set hint request flags on the user and level, and save.
+    user_level = get_user_level_for_level(level, hunt_info.user)
+    user_level.hint_requested = True
+    user_level.save()
 
     # Redirect back to the level in question.
     return "/level/" + str(lvl)
@@ -98,42 +93,6 @@ def determine_next_hint():
     setting = AppSetting.objects.get(active=True)
     setting.next_hint = hint_time
     setting.save()
-
-
-def release_private_hints():
-    """ Release all private hints. """
-    # GRT For now do nothing because it's really hard for private hints when you've no idea what level they need a hint for.
-    return
-
-    users = HuntInfo.objects.all()
-    # Spin through users first to handle private hints.
-    for user in users:
-        # Special - maybe redact a private hint if someone else is releasing it now.
-        if user.private_hints_shown > 0:
-            usr_lvl = Level.objects.get(number=user.level)
-            if usr_lvl.hint_requested:
-                user.private_hints_shown -= 1
-                user.save()
-
-        # Special - maybe release a private hint.
-        if user.private_hint_requested:
-            usr_lvl = Level.objects.get(number=user.level)
-            if usr_lvl.hint_requested:
-                # This hint wouldn't be private - reinstate the private hint allowance for later.
-                user.private_hint_allowed = True
-            else:
-                # Release a private hint.
-                user.private_hints_shown = user.private_hints_shown + 1
-
-            # Reset hint request flags and save.
-            user.private_hint_requested = False
-            user.hint_requested = False
-            user.save()
-
-        # Reset the hint request flag for users who have requested regular hints.
-        elif user.hint_requested:
-            user.hint_requested = False
-            user.save()
 
 
 def release_level_hints():
@@ -187,8 +146,8 @@ def update_rubber_banding():
 def release_hints():
     # First figure out when we should next do this.
     determine_next_hint()
-    release_private_hints()
     release_level_hints()
+    # GRT Rubber banding probably isn't working for split-branches
     release_rubber_banding_hints()
     update_rubber_banding()
     return True

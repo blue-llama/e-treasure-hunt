@@ -20,7 +20,6 @@ def advance_level(hunt, answer):
     """ Carry out all the necessary admin to advance a level. """
     update_active_levels(hunt, answer)
     log_level_advance(hunt, answer)
-    clear_private_hints(hunt)
 
 
 def log_level_advance(hunt, answer):
@@ -31,13 +30,6 @@ def log_level_advance(hunt, answer):
     event.team = hunt.user.username
     event.level = answer.leads_to_level.number
     event.save()
-
-
-def clear_private_hints(hunt):
-    """ Clear any private hint stuff, it's been used. """
-    hunt.private_hint_requested = False
-    hunt.private_hints_shown = 0
-    hunt.save()
 
 
 def get_latitude_longitude(request):
@@ -108,10 +100,12 @@ def look_for_answers(request):
     return "/nothing-here"
 
 
-def get_hints_to_show(level, num_hints):
+def get_hints_to_show(level, user_level):
     """
     Gets the images to show for this level.
     """
+    num_hints = min(5, user_level.hints_shown)
+
     # Get the clue image names as an array, and select the ones to show.
     hints = ast.literal_eval(level.clues)
     hints_temp = hints[0:num_hints]
@@ -121,9 +115,16 @@ def get_hints_to_show(level, num_hints):
     fs = DropBoxStorage()
     for hint in hints_temp:
         hints_to_show.append(fs.url(hint))
+    return hints_to_show
 
 
 def can_request_hint(user_level):
+    """
+    Can a hint be requested for this user level.
+    A hint can't be requested if:
+    - A hint has already been requested
+    - We've displayed all the hints available
+    """
     allow_hint = True
     reason = ""
 
@@ -173,9 +174,7 @@ def maybe_load_level(request):
         # Figure out how many images to display. This is the base number for
         # the level plus any private hints the team might have access to.
         user_level = get_user_level_for_level(current_level, request.user.huntinfo)
-        num_hints = min(5, user_level.hints_shown + team.private_hints_shown)
-
-        hints_to_show = get_hints_to_show(current_level, num_hints)
+        hints_to_show = get_hints_to_show(current_level, user_level)
 
         # Is this the last level?
         is_last_level = current_level.number == get_max_level_number()

@@ -3,21 +3,22 @@ from hunt.levels import (
     update_active_levels,
     get_users_active_levels,
     advance_level,
-    clear_private_hints,
     log_level_advance,
     create_new_user_level,
     look_for_answers,
     can_request_hint,
     get_level_numbers,
     get_answer_for_last_level,
+    get_hints_to_show,
 )
 from hunt.models import HuntEvent, UserLevel
 import pytest
 import mock
 from factory_djoy import UserFactory
+from storages.backends.dropbox import DropBoxStorage
 
 pytestmark = pytest.mark.django_db
-from factories import AnswerFactory, UserLevelFactory, HuntFactory
+from factories import AnswerFactory, UserLevelFactory, HuntFactory, CLUE_NAME
 
 
 def test_correct_answer(location):
@@ -41,13 +42,6 @@ def test_update_active_levels(hunt, levels):
     assert len(hunt.active_levels.all()) == 2
     active_levels = get_users_active_levels(hunt)
     assert active_levels == [2, 1]
-
-
-def test_clear_private_hint(levels):
-    hunt = HuntFactory(private_hint_requested=True, private_hints_shown=3)
-    clear_private_hints(hunt)
-    assert not hunt.private_hint_requested
-    assert hunt.private_hints_shown == 0
 
 
 def test_advance_level(hunt, levels):
@@ -127,3 +121,13 @@ def test_look_for_answers_incorrect_answer(mock, hunt, rf):
 def test_get_answer_for_last_level(hunt, levels):
     answer = AnswerFactory.create(solves_level=levels[0], leads_to_level=levels[1])
     assert get_answer_for_last_level(levels[1].number) == answer
+
+
+def url_side_effect(url):
+    return url
+
+@mock.patch('storages.backends.dropbox.DropBoxStorage.url', side_effect=url_side_effect)
+def test_get_hints_to_show(mock, hunt, level):
+    userlevel = UserLevelFactory.create(hunt=hunt, level=level, hints_shown=3)
+    assert get_hints_to_show(level, userlevel) == [CLUE_NAME for i in range(3)]
+
