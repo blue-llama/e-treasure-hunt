@@ -7,6 +7,17 @@ from random import random
 
 next_hint_time = None
 
+
+def log_hint_request(request, level_number):
+    # Log an event to say there's been a hint request.
+    event = HuntEvent()
+    event.time = datetime.utcnow()
+    event.type = HuntEvent.HINT_REQ
+    event.team = request.user.username
+    event.level = level_number
+    event.save()
+
+
 # GRT Need to fix how private hints work
 def request_hint(request):
     # Request must be for a specific level - not allowed to request hints for old levels.
@@ -26,14 +37,7 @@ def request_hint(request):
 
     # Release hints now if they're due.
     maybe_release_hints()
-
-    # Log an event to say there's been a hint request.
-    event = HuntEvent()
-    event.time = datetime.utcnow()
-    event.type = HuntEvent.HINT_REQ
-    event.team = request.user.username
-    event.level = lvl
-    event.save()
+    log_hint_request(request, lvl)
 
     if hunt_info.private_hint_allowed:
         # Special - just do a private hint.

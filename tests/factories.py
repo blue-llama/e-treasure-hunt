@@ -6,6 +6,7 @@ import factory
 
 CLUE_NAME = "60bf0f67-14bd-488d-acdb-d677e9067515.png"
 
+
 class LevelFactory(CleanModelFactory):
     class Meta:
         model = Level
@@ -30,6 +31,7 @@ class LocationFactory(CleanModelFactory):
     latitude = "-1.2345678"
     tolerance = 100
 
+
 class AnswerFactory(CleanModelFactory):
     class Meta:
         model = Answer
@@ -51,6 +53,7 @@ class MultiLocationFactory(CleanModelFactory):
     longitude = factory.Sequence(lambda n: n * 10)
     latitude = factory.Sequence(lambda n: n * 10)
     tolerance = 100
+
 
 class MultiAnswerFactory(CleanModelFactory):
     class Meta:

@@ -3,7 +3,7 @@
 {% block content %}
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 
-<form action="/answer-mgmt" method="post" enctype="multipart/form-data">
+<form action="/level-mgmt" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <h3>Level</h3>
     {{ level.as_p }}

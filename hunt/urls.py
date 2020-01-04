@@ -32,11 +32,10 @@ urlpatterns = [
     path("oops", views.oops, name="oops"),
     path("events", views.get_hunt_events, name="events"),
     path("mgmt", views.mgmt, name="mgmt"),
-    path("hint-mgmt", views.hint_mgmt, name="hint-mgmt"),
-    path("add-level", views.add_new_level, name="add-level"),
-    path("answer-mgmt", views.answer_mgmt, name="answer-mgmt"),
-    path("hint-release", views.do_release_hints, name="hint-release"),
     path("level-mgmt", views.level_mgmt, name="level-mgmt"),
-    path("graph", views.graph, name="graph"),
-    path("test", views.test, name="test"),
+    path("hint-release", views.do_release_hints, name="hint-release"),
+
+    # The following pages have been deprecated.
+    #path("hint-mgmt", views.hint_mgmt, name="hint-mgmt"),
+    #path("add-level", views.add_new_level, name="add-level"),
 ]  

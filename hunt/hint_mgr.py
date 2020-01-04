@@ -36,6 +36,9 @@ def clone_uploaded_file(data):
 
 
 def delete_old_clue_threads(level):
+    """
+    Delete any existing clues for a given level.
+    """
     fs = DropBoxStorage()
     threads = []
     if level.clues:
@@ -55,6 +58,11 @@ def delete_old_clue_threads(level):
 
 
 def create_file_thread(fs, threads, file):
+    """
+    Create a thread that will upload this file.
+
+    :return: Name of this clue file
+    """
     extension = file.name.split(".")[-1]
     clue_name = str(uuid4()) + "." + extension
 
@@ -77,7 +85,7 @@ def create_clues_and_hints(level_number, file_dict):
         if file:
             clue_names.append(create_file_thread(fs, threads, file))
         else:
-            # If we're not uploading 
+            # If we're not uploading
             clue_names.append("")
 
     # We now pause execution on the main thread by 'joining' all of our started threads.
@@ -88,7 +96,7 @@ def create_clues_and_hints(level_number, file_dict):
 
 
 def create_level(levelform_data, file_dict):
-    level_number = levelform_data.get('number')
+    level_number = levelform_data.get("number")
     try:
         level = Level.objects.get(number=level_number)
         delete_old_clue_threads(level)
@@ -106,7 +114,7 @@ def create_answer(level, answerform_data):
     # Seek to the beginning of the file because the validator may have read the file
     answerform_data.get("info").file.seek(0)
     json_data = json.loads(answerform_data.get("info").file.read())
-    description = answerform_data.get("description").file.read().decode('utf-8')
+    description = answerform_data.get("description").file.read().decode("utf-8")
     location = Location.objects.create(
         latitude=json_data.get("latitude"),
         longitude=json_data.get("longitude"),
@@ -118,22 +126,3 @@ def create_answer(level, answerform_data):
         name=answerform_data.get("name"),
         description=description,
     )
-
-
-# GRT Ugh, this is so annoying because it expects a single description in a single file
-def upload_new_hint(request):
-    if not request.user.has_perm("hunt.add_level"):
-        return "/hint-mgmt?success=False"
-
-    if not request.POST:
-        return "/hint-mgmt?success=False"
-
-    lvl_num = request.POST.get("lvl-num")
-    fail_str = "/hint-mgmt?success=False&next=" + str(int(lvl_num))
-
-    try:
-        create_answers(lvl_info.get("answers"), level)
-    except:
-        return fail_str
-
-    return "/hint-mgmt?success=True&next=" + str(int(lvl_num) + 1)

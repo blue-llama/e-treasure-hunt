@@ -1,6 +1,6 @@
 import pytest
 import mock
-from hunt.hints import request_hint, release_level_hints
+from hunt.hints import request_hint, release_level_hints, log_hint_request
 from hunt.models import UserLevel, HuntEvent
 
 pytestmark = pytest.mark.django_db
@@ -17,6 +17,14 @@ def test_request_hint_on_non_active_level(rf, hunt, levels):
     request = rf.get("/hint", {"lvl": 2})
     request.user = hunt.user
     assert request_hint(request) == "/oops"
+
+
+def test_log_hint_event(rf, hunt):
+    request = rf.get("/hint", {"lvl": 5})
+    request.user = hunt.user
+    log_hint_request(request, request.GET.get("lvl", None))
+    assert len(HuntEvent.objects.all()) == 1
+    assert len(HuntEvent.objects.filter(type="REQ")) == 1
 
 
 @mock.patch("hunt.hints.maybe_release_hints")

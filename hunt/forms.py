@@ -18,6 +18,7 @@ class LevelUploadForm(forms.Form):
         queryset=Answer.objects.all().values_list("name", flat=True), required=False
     )
 
+
 class AnswerUploadForm(forms.Form):
     name = forms.CharField(
         label="Name", max_length=100, validators=[validate_answer_name]

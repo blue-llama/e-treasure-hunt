@@ -209,19 +209,6 @@ def mgmt(request):
     return HttpResponse(template.render(context, request))
 
 
-# Level uploader page.
-@user_passes_test(lambda u: u.is_staff)
-def hint_mgmt(request):
-    template = loader.get_template("hint-mgmt.html")
-
-    next = request.GET.get("next")
-    if next == None:
-        next = 1
-
-    context = {"success": request.GET.get("success"), "next": next}
-    return HttpResponse(template.render(context, request))
-
-
 # Upload level endpoint.
 @user_passes_test(lambda u: u.is_staff)
 def add_new_level(request):
@@ -236,7 +223,7 @@ def do_release_hints(request):
 
 # Answer uploader page.
 @user_passes_test(lambda u: u.is_staff)
-def answer_mgmt(request):
+def level_mgmt(request):
     if request.method == "POST":
         levelform = LevelUploadForm(request.POST, request.FILES)
         answerformset = AnswerUploadFormSet(request.POST, request.FILES)
@@ -252,7 +239,7 @@ def answer_mgmt(request):
         answerformset = AnswerUploadFormSet()
         levelform = LevelUploadForm()
 
-    template = loader.get_template("answer-mgmt.html")
+    template = loader.get_template("level-mgmt.html")
     context = {"level": levelform, "formset": answerformset}
     return HttpResponse(template.render(context, request))
 
