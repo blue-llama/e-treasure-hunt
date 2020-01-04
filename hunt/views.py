@@ -244,3 +244,11 @@ def level_mgmt(request):
     return HttpResponse(template.render(context, request))
 
 
+@user_passes_test(lambda u: u.is_staff)
+def level_graph(request):
+    template = loader.get_template("level-graph.html")
+    answers = Answer.objects.all()
+    levels = Level.objects.all()
+    context = {"levels": levels, "answers": answers}
+    return HttpResponse(template.render(context, request))
+

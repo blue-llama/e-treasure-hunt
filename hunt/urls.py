@@ -34,6 +34,7 @@ urlpatterns = [
     path("mgmt", views.mgmt, name="mgmt"),
     path("level-mgmt", views.level_mgmt, name="level-mgmt"),
     path("hint-release", views.do_release_hints, name="hint-release"),
+    path("level-graph", views.level_graph, name="graph")
 
     # The following pages have been deprecated.
     #path("hint-mgmt", views.hint_mgmt, name="hint-mgmt"),
