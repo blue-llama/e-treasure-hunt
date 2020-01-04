@@ -3,7 +3,7 @@
 {% block content %}
 
 {% if current_level != highest_level %}
-  <div class="banner">Your team is on Level {{ team_level }}! <a href="/level/{{ team_level }}">Join them</a></div>
+  <div class="banner">Your team is on Level {{ team_level }}! <a href="/level/{{ highest_level }}">Join them</a></div>
 {% endif %}
   <div class="heading"><h1>{{ level_name }}</h1><h2>Level {{ current_level }}</h2></div>
 
