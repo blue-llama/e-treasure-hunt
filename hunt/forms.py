@@ -19,11 +19,14 @@ class LevelUploadForm(forms.Form):
     )
 
 
-class AnswerUploadForm(forms.Form):
+class BaseAnswerUploadForm(forms.Form):
     name = forms.CharField(
         label="Name", max_length=100, validators=[validate_answer_name]
     )
     description = forms.FileField(widget=forms.FileInput)
+
+
+class AnswerUploadForm(BaseAnswerUploadForm):
     info = forms.FileField(widget=forms.FileInput, validators=[validate_answer_file])
 
 

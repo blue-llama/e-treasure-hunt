@@ -1,7 +1,7 @@
 import pytest
 import factory
 import mock
-from hunt.hint_mgr import create_answer, create_level
+from hunt.hint_mgr import create_answer, create_level, create_first_level
 from hunt.models import Answer, Level
 from hunt.forms import AnswerUploadForm
 from django.core.exceptions import ValidationError
@@ -29,7 +29,21 @@ def test_create_answer(level, answerform):
     assert answer.description == "Some text for a description"
     assert answer.name == "Answer name"
     assert level == answer.solves_level
-    answer.clean()
+
+
+def test_create_first_level(baseanswerform):
+    create_first_level(baseanswerform.cleaned_data, baseanswerform.files)
+    level = Level.objects.get(number=0)
+    assert level
+    assert level.clues == ""
+    assert level.number == 0
+    answer = Answer.objects.get(name="Answer name")
+    assert answer.location.latitude == Decimal(0)
+    assert answer.location.longitude == Decimal(0)
+    assert answer.location.tolerance == 100
+    assert answer.description == "Some text for a description"
+    assert answer.name == "Answer name"
+    assert level == answer.solves_level
 
 
 @mock.patch("hunt.hint_mgr.create_file_thread", return_value=CLUE_NAME)

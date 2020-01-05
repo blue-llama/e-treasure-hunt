@@ -138,6 +138,7 @@ def get_furthest_active_level():
 def update_rubber_banding():
     # Update the last max level to reflect that we've done rubber-banding.
     # Get the current max level and save it off.
+    settings = AppSetting.objects.get(active=True)
     settings.last_max_level = settings.max_level
     settings.max_level = get_furthest_active_level()
     settings.save()
@@ -147,7 +148,6 @@ def release_hints():
     # First figure out when we should next do this.
     determine_next_hint()
     release_level_hints()
-    # GRT Rubber banding probably isn't working for split-branches
     release_rubber_banding_hints()
     update_rubber_banding()
     return True

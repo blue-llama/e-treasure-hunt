@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from hunt.models import Answer, Level
-from hunt.forms import AnswerUploadForm, LevelUploadForm
+from hunt.forms import AnswerUploadForm, LevelUploadForm, BaseAnswerUploadForm
 import pytest
 import factory
 
@@ -46,6 +46,11 @@ def build_answer_form_files():
         "info": info,
     }
 
+def build_base_answer_form_files():
+    with open("tests/input/description.txt", "rb") as file:
+        description = SimpleUploadedFile("description.txt", file.read())
+    return {"description": description}
+
 
 def build_answer_form_data():
     return {"name": "Answer name"}
@@ -55,6 +60,15 @@ def build_answer_form_data():
 def answerform():
     answerform = AnswerUploadForm(
         data=build_answer_form_data(), files=build_answer_form_files()
+    )
+    answerform.is_valid()
+    return answerform
+
+
+@pytest.fixture(scope="function")
+def baseanswerform():
+    answerform = BaseAnswerUploadForm(
+        data=build_answer_form_data(), files=build_base_answer_form_files()
     )
     answerform.is_valid()
     return answerform

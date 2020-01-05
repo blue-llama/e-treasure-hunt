@@ -9,9 +9,9 @@ from django.template import loader
 from hunt.models import *
 from hunt.levels import *
 from hunt.hints import *
-from hunt.hint_mgr import create_level, create_answer
+from hunt.hint_mgr import create_level, create_answer, create_first_level
 from hunt.utilities import get_users_active_levels
-from hunt.forms import AnswerUploadFormSet, LevelUploadForm
+from hunt.forms import AnswerUploadFormSet, LevelUploadForm, BaseAnswerUploadForm
 from . import hint_mgr
 from django.contrib.auth.models import Permission
 import os
@@ -85,7 +85,7 @@ def home(request):
 
     context = {
         "display_name": request.user.get_full_name(),
-        "highest_level": get_users_active_levels(request.user)[0],
+        "highest_level": sorted(get_level_numbers(request), reverse=True)[0],
     }
     return HttpResponse(template.render(context, request))
 
@@ -108,7 +108,7 @@ def oops(request):
 
     # Shouldn't be here. Show an error page.
     template = loader.get_template("oops.html")
-    context = {"levels": get_users_active_levels(request.user)}
+    context = {"levels": get_level_numbers(request)}
 
     # Return the rendered template.
     return HttpResponse(template.render(context, request))
@@ -185,7 +185,7 @@ def nothing(request):
 
     template = loader.get_template("nothing.html")
 
-    context = {"levels": get_users_active_levels(request.user)}
+    context = {"levels": get_level_numbers(request)}
     return HttpResponse(template.render(context, request))
 
 
@@ -221,7 +221,7 @@ def do_release_hints(request):
     return redirect("/mgmt?success=" + str(release_hints()))
 
 
-# Answer uploader page.
+# Level uploader page, uploads a level and multiple answers.
 @user_passes_test(lambda u: u.is_staff)
 def level_mgmt(request):
     if request.method == "POST":
@@ -235,12 +235,28 @@ def level_mgmt(request):
             except:
                 raise
     elif request.method == "GET":
-        # GRT If we already have a level with some answers we should fill that in with them
+        # This could be improved by passing information about existing levels but since this is mostly files
+        # there's not much that can be filled in.
         answerformset = AnswerUploadFormSet()
         levelform = LevelUploadForm()
 
     template = loader.get_template("level-mgmt.html")
     context = {"level": levelform, "formset": answerformset}
+    return HttpResponse(template.render(context, request))
+
+
+# Initial Level uploader, which just requires a name and a description.
+@user_passes_test(lambda u: u.is_staff)
+def initial_level_mgmt(request):
+    if request.method == "POST":
+        answerform = BaseAnswerUploadForm(request.POST, request.FILES)
+        if answerform.is_valid():
+            create_first_level(answerform.cleaned_data, request.FILES)
+            return redirect('level-mgmt')
+
+    answerform = BaseAnswerUploadForm()
+    template = loader.get_template("initial-level-mgmt.html")
+    context = {"form": answerform}
     return HttpResponse(template.render(context, request))
 
 

@@ -63,8 +63,7 @@ def is_correct_answer(latitude, longitude, location):
 
 
 def create_new_user_level(hunt, level):
-    user_level = UserLevel(hunt=hunt, level=level)
-    user_level.save()
+    UserLevel.objects.create(hunt=hunt, level=level)
 
 
 def update_active_levels(hunt, answer):
@@ -156,7 +155,10 @@ def get_answer_for_last_level(level_num):
     
     There may be multiple levels that lead to this level, assume the first has all the necessary information.
     """
-    return Answer.objects.filter(leads_to_level__number=level_num)[0]
+    try:
+        return Answer.objects.filter(leads_to_level__number=level_num)[0]
+    except:
+        return None
 
 
 def maybe_load_level(request):
@@ -169,11 +171,25 @@ def maybe_load_level(request):
     if level_num in active_level_numbers:
         # Get the level objects for this level and the one before.
         answer_for_last_level = get_answer_for_last_level(level_num)
+        # If we can't find any answers that lead to this page then something has gone wrong.
+        if not answer_for_last_level:
+            template = loader.get_template("oops.html")
+            context = {"levels": sorted(active_level_numbers, reverse=True)}
+            return template.render(context, request)
+
         current_level = Level.objects.get(number=level_num)
 
         # Figure out how many images to display. This is the base number for
         # the level plus any private hints the team might have access to.
-        user_level = get_user_level_for_level(current_level, request.user.huntinfo)
+        # If this is a staff member, they may not have a user level so create one
+        # for them.
+        try:
+            user_level = get_user_level_for_level(current_level, request.user)
+        except RuntimeError:
+            if request.user.is_staff:
+                create_new_user_level(request.user.huntinfo, current_level)
+                user_level = get_user_level_for_level(current_level, request.user)
+
         hints_to_show = get_hints_to_show(current_level, user_level)
 
         # Is this the last level?
@@ -189,15 +205,15 @@ def maybe_load_level(request):
         # Prepare the template and context.
         template = loader.get_template("level.html")
         context = {
-            "highest_level": all_active_levels[0],
+            "highest_level": active_level_numbers[0],
             "current_level": current_level.number,
             "level_name": answer_for_last_level.name.upper(),
             "hints": hints_to_show,
             "desc_paras": desc_paras,
             "allow_hint": allow_hint,
             "reason": reason,
-            "latitude": answer_for_last_level.latitude,
-            "longitude": answer_for_last_level.longitude,
+            "latitude": answer_for_last_level.location.latitude,
+            "longitude": answer_for_last_level.location.longitude,
             "is_last": is_last_level,
         }
     else:

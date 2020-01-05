@@ -1,0 +1,11 @@
+{% extends 'mgmt-base.html' %}
+
+{% block content %}
+
+<form action="/initial-level-mgmt" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h3>Level</h3>
+    {{ form.as_p }}
+    <div><input class="gobutton" type="submit" value="SUBMIT"></div>
+</form>
+{% endblock %}

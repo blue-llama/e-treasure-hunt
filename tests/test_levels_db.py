@@ -64,7 +64,10 @@ def test_create_new_user_level(hunt, level):
     assert len(UserLevel.objects.all()) == 0
     create_new_user_level(hunt, level)
     assert len(UserLevel.objects.all()) == 1
-    assert UserLevel.objects.get(hunt=hunt, level=level)
+    user_level = UserLevel.objects.get(hunt=hunt, level=level)
+    assert user_level
+    assert user_level.hints_shown == 1
+    assert not user_level.hint_requested
 
 
 def test_can_request_hint_hint_requested(user_level):

@@ -13,7 +13,28 @@ class HuntInfo(models.Model):
         return self.user.username + "_hunt"
 
 
-# Level.
+class Location(models.Model):
+    """
+    A location for which there can be an answer. This exists so that we can validate creation of these objects
+    """
+
+    latitude = models.DecimalField(
+        max_digits=13,
+        decimal_places=7,
+        validators=[MaxValueValidator(90), MinValueValidator(-90)],
+        default=0,
+    )
+    longitude = models.DecimalField(
+        max_digits=13,
+        decimal_places=7,
+        validators=[MaxValueValidator(180), MinValueValidator(-180)],
+        default=0,
+    )
+    tolerance = models.IntegerField(
+        validators=[MaxValueValidator(10000)], default=100
+    )  # Don't allow a tolerance any greater than 10km
+
+
 class Level(models.Model):
     number = models.IntegerField(primary_key=True)
     clues = models.CharField(max_length=500)
@@ -22,49 +43,17 @@ class Level(models.Model):
     # user_levels - The user specific portion of this level, one for each hunt/user
 
 
-# Each level can be solved independently by a team so a different number of hints may be displayed for each and requested by each.
-class UserLevel(models.Model):
-    hunt = models.ForeignKey(
-        HuntInfo, on_delete=models.CASCADE, null=True, related_name="active_levels"
-    )
-    level = models.ForeignKey(
-        Level, on_delete=models.CASCADE, null=True, related_name="user_levels"
-    )
-    hints_shown = models.IntegerField(default=1)
-    hint_requested = models.BooleanField(default=False)
-
-
-class Location(models.Model):
-    """
-    A location for which there can be an answer. This exists so that we can validate creation of these objects
-    """
-    latitude = models.DecimalField(
-        max_digits=13,
-        decimal_places=7,
-        validators=[MaxValueValidator(90), MinValueValidator(-90)],
-        default=0
-    )
-    longitude = models.DecimalField(
-        max_digits=13,
-        decimal_places=7,
-        validators=[MaxValueValidator(180), MinValueValidator(-180)],
-        default=0
-    )
-    tolerance = models.IntegerField(
-        validators=[MaxValueValidator(10000)],
-        default=100
-    )  # Don't allow a tolerance any greater than 10km
-
-
-# Answer to a level, this needs to be a separate model such that a level can have multiple answers (hence the ForeignKey)
 class Answer(models.Model):
-    # The level this answer
+    """
+    Answer to a level, this needs to be a separate model such that a level can have multiple answers (hence the ForeignKey)
+    """
+
     location = models.OneToOneField(
         Location, on_delete=models.CASCADE, related_name="answer"
     )
     name = models.CharField(max_length=100, primary_key=True)
     description = models.TextField(max_length=5000)
-    # Which level does this answer apply to
+    # Which level does this answer solve
     solves_level = models.ForeignKey(
         Level, on_delete=models.CASCADE, null=True, related_name="answers"
     )
@@ -72,6 +61,23 @@ class Answer(models.Model):
     leads_to_level = models.ForeignKey(
         Level, on_delete=models.CASCADE, blank=True, null=True, related_name="+"
     )
+
+
+class UserLevel(models.Model):
+    """
+    A class representing a single level for a user. UserLevels track the progress of a user through the hunt, so UserLevels only exist
+    for levels a team has completed or is working on.
+    """
+    # Each hunt has multiple levels, so use a ForeignKey
+    hunt = models.ForeignKey(
+        HuntInfo, on_delete=models.CASCADE, null=True, related_name="active_levels"
+    )
+    # Each level can be solved by each user, so use a ForeignKey
+    level = models.ForeignKey(
+        Level, on_delete=models.CASCADE, null=True, related_name="user_levels"
+    )
+    hints_shown = models.IntegerField(default=1)
+    hint_requested = models.BooleanField(default=False)
 
 
 # Hint release time (start of 40 minute window, UTC).

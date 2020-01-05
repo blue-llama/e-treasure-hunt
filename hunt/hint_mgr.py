@@ -95,6 +95,26 @@ def create_clues_and_hints(level_number, file_dict):
     return clue_names
 
 
+def create_first_level(baseanswerform_data, file_dict):
+    # Seek to the beginning of the file because the validator may have read the file
+    try:
+        level = Level.objects.get(number=0)
+    except Level.DoesNotExist:
+        level = Level(number=0)
+
+    level.clues = ""
+    level.save()
+    location = Location.objects.create()
+    description = baseanswerform_data.get("description").file.read().decode("utf-8")
+    Answer.objects.create(
+        location=location,
+        solves_level=level,
+        name=baseanswerform_data.get("name"),
+        description=description,
+    )
+    return
+
+
 def create_level(levelform_data, file_dict):
     level_number = levelform_data.get("number")
     try:
