@@ -23,10 +23,6 @@ You do not need to use Google Maps. If you choose not to, an alternate map is av
 - Heroku account
 - Heroku CLI installed
 
-## Initial Configuration
-
-Setup:
-=======
 ## Setup
 - Create your Heroku app
 - Set the DJ_KEY environment variable to a secret string
