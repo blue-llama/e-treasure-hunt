@@ -54,6 +54,10 @@ A Location is a geographical point (longitude and latitude) with a tolerance (in
 
 You can view the current hunt layout by navigating to \<domain\>/level-graph.
 
+# Testing changes
+
+Unit tests are available in the (hunt/tests/) folder. They can be run using pytest by running the command `pytest tests/`. Remember that you need to create migrations for any model changes that you make `python manage.py makemigrations hunt` and then migrate the database `pythong manage.py migrate` before running the tests.
+
 # Creating Levels
 
 ## Required Files
