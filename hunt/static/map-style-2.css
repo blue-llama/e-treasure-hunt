@@ -135,6 +135,10 @@ section.special {
   position: relative !important;
 }
 
+.leaflet-bottom {
+  position: fixed !important;
+}
+
 @media only screen and (max-width: 800px) {
   .gobutton {
     padding: 15px;
