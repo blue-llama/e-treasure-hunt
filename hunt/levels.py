@@ -18,7 +18,7 @@ from storages.backends.dropbox import DropBoxStorage
 
 def advance_level(hunt, answer):
     """ Carry out all the necessary admin to advance a level. """
-    update_active_levels(hunt, answer)
+    create_new_user_level(hunt, answer.leads_to_level)
     log_level_advance(hunt, answer)
 
 
@@ -62,13 +62,13 @@ def is_correct_answer(latitude, longitude, location):
     return False
 
 
-def create_new_user_level(hunt, level):
-    UserLevel.objects.create(hunt=hunt, level=level)
+def create_new_user_level(hunt, level, hints_shown=1):
+    UserLevel.objects.create(hunt=hunt, level=level, hints_shown=hints_shown)
 
 
 def update_active_levels(hunt, answer):
     """ Update the hunt info's list of active levels. """
-    create_new_user_level(hunt, answer.leads_to_level)
+    
 
 
 def get_search_level(request):
@@ -187,7 +187,7 @@ def maybe_load_level(request):
             user_level = get_user_level_for_level(current_level, request.user)
         except RuntimeError:
             if request.user.is_staff:
-                create_new_user_level(request.user.huntinfo, current_level)
+                create_new_user_level(request.user.huntinfo, current_level, 5)
                 user_level = get_user_level_for_level(current_level, request.user)
 
         hints_to_show = get_hints_to_show(current_level, user_level)

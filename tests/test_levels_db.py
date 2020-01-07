@@ -30,20 +30,6 @@ def test_incorrect_answer(location):
     assert not is_correct_answer(1.2345678, 180 - 1.2345678, location)
 
 
-def test_update_active_levels(hunt, levels):
-    # Create a hunt with only 1 active level
-    UserLevelFactory.create(hunt=hunt, level=levels[0])
-    assert len(hunt.active_levels.all()) == 1
-    # Create an answer for the first level
-    answer = AnswerFactory.create(solves_level=levels[0], leads_to_level=levels[1])
-    update_active_levels(hunt, answer)
-
-    # We should now have 2 active levels, numbered 1 and 2
-    assert len(hunt.active_levels.all()) == 2
-    active_levels = get_users_active_levels(hunt)
-    assert active_levels == [2, 1]
-
-
 def test_advance_level(hunt, levels):
     UserLevelFactory.create(hunt=hunt, level=levels[0])
     answer = AnswerFactory.create(solves_level=levels[0], leads_to_level=levels[1])
@@ -67,6 +53,16 @@ def test_create_new_user_level(hunt, level):
     user_level = UserLevel.objects.get(hunt=hunt, level=level)
     assert user_level
     assert user_level.hints_shown == 1
+    assert not user_level.hint_requested
+
+
+def test_create_new_user_level_custom_hints(hunt, level):
+    assert len(UserLevel.objects.all()) == 0
+    create_new_user_level(hunt, level, 5)
+    assert len(UserLevel.objects.all()) == 1
+    user_level = UserLevel.objects.get(hunt=hunt, level=level)
+    assert user_level
+    assert user_level.hints_shown == 5
     assert not user_level.hint_requested
 
 
