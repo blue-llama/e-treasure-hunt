@@ -19,7 +19,7 @@ def request_hint(request):
         return "/oops"
         
     # Get the level that the hint has been requested for.
-    level = Level.objects.filter(number = lvl)[0]
+    level = UserLevel.objects.filter(level = lvl, user = request.user)[0]
     
     # Release hints now if they're due.
     maybe_release_hints()
@@ -32,18 +32,13 @@ def request_hint(request):
     event.level = lvl
     event.save()
     
-    if (hunt_info.private_hint_allowed):
-        # Special - just do a private hint.
-        hunt_info.hint_requested = True
-        hunt_info.private_hint_requested = True
-        hunt_info.private_hint_allowed = False
-        hunt_info.save()
-    else:
-        # Set hint request flags on the user and level, and save.
-        hunt_info.hint_requested = True
-        level.hint_requested = True
-        level.save()
-        hunt_info.save()
+    # Set hint request flag on the user level, and save.
+    level.hint_requested = True
+    level.save()
+    
+    # Set hint request flag on the user, and save.
+    hunt_info.hint_requested = True
+    hunt_info.save()
     
     # Redirect back to the level in question.
     return "/level/" + str(lvl)
@@ -97,65 +92,35 @@ def release_hints():
     determine_next_hint()
         
     # Now get all the users and levels.
-    levels = Level.objects.all()
+    levels = UserLevel.objects.all()
     users = HuntInfo.objects.all()
     
-    # Spin through users first to handle private hints.
+    # Reset all team hint request flags
     for user in users:
-        # Special - maybe redact a private hint if someone else is releasing it now.
-        if (user.private_hints_shown > 0):
-            usr_lvl = Level.objects.get(number=user.level)
-            if (usr_lvl.hint_requested):
-                user.private_hints_shown -= 1
-                user.save()
-    
-        # Special - maybe release a private hint.
-        if user.private_hint_requested:
-            usr_lvl = Level.objects.get(number=user.level)
-            if (usr_lvl.hint_requested):
-                # This hint wouldn't be private - reinstate the private hint allowance for later.
-                user.private_hint_allowed = True
-            else:
-                # Release a private hint.
-                user.private_hints_shown = user.private_hints_shown + 1
-            
-            # Reset hint request flags and save.
-            user.private_hint_requested = False
+        if user.hint_requested:
             user.hint_requested = False
             user.save()
         
-        # Reset the hint request flag for users who have requested regular hints.
-        elif user.hint_requested:
-            user.hint_requested = False
-            user.save()
-    
     # Release hints for levels where this has been requested, and reset the flag.
     for level in levels:
         if level.hint_requested:
         
             # Log an event to say we're doing this.
             event = HuntEvent()
+            event.team = level.user.username
             event.time = datetime.utcnow()
             event.type = HuntEvent.HINT_REL
-            event.level = level.number
+            event.level = level.level
             event.save()
             
             # Increment the number of hints and reset the flag.
             level.hints_shown = level.hints_shown + 1
             level.hint_requested = False
             level.save()
-            
-    # Rubber banding - we release hints for all clues which the most advanced team has passed during the last hint period.
-    settings = AppSetting.objects.get(active=True);
-    if (settings.last_max_level != settings.max_level):
-        for ii in range(settings.last_max_level, settings.max_level):
-            rubber_band_lvl = Level.objects.get(number=ii)
-            if (rubber_band_lvl.hints_shown < 2):
-                rubber_band_lvl.hints_shown = 2
-                rubber_band_lvl.save()
     
     # Update the last max level to reflect that we've done rubber-banding.
     # Get the current max level and save it off.
+    settings = AppSetting.objects.get(active=True)
     settings.last_max_level = settings.max_level
     settings.max_level = HuntInfo.objects.order_by('-level')[0].level
     

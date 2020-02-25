@@ -6,9 +6,6 @@ class HuntInfo(models.Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE,  null=True)
   level = models.IntegerField(default=1)
   hint_requested = models.BooleanField(default=False)
-  private_hint_requested = models.BooleanField(default=False)
-  private_hints_shown = models.IntegerField(default=0)
-  private_hint_allowed = models.BooleanField(default=False)
   def __str__(self):
     return self.user.username + "_hunt"
 
@@ -21,6 +18,10 @@ class Level(models.Model):
     longitude = models.DecimalField(max_digits=13, decimal_places=7)
     tolerance = models.IntegerField()
     clues = models.CharField(max_length=500)
+    
+class UserLevel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    level = models.IntegerField()
     hints_shown = models.IntegerField(default=1)
     hint_requested = models.BooleanField(default=False)
     

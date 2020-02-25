@@ -22,12 +22,15 @@ def advance_level(user, level):
         event.team = user.username
         event.level = level
         event.save()
+        
+        # Create a UserLevel for this team and level
+        user_level = UserLevel()
+        user_level.user = user
+        user_level.level = level
+        user_level.save()
 
         # Update the team's level, clear any hint request flags and save.
         hunt_info.level = level
-        hunt_info.hint_requested = False
-        hunt_info.private_hint_requested = False
-        hunt_info.private_hints_shown = 0
         hunt_info.save()
     
 def look_for_level(request):
@@ -87,24 +90,24 @@ def maybe_load_level(request):
     
     # Get the user's hunt progress information, including current level.
     team = request.user.huntinfo
-    team_level = team.level
+    team_level_num = team.level
     
     # Figure out the maximum level number.
     max_level_num = Level.objects.order_by('-number')[0].number
     
     # Hack - admins can see all levels.
     if (request.user.is_staff):
-        team_level = max_level_num
+        team_level_num = max_level_num
     
     # Only load the level if it's one the team has access to.
-    if level_num <= team_level:
+    if level_num <= team_level_num:
         # Get the level objects for this level and the one before.
         last_level = Level.objects.filter(number = level_num - 1)[0]
         current_level = Level.objects.filter(number = level_num)[0]
+        team_level = UserLevel.objects.filter(level = level_num, user=request.user)[0]
         
-        # Figure out how many images to display. This is the base number for
-        # the level plus any private hints the team might have access to.
-        num_hints = min(5, current_level.hints_shown + team.private_hints_shown)
+        # Figure out how many images to display.
+        num_hints = min(5, team_level.hints_shown)
         
         # Get the clue image names as an array, and select the ones to show.
         hints = ast.literal_eval(current_level.clues)        
@@ -132,14 +135,14 @@ def maybe_load_level(request):
         if (team.hint_requested):
             allow_hint = False
             reason = "Your team has already requested a hint."
-        elif (current_level.hints_shown >= 5):
+        elif (team_level.hints_shown >= 5):
             allow_hint = False
             reason = "No more hints are available on this level."
         
         # Prepare the template and context.
         template = loader.get_template('level.html')
         context = {
-            'team_level': team_level,
+            'team_level': team_level_num,
             'level_number': current_level.number,
             'level_name': last_level.name.upper(),
             'hints': hints_to_show,
