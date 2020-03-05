@@ -1,0 +1,6 @@
+*cov*
+.idea
+*pytest_cache*
+*pycache*
+jquery*
+*/migrations/*
