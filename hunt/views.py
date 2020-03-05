@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required, permission_required, 
 from django.template import loader
 from hunt.models import *
 from hunt.levels import *
-from hunt.hints import *
+from hunt.hint_request import request_hint
+from hunt.hint_release import maybe_release_hints
 from . import hint_mgr
 from django.contrib.auth.models import Permission
 import os
@@ -115,7 +116,7 @@ def map(request):
     if (is_working_hours()):
         return HttpResponse(loader.get_template('work-time.html').render({}, request))
     
-    settings = AppSetting.objects.get(active=True);
+    settings = AppSetting.objects.get(active=True)
     template = loader.get_template('map-base.html')
     if (settings.use_alternative_map):
         template = loader.get_template('maphold.html')

@@ -20,10 +20,15 @@ class Level(models.Model):
     clues = models.CharField(max_length=500)
     
 class UserLevel(models.Model):
+    """
+    A class representing a single level for a user. Tracks hints specific
+    to that user.
+    """
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     level = models.IntegerField()
     hints_shown = models.IntegerField(default=1)
     hint_requested = models.BooleanField(default=False)
+    next_hint_release = models.DateTimeField(null=True, blank=True)
     
 # Hint release time (start of 40 minute window, UTC).
 class HintTime(models.Model):
