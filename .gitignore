@@ -1,0 +1,9 @@
+*cov*
+.idea
+*pytest_cache*
+*pycache*
+jquery*
+*/migrations/*
+venv
+static
+style.css

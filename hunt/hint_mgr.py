@@ -1,4 +1,4 @@
-from hunt.models import HuntInfo, Level, HintTime, AppSetting, HuntEvent
+from hunt.models import HuntInfo, Level, AppSetting, HuntEvent
 from storages.backends.dropbox import DropBoxStorage
 import json
 from uuid import uuid4
