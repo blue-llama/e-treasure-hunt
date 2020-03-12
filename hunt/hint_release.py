@@ -17,14 +17,13 @@ def maybe_release_hints():
             event.time = datetime.utcnow()
             event.team = level.user.username
             event.type = HuntEvent.HINT_REL
-            event.level = level.number
+            event.level = level.level
             event.save()
 
             release_hint(level)
 
-            level.user.hint_requested = False
-            level.user.save()
-
+            level.user.huntinfo.hint_requested = False
+            level.user.huntinfo.save()
 
 def check_hint_release(level):
     """

@@ -87,5 +87,5 @@ def process_hint_request(userlevel):
     """
     delay = determine_hint_delay(userlevel)
     userlevel.hint_requested = True
-    userlevel.next_hint_release = datetime.now() + datetime.timedelta(minutes=delay)
+    userlevel.next_hint_release = datetime.now() + timedelta(minutes=delay)
     userlevel.save()
