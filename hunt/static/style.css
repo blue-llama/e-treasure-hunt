@@ -230,6 +230,7 @@ h3 {
   max-height: 66vw;
   padding: 10px 0px;
   object-fit: contain;
+  border-bottom: 1px solid black;
 }
 
 .label {
