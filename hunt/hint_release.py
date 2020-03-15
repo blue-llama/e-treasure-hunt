@@ -5,22 +5,22 @@ from hunt.models import *
 from datetime import datetime
 
 
-def maybe_release_hints():
+def maybe_release_hint(user):
     """
-    Release any requested hints that have been delayed for the appropriate
+    Release any requested hint that has been delayed for the appropriate
     length of time.
     """
-    for hunt_info in HuntInfo.objects.all():
-        if check_hint_release(hunt_info):
-            # Log an event
-            event = HuntEvent()
-            event.time = datetime.utcnow()
-            event.team = hunt_info.user.username
-            event.type = HuntEvent.HINT_REL
-            event.level = hunt_info.level
-            event.save()
+    hunt_info = user.huntinfo
+    if check_hint_release(hunt_info):
+        # Log an event
+        event = HuntEvent()
+        event.time = datetime.utcnow()
+        event.team = user.username
+        event.type = HuntEvent.HINT_REL
+        event.level = hunt_info.level
+        event.save()
 
-            release_hint(hunt_info)
+        release_hint(hunt_info)
 
 
 def check_hint_release(hunt_info):

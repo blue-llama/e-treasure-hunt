@@ -5,7 +5,7 @@ from django.template import loader
 from hunt.models import *
 from hunt.levels import *
 from hunt.hint_request import request_hint
-from hunt.hint_release import maybe_release_hints
+from hunt.hint_release import maybe_release_hint
 from . import hint_mgr
 from django.contrib.auth.models import Permission
 import os
@@ -91,7 +91,7 @@ def level(request):
     if (is_working_hours()):
         return HttpResponse(loader.get_template('work-time.html').render({}, request))
 
-    maybe_release_hints()
+    maybe_release_hint(request.user)
     return HttpResponse(maybe_load_level(request))
 
 # Error page.
