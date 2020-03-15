@@ -229,6 +229,7 @@ h3 {
   max-width: 88vw;
   max-height: 66vw;
   padding: 10px 0px;
+  object-fit: contain;
 }
 
 .label {
