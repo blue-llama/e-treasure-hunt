@@ -157,7 +157,7 @@ def maybe_load_level(request):
         # Shouldn't be here. Show an error page.
         template = loader.get_template('oops.html')
         context = {
-            'team_level': team_level
+            'team_level': team_level_num
         }
 
     # Return the rendered template.
