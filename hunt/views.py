@@ -82,7 +82,6 @@ def home(request):
     context = {
         'display_name': request.user.get_full_name(),
         'team_level': team_level,
-        'hint_requested': hunt_info.hint_requested,
     }
     return HttpResponse(template.render(context, request))
 

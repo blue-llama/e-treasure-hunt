@@ -23,14 +23,11 @@ def advance_level(user, level):
         event.level = level
         event.save()
 
-        # Create a UserLevel for this team and level
-        user_level = UserLevel()
-        user_level.user = user
-        user_level.level = level
-        user_level.save()
-
         # Update the team's level, clear any hint request flags and save.
         hunt_info.level = level
+        hunt_info.hints_shown = 1
+        hunt_info.hint_requested = False
+        hunt_info.next_hint_release = None
         hunt_info.save()
 
 def look_for_level(request):
@@ -104,10 +101,9 @@ def maybe_load_level(request):
         # Get the level objects for this level and the one before.
         last_level = Level.objects.filter(number = level_num - 1)[0]
         current_level = Level.objects.filter(number = level_num)[0]
-        team_level = UserLevel.objects.filter(level = level_num, user=request.user)[0]
 
         # Figure out how many images to display.
-        num_hints = min(5, team_level.hints_shown)
+        num_hints = min(5, team.hints_shown)
 
         # Get the clue image names as an array, and select the ones to show.
         hints = ast.literal_eval(current_level.clues)
@@ -132,10 +128,10 @@ def maybe_load_level(request):
 
         # Don't allow a hint if one's already been requested by the team, or
         # if max hints are already shown.
-        if (team.hint_requested):
+        if team.hint_requested:
             allow_hint = False
             reason = "Your team has already requested a hint."
-        elif (team_level.hints_shown >= 5):
+        elif team.hints_shown >= 5:
             allow_hint = False
             reason = "No more hints are available on this level."
 

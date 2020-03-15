@@ -3,11 +3,13 @@ from django.contrib.auth.models import User
 
 # Team hunt progress info.
 class HuntInfo(models.Model):
-  user = models.OneToOneField(User, on_delete=models.CASCADE,  null=True)
-  level = models.IntegerField(default=1)
-  hint_requested = models.BooleanField(default=False)
-  def __str__(self):
-    return self.user.username + "_hunt"
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    level = models.IntegerField(default=1)
+    hints_shown = models.IntegerField(default=1)
+    hint_requested = models.BooleanField(default=False)
+    next_hint_release = models.DateTimeField(null=True, blank=True)
+    def __str__(self):
+        return self.user.username + "_hunt"
 
 # Level.
 class Level(models.Model):
@@ -18,17 +20,6 @@ class Level(models.Model):
     longitude = models.DecimalField(max_digits=13, decimal_places=7)
     tolerance = models.IntegerField()
     clues = models.CharField(max_length=500)
-
-class UserLevel(models.Model):
-    """
-    A class representing a single level for a user. Tracks hints specific
-    to that user.
-    """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    level = models.IntegerField()
-    hints_shown = models.IntegerField(default=1)
-    hint_requested = models.BooleanField(default=False)
-    next_hint_release = models.DateTimeField(null=True, blank=True)
 
 # Hint release time (start of 40 minute window, UTC).
 class HintTime(models.Model):

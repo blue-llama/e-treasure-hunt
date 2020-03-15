@@ -10,36 +10,34 @@ def maybe_release_hints():
     Release any requested hints that have been delayed for the appropriate
     length of time.
     """
-    for level in UserLevel.objects.all():
-        if check_hint_release(level):
+    for hunt_info in HuntInfo.objects.all():
+        if check_hint_release(hunt_info):
             # Log an event
             event = HuntEvent()
             event.time = datetime.utcnow()
-            event.team = level.user.username
+            event.team = hunt_info.user.username
             event.type = HuntEvent.HINT_REL
-            event.level = level.level
+            event.level = hunt_info.level
             event.save()
 
-            release_hint(level)
+            release_hint(hunt_info)
 
-            level.user.huntinfo.hint_requested = False
-            level.user.huntinfo.save()
 
-def check_hint_release(level):
+def check_hint_release(hunt_info):
     """
     Check whether we've passed the threshold to release the next hint.
     """
     time_now = datetime.now()
-    return (level.hint_requested and
-            level.next_hint_release is not None and
-            time_now > level.next_hint_release)
+    return (hunt_info.hint_requested and
+            hunt_info.next_hint_release is not None and
+            time_now > hunt_info.next_hint_release)
 
 
-def release_hint(level):
+def release_hint(hunt_info):
     """
-    Updates the UserLevel object to take into account that a hint has been released.
+    Updates the HuntInfo object to take into account that a hint has been released.
     """
-    level.hints_shown += 1
-    level.hint_requested = False
-    level.next_hint_release = None
-    level.save()
+    hunt_info.hints_shown += 1
+    hunt_info.hint_requested = False
+    hunt_info.next_hint_release = None
+    hunt_info.save()

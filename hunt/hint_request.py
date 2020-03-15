@@ -17,16 +17,13 @@ def request_hint(request):
 
     # Check that this a request for the user's current level.
     lvl = int(lvl)
-    hunt_info = HuntInfo.objects.filter(user=request.user)[0]
+    hunt_info = request.user.huntinfo
     if lvl != hunt_info.level:
         return "/oops"
 
-    # Get the level that the hint has been requested for.
-    level = UserLevel.objects.filter(level=lvl, user=request.user)[0]
-
     # If a hint request is already in progress, there's nothing to do here.
-    # Just sent the user back to the level they're on.
-    if level.hint_requested or hunt_info.hint_requested:
+    # Just send the user back to the level they're on.
+    if hunt_info.hint_requested:
         return "/level/" + str(lvl)
 
     # Log an event to say there's been a hint request.
@@ -37,11 +34,7 @@ def request_hint(request):
     event.level = lvl
     event.save()
 
-    process_hint_request(level)
-
-    # Set hint request flag on the user, and save.
-    hunt_info.hint_requested = True
-    hunt_info.save()
+    process_hint_request(hunt_info)
 
     # Redirect back to the level in question.
     return "/level/" + str(lvl)
@@ -49,43 +42,43 @@ def request_hint(request):
 
 def get_furthest_active_level():
     """
-    Finds the furthest level anyone has reached in the hunt by
-    checking for the existence of UserLevel objects.
+    Finds the furthest level anyone has reached in the hunt.
     """
     hunts = HuntInfo.objects.all()
-    return max(hunt.level for hunt in hunts)
+    return max(hunt.level for hunt in hunts if not hunt.user.is_staff)
 
 
-def in_the_lead(userlevel):
+def in_the_lead(hunt_info):
     """
     A user is in the lead if they are at the furthest active level
     anyone has reached and have received the most (or joint most)
     hints for that level.
     """
-    if userlevel.level < get_furthest_active_level():
+    if hunt_info.level < get_furthest_active_level():
         return False
 
-    users_on_this_level = UserLevel.objects.filter(level=userlevel.level)
-    return userlevel.hints_shown == max(ul.hints_shown for ul in users_on_this_level)
+    hunts = HuntInfo.objects.filter(level=hunt_info.level)
+    max_hints = max(hunt.hints_shown for hunt in hunts if not hunt.user.is_staff)
+    return hunt_info.hints_shown == max_hints
 
 
-def determine_hint_delay(userlevel):
+def determine_hint_delay(hunt_info):
     """
     Determine how long a user has to wait before seeing the next
     hint. Users who are in the lead have to wait longer than others.
     """
-    if in_the_lead(userlevel):
+    if in_the_lead(hunt_info):
         return LEADER_HINT_WAIT_TIME
-    else:
-        return NON_LEADER_HINT_WAIT_TIME
+
+    return NON_LEADER_HINT_WAIT_TIME
 
 
-def process_hint_request(userlevel):
+def process_hint_request(hunt_info):
     """
-    Sets fields on the userlevel to indicate that a hint request is in
+    Sets fields on the HuntInfo to indicate that a hint request is in
     progress.
     """
-    delay = determine_hint_delay(userlevel)
-    userlevel.hint_requested = True
-    userlevel.next_hint_release = datetime.now() + timedelta(minutes=delay)
-    userlevel.save()
+    delay = determine_hint_delay(hunt_info)
+    hunt_info.hint_requested = True
+    hunt_info.next_hint_release = datetime.now() + timedelta(minutes=delay)
+    hunt_info.save()
