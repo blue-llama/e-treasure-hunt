@@ -18,7 +18,7 @@ class Level(models.Model):
     longitude = models.DecimalField(max_digits=13, decimal_places=7)
     tolerance = models.IntegerField()
     clues = models.CharField(max_length=500)
-    
+
 class UserLevel(models.Model):
     """
     A class representing a single level for a user. Tracks hints specific
@@ -29,7 +29,7 @@ class UserLevel(models.Model):
     hints_shown = models.IntegerField(default=1)
     hint_requested = models.BooleanField(default=False)
     next_hint_release = models.DateTimeField(null=True, blank=True)
-    
+
 # Hint release time (start of 40 minute window, UTC).
 class HintTime(models.Model):
     time = models.TimeField()
@@ -38,7 +38,7 @@ class HintTime(models.Model):
         return string_rep
 
 # App settings. Use Boolean primary key to ensure there's only one active.
-# Could make this into a table with string key-values, but we'd lose automatic 
+# Could make this into a table with string key-values, but we'd lose automatic
 # field types, and need to parse them from strings.
 class AppSetting(models.Model):
     active = models.BooleanField(primary_key=True)
@@ -46,7 +46,7 @@ class AppSetting(models.Model):
     last_max_level = models.IntegerField(default=1)
     max_level = models.IntegerField(default=1)
     use_alternative_map = models.BooleanField(default=False)
-    
+
 # Event log for the hunt.
 class HuntEvent(models.Model):
     HINT_REQ = 'REQ'
@@ -57,20 +57,20 @@ class HuntEvent(models.Model):
         (HINT_REL, 'Hints released'),
         (CLUE_ADV, 'Advanced level'),
     ]
-    
+
     time = models.DateTimeField()
     type = models.CharField(max_length=3, choices=EVENT_TYPES)
     team = models.CharField(max_length=127, default="")
     level = models.IntegerField(default=0)
-    
+
     def __str__(self):
         string_rep = "At " + str(self.time) + " "
-        
+
         if (self.type == HuntEvent.HINT_REQ):
             string_rep += self.team.upper() + " requested a hint on level " + str(self.level)
         elif (self.type == HuntEvent.CLUE_ADV):
             string_rep += self.team.upper() + " progressed to level " + str(self.level)
         else:
             string_rep += "a hint was added on level " + str(self.level)
-            
+
         return string_rep

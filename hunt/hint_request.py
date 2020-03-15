@@ -14,21 +14,21 @@ def request_hint(request):
     lvl = request.GET.get('lvl')
     if (lvl == None):
         return "oops"
-        
+
     # Check that this a request for the user's current level.
-    lvl = int(lvl) 
+    lvl = int(lvl)
     hunt_info = HuntInfo.objects.filter(user=request.user)[0]
     if lvl != hunt_info.level:
         return "/oops"
-        
+
     # Get the level that the hint has been requested for.
     level = UserLevel.objects.filter(level=lvl, user=request.user)[0]
-    
+
     # If a hint request is already in progress, there's nothing to do here.
     # Just sent the user back to the level they're on.
     if level.hint_requested or hunt_info.hint_requested:
         return "/level/" + str(lvl)
-    
+
     # Log an event to say there's been a hint request.
     event = HuntEvent()
     event.time = datetime.utcnow()
@@ -36,13 +36,13 @@ def request_hint(request):
     event.team = request.user.username
     event.level = lvl
     event.save()
-    
+
     process_hint_request(level)
-    
+
     # Set hint request flag on the user, and save.
     hunt_info.hint_requested = True
     hunt_info.save()
-    
+
     # Redirect back to the level in question.
     return "/level/" + str(lvl)
 
