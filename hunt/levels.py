@@ -9,6 +9,8 @@ from datetime import datetime
 
 from storages.backends.dropbox import DropBoxStorage
 
+import hunt.slack as slack
+
 def advance_level(user, level):
     hunt_info = HuntInfo.objects.filter(user=user)[0]
 
@@ -29,6 +31,11 @@ def advance_level(user, level):
         hunt_info.hint_requested = False
         hunt_info.next_hint_release = None
         hunt_info.save()
+
+        # Cancel any pending slack announcements.
+        if hunt_info.slack_channel:
+            slack.cancel_pending_announcements(hunt_info.slack_channel)
+
 
 def look_for_level(request):
 

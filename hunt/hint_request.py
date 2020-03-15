@@ -4,6 +4,8 @@ Functions for requesting hints.
 from hunt.models import *
 from datetime import datetime, timedelta
 
+import hunt.slack as slack
+
 # Time in minutes to wait for a hint to be dropped after a request.
 LEADER_HINT_WAIT_TIME = 40
 NON_LEADER_HINT_WAIT_TIME = 20
@@ -35,6 +37,12 @@ def request_hint(request):
     event.save()
 
     process_hint_request(hunt_info)
+
+    # If we have a slack channel for this user, schedule an announcement to coincide
+    # with the hint release.
+    if hunt_info.slack_channel:
+        timestamp = int(hunt_info.next_hint_release.timestamp())
+        slack.schedule_hint_announcement(hunt_info.slack_channel, timestamp)
 
     # Redirect back to the level in question.
     return "/level/" + str(lvl)
