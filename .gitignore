@@ -4,5 +4,5 @@
 *pycache*
 jquery*
 venv
-static
+/static
 style.css
