@@ -7,11 +7,11 @@ from geopy import distance
 from storages.backends.dropbox import DropBoxStorage
 
 import hunt.slack as slack
-from hunt.models import HuntEvent, HuntInfo, Level
+from hunt.models import HuntEvent, Level
 
 
 def advance_level(user: User, level: int) -> None:
-    hunt_info = HuntInfo.objects.filter(user=user)[0]
+    hunt_info = user.huntinfo
 
     # User may only advance by one level at a time
     if level == hunt_info.level + 1:
@@ -63,7 +63,7 @@ def look_for_level(request: HttpRequest) -> str:
             return "/oops"
 
     # Get the level object corresponding to the search.
-    level = Level.objects.filter(number=search_level)[0]
+    level = Level.objects.get(number=search_level)
 
     # Get the distance between the search location and the level solution
     level_coords = (level.latitude, level.longitude)
@@ -102,8 +102,8 @@ def maybe_load_level(request: HttpRequest) -> str:
     # Only load the level if it's one the team has access to.
     if level_num <= team_level_num:
         # Get the level objects for this level and the one before.
-        last_level = Level.objects.filter(number=level_num - 1)[0]
-        current_level = Level.objects.filter(number=level_num)[0]
+        last_level = Level.objects.get(number=level_num - 1)
+        current_level = Level.objects.get(number=level_num)
 
         # Figure out how many images to display.
         num_hints = min(5, team.hints_shown)
