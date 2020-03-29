@@ -69,11 +69,7 @@ def look_for_level(request):
     # Get the distance between the search location and the level solution
     level_coords = (level.latitude, level.longitude)
     search_coords = (lat, long)
-
-    # TODO: This doesn't work well around the antipode of the solution.
-    # Consider simply catching the resulting exception and rejecting the
-    # guess - it could hardly be further from the right answer!
-    dist = distance.vincenty(search_coords, level_coords).m
+    dist = distance.distance(search_coords, level_coords).m
 
     # If the distance is small enough, accept the solution.
     if (dist <= level.tolerance):
