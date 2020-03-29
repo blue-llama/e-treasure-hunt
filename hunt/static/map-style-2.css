@@ -1,6 +1,6 @@
 body {
   color: #567;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   width: 100%;
   margin: 0px;
   text-align: center;
@@ -42,7 +42,7 @@ body {
   flex-direction: row;
   width: 100%;
   padding-right: 30px;
-  justify-content:flex-end;
+  justify-content: flex-end;
 }
 
 .gobutton {
@@ -143,25 +143,25 @@ section.special {
   .gobutton {
     padding: 15px;
   }
-  
+
   .geocoder-control-input {
     width: 500px !important;
   }
-  
+
   .geocoder-control-suggestions {
     width: 500px !important;
   }
 }
 
-@media only screen and (max-width: 550px) {  
+@media only screen and (max-width: 550px) {
   .google-gobutton {
     margin: 30px 10px !important;
   }
-  
+
   .geocoder-control-input {
     width: 350px !important;
   }
-  
+
   .geocoder-control-suggestions {
     width: 350px !important;
   }
@@ -171,27 +171,27 @@ section.special {
   .alt-gobutton {
     margin: 0px 10px !important;
   }
-  
+
   #autocomplete {
     margin: 5px auto 0px auto !important;
   }
-  
+
   .gm-bundled-control {
     display: none !important;
   }
 }
 
-@media only screen and (max-width: 400px) {  
+@media only screen and (max-width: 400px) {
   .geocoder-control-input {
     width: 200px !important;
   }
-    
+
   .geocoder-control-suggestions {
     width: 200px !important;
   }
 }
 
-@media only screen and (max-width: 350px) {  
+@media only screen and (max-width: 350px) {
   .top .right {
     display: none !important;
   }

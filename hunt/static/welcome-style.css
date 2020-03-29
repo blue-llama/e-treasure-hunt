@@ -12,15 +12,27 @@ body {
 }
 
 @media only screen and (max-height: 800px) {
-  .top { height: 80px !important; }
-  h1 { margin-bottom: 30px !important; }
+  .top {
+    height: 80px !important;
+  }
+  h1 {
+    margin-bottom: 30px !important;
+  }
 }
 
 @media only screen and (max-height: 450px) {
-  .top { height: 50px !important; }
-  h1 { margin-bottom: 10px !important; }
-  .gobutton { padding: 15px !important; }
-  .right { padding-right: 15px !important; }
+  .top {
+    height: 50px !important;
+  }
+  h1 {
+    margin-bottom: 10px !important;
+  }
+  .gobutton {
+    padding: 15px !important;
+  }
+  .right {
+    padding-right: 15px !important;
+  }
 }
 
 .top {
@@ -44,7 +56,7 @@ body {
   flex-direction: row;
   width: 100%;
   padding-right: 30px;
-  justify-content:flex-end;
+  justify-content: flex-end;
 }
 
 .content {
@@ -84,16 +96,16 @@ h1 {
 }
 
 .form-field input {
-    border: none;
-    height: 2.1em;
-    width: 9em;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    margin-top: 5px;
-    background-color: #fff;
-    text-align: center;
-    color: #345;
-    font-size: 0.9em;
+  border: none;
+  height: 2.1em;
+  width: 9em;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  margin-top: 5px;
+  background-color: #fff;
+  text-align: center;
+  color: #345;
+  font-size: 0.9em;
 }
 
 .submit {

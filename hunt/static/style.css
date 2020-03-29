@@ -1,6 +1,6 @@
 body {
   color: #567;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   width: 100%;
   margin: 0px;
   text-align: center;
@@ -8,14 +8,16 @@ body {
 }
 
 @media only screen and (max-width: 500px) {
-  .level-label { display: none; }
+  .level-label {
+    display: none;
+  }
 
   .level-list .gobutton {
-      padding: 10px 15px !important;
-      border-radius: 25px;
-      width: 2em;
-      justify-content: center;
-      display: flex;
+    padding: 10px 15px !important;
+    border-radius: 25px;
+    width: 2em;
+    justify-content: center;
+    display: flex;
   }
 }
 
@@ -24,7 +26,9 @@ body {
     margin-top: 50px !important;
     font-size: 2.5rem !important;
   }
-  h2 { font-size: 1.8rem !important; }
+  h2 {
+    font-size: 1.8rem !important;
+  }
 }
 
 @media only screen and (max-height: 700px) {
@@ -32,8 +36,12 @@ body {
     margin-top: 40px !important;
     font-size: 2rem !important;
   }
-  h2 { font-size: 1.5rem !important; }
-  .story p { margin-bottom: 0px !important; }
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  .story p {
+    margin-bottom: 0px !important;
+  }
 }
 
 @media only screen and (max-height: 600px) {
@@ -41,8 +49,12 @@ body {
     margin-top: 30px !important;
     font-size: 1.8rem !important;
   }
-  h2 { font-size: 1.2rem !important; }
-  h3 { font-size: 0.9rem !important; }
+  h2 {
+    font-size: 1.2rem !important;
+  }
+  h3 {
+    font-size: 0.9rem !important;
+  }
 }
 
 .top {
@@ -78,7 +90,7 @@ body {
   flex-direction: row;
   width: 100%;
   padding-right: 30px;
-  justify-content:flex-end;
+  justify-content: flex-end;
 }
 
 .banner {
@@ -141,13 +153,13 @@ h3 {
 
 .v-center {
   height: 100%;
-  display:flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.level-list  {
+.level-list {
   margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
@@ -155,7 +167,9 @@ h3 {
   padding: 0px 10vw;
 }
 
-.level-label { padding-right: 0.3rem; }
+.level-label {
+  padding-right: 0.3rem;
+}
 
 .level-list .gobutton {
   padding: 10px 20px;
@@ -238,16 +252,16 @@ h3 {
 }
 
 .numinput {
-    border: 2px solid #bbb;
-    height: 1.8em;
-    width: 10em;
-    border-radius: 5px;
-    background-color: #fff;
-    padding-left: 1em;
-    text-align: center;
-    color: #345;
-    font-size: 1.2em;
-    margin-bottom: 20px;
+  border: 2px solid #bbb;
+  height: 1.8em;
+  width: 10em;
+  border-radius: 5px;
+  background-color: #fff;
+  padding-left: 1em;
+  text-align: center;
+  color: #345;
+  font-size: 1.2em;
+  margin-bottom: 20px;
 }
 
 .reason {
