@@ -1,13 +1,13 @@
 from datetime import datetime
 
+from django.contrib.auth.models import User
 from django.http.request import HttpRequest
-from django.http.response import HttpResponse
 from django.template import loader
 from geopy import distance
 from storages.backends.dropbox import DropBoxStorage
 
 import hunt.slack as slack
-from hunt.models import HuntEvent, HuntInfo, Level, User
+from hunt.models import HuntEvent, HuntInfo, Level
 
 
 def advance_level(user: User, level: int) -> None:
@@ -155,10 +155,11 @@ def maybe_load_level(request: HttpRequest) -> str:
         context = {"team_level": team_level_num}
 
     # Return the rendered template.
-    return template.render(context, request)
+    rendered: str = template.render(context, request)
+    return rendered
 
 
-def list_levels(request: HttpRequest) -> HttpResponse:
+def list_levels(request: HttpRequest) -> str:
     # Get the team's current level.
     team_level = request.user.huntinfo.level
 
@@ -176,4 +177,5 @@ def list_levels(request: HttpRequest) -> HttpResponse:
     context = {"team_level": team_level, "levels": levels}
 
     # Return the rendered template.
-    return template.render(context, request)
+    rendered: str = template.render(context, request)
+    return rendered

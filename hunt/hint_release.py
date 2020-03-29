@@ -3,7 +3,9 @@ Functions for releasing hints.
 """
 from datetime import datetime
 
-from hunt.models import HuntEvent, HuntInfo, User
+from django.contrib.auth.models import User
+
+from hunt.models import HuntEvent, HuntInfo
 
 
 def maybe_release_hint(user: User) -> None:
