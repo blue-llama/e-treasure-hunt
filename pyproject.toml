@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "e-treasure-hunt"
+version = "0.1.0"
+description = ""
+authors = ["David Hotham <david.hotham@blueyonder.co.uk>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+django = "^3.0.4"
+django-heroku = "^0.3.1"
+django-storages = "^1.9.1"
+dropbox = "^9.5.0"
+geopy = "^1.21.0"
+gunicorn = "^20.0.4"
+pytz = "^2019.3"
+requests = "^2.23.0"
+
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
+flake8 = "^3.7.9"
+isort = "^4.3.21"
+mypy = "^0.770"
+django-stubs = "^1.5.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
