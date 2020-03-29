@@ -110,14 +110,11 @@ def maybe_load_level(request: HttpRequest) -> str:
         num_hints = min(5, team.hints_shown)
 
         # Get the clue image names as an array, and select the ones to show.
-        hints = ast.literal_eval(current_level.clues)
-        hints_temp = hints[0:num_hints]
+        hints = current_level.clues[0:num_hints]
 
         # Get actual hint URLs from DropBox.
-        hints_to_show = []
         fs = DropBoxStorage()
-        for hint in hints_temp:
-            hints_to_show.append(fs.url(hint))
+        hint_urls = [fs.url(hint) for hint in hints]
 
         # Is this the last level?
         is_last_level = current_level.number == max_level_num
@@ -145,7 +142,7 @@ def maybe_load_level(request: HttpRequest) -> str:
             "team_level": team_level_num,
             "level_number": current_level.number,
             "level_name": last_level.name.upper(),
-            "hints": hints_to_show,
+            "hints": hint_urls,
             "desc_paras": desc_paras,
             "allow_hint": allow_hint,
             "reason": reason,

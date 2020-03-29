@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
@@ -23,7 +24,7 @@ class Level(models.Model):
     latitude = models.DecimalField(max_digits=13, decimal_places=7)
     longitude = models.DecimalField(max_digits=13, decimal_places=7)
     tolerance = models.IntegerField()
-    clues = models.CharField(max_length=500)
+    clues = ArrayField(models.CharField(max_length=48), default=list)
 
 
 # App settings. Use Boolean primary key to ensure there's only one active.

@@ -53,22 +53,20 @@ def upload_new_hint(request: HttpRequest) -> str:
     fs = DropBoxStorage()
     threads = []
 
-    if level.clues:
-        old_clues = ast.literal_eval(level.clues)
-        for old_clue in old_clues:
-            if fs.exists(old_clue):
-                process = Thread(target=delete_file, args=[fs, old_clue])
-                process.start()
-                threads.append(process)
+    for old_clue in level.clues:
+        if fs.exists(old_clue):
+            process = Thread(target=delete_file, args=[fs, old_clue])
+            process.start()
+            threads.append(process)
 
-    clue_names = []
+    new_clues = []
     for file_ in lvl_photos:
         extension = file_.name.split(".")[-1]
         if extension.lower() not in ("png", "jpg"):
             return fail_str
 
         clue_name = str(uuid4()) + "." + extension
-        clue_names.append(clue_name)
+        new_clues.append(clue_name)
 
         process = Thread(target=save_file, args=[fs, file_, clue_name])
         process.start()
@@ -88,7 +86,7 @@ def upload_new_hint(request: HttpRequest) -> str:
     level.latitude = lvl_info.get("latitude")
     level.longitude = lvl_info.get("longitude")
     level.tolerance = lvl_info.get("tolerance")
-    level.clues = str(clue_names)
+    level.clues = new_clues
 
     # We now pause execution on the main thread by 'joining' all of our started threads.
     # This ensures that each Dropbox operation completes before we return.
