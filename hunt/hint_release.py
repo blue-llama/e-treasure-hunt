@@ -3,10 +3,10 @@ Functions for releasing hints.
 """
 from datetime import datetime
 
-from hunt.models import HuntEvent
+from hunt.models import HuntEvent, HuntInfo, User
 
 
-def maybe_release_hint(user):
+def maybe_release_hint(user: User) -> None:
     """
     Release any requested hint that has been delayed for the appropriate
     length of time.
@@ -24,7 +24,7 @@ def maybe_release_hint(user):
         release_hint(hunt_info)
 
 
-def check_hint_release(hunt_info):
+def check_hint_release(hunt_info: HuntInfo) -> bool:
     """
     Check whether we've passed the threshold to release the next hint.
     """
@@ -36,7 +36,7 @@ def check_hint_release(hunt_info):
     )
 
 
-def release_hint(hunt_info):
+def release_hint(hunt_info: HuntInfo) -> None:
     """
     Updates the HuntInfo object to take into account that a hint has been released.
     """

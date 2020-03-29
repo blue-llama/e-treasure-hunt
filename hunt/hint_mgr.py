@@ -7,30 +7,34 @@ from django.core.files.uploadedfile import (
     InMemoryUploadedFile,
     SimpleUploadedFile,
     TemporaryUploadedFile,
+    UploadedFile,
 )
+from django.http.request import HttpRequest
 from storages.backends.dropbox import DropBoxStorage
 
 from hunt.models import Level
 
 
-def delete_file(fs, name):
+def delete_file(fs: DropBoxStorage, name: str) -> None:
     fs.delete(name)
 
 
-def save_file(fs, file, name):
-    fs.save(name, file)
+def save_file(fs: DropBoxStorage, file_: UploadedFile, name: str) -> None:
+    fs.save(name, file_)
 
 
 # Hacky fix for django file upload bug
-def clone_uploaded_file(data):
+def clone_uploaded_file(data: UploadedFile) -> UploadedFile:
     if isinstance(data, InMemoryUploadedFile):
         return SimpleUploadedFile(data.name, data.read(), data.content_type)
-    elif isinstance(data, TemporaryUploadedFile):
+
+    if isinstance(data, TemporaryUploadedFile):
         data.file.close_called = True
+
     return data
 
 
-def upload_new_hint(request):
+def upload_new_hint(request: HttpRequest) -> str:
     if not request.user.has_perm("hunt.add_level"):
         return "/hint-mgmt?success=False"
 
@@ -71,16 +75,16 @@ def upload_new_hint(request):
                 threads.append(process)
 
     clue_names = []
-    for file in lvl_photos:
-        extension = file.name.split(".")[-1]
-        print(file.name)
+    for file_ in lvl_photos:
+        extension = file_.name.split(".")[-1]
+        print(file_.name)
         if (extension.lower() != "png") and (extension.lower() != "jpg"):
             return fail_str
         clue_name = str(uuid4()) + "." + extension
         clue_names.append(clue_name)
 
         # Hack - Django keeps closing files. Clone it to keep it open.
-        file_clone = clone_uploaded_file(file)
+        file_clone = clone_uploaded_file(file_)
 
         process = Thread(target=save_file, args=[fs, file_clone, clue_name])
         process.start()

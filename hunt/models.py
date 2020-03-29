@@ -11,7 +11,7 @@ class HuntInfo(models.Model):
     next_hint_release = models.DateTimeField(null=True, blank=True)
     slack_channel = models.CharField(max_length=16, default="", blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.user.username + "_hunt"
 
 
@@ -30,7 +30,7 @@ class Level(models.Model):
 class HintTime(models.Model):
     time = models.TimeField()
 
-    def __str__(self):
+    def __str__(self) -> str:
         string_rep = "Hint for " + str(self.time) + " UTC - expect 0-40 mins later"
         return string_rep
 
@@ -62,7 +62,7 @@ class HuntEvent(models.Model):
     team = models.CharField(max_length=127, default="")
     level = models.IntegerField(default=0)
 
-    def __str__(self):
+    def __str__(self) -> str:
         string_rep = "At " + str(self.time) + " "
 
         if self.type == HuntEvent.HINT_REQ:

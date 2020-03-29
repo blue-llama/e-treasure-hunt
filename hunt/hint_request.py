@@ -3,6 +3,8 @@ Functions for requesting hints.
 """
 from datetime import datetime, timedelta
 
+from django.http.request import HttpRequest
+
 import hunt.slack as slack
 from hunt.models import HuntEvent, HuntInfo
 
@@ -11,7 +13,7 @@ LEADER_HINT_WAIT_TIME = 40
 NON_LEADER_HINT_WAIT_TIME = 20
 
 
-def request_hint(request):
+def request_hint(request: HttpRequest) -> str:
     # Request must be for a specific level - not allowed to request hints for old
     # levels.
     lvl = request.GET.get("lvl")
@@ -49,7 +51,7 @@ def request_hint(request):
     return "/level/" + str(lvl)
 
 
-def get_furthest_active_level():
+def get_furthest_active_level() -> int:
     """
     Finds the furthest level anyone has reached in the hunt.
     """
@@ -57,7 +59,7 @@ def get_furthest_active_level():
     return max(hunt.level for hunt in hunts if not hunt.user.is_staff)
 
 
-def in_the_lead(hunt_info):
+def in_the_lead(hunt_info: HuntInfo) -> bool:
     """
     A user is in the lead if they are at the furthest active level
     anyone has reached and have received the most (or joint most)
@@ -71,7 +73,7 @@ def in_the_lead(hunt_info):
     return hunt_info.hints_shown == max_hints
 
 
-def determine_hint_delay(hunt_info):
+def determine_hint_delay(hunt_info: HuntInfo) -> int:
     """
     Determine how long a user has to wait before seeing the next
     hint. Users who are in the lead have to wait longer than others.
@@ -82,7 +84,7 @@ def determine_hint_delay(hunt_info):
     return NON_LEADER_HINT_WAIT_TIME
 
 
-def process_hint_request(hunt_info):
+def process_hint_request(hunt_info: HuntInfo) -> None:
     """
     Sets fields on the HuntInfo to indicate that a hint request is in
     progress.

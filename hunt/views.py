@@ -1,8 +1,10 @@
 import csv
+# import datetime
 import os
 
+# import pytz
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import redirect
 from django.template import loader
 
@@ -15,42 +17,44 @@ from . import hint_mgr
 
 
 # Simple true-false function to determine whether the hunt is live.
-def is_working_hours():
+def is_working_hours() -> bool:
     return False
-    # time = datetime.utcnow()
 
-    # if (time.weekday() > 4):
-    # return False
+    # london = pytz.timezone("Europe/London")
+    # now = datetime.datetime.now(tz=london)
 
-    # if (time.hour < 8):
-    # return False
-    # elif (time.hour > 16):
-    # return False
-    # elif ((time.hour == 16) and (time.minute >= 30)):
-    # return False
-    # elif ((time.hour == 11) and (time.minute >= 30)):
-    # return False
-    # elif ((time.hour == 12) and (time.minute < 30)):
-    # return False
+    # if now.weekday() > 4:
+    #     return False
+
+    # clock = now.time()
+
+    # if clock < datetime.time(9, 0):
+    #     return False
+
+    # if datetime.time(12, 30) < clock < datetime.time(13, 30):
+    #     return False
+
+    # if datetime.time(17, 30) < clock:
+    #     return False
 
     # return True
 
 
 # Send users to the hunt and admins to management.
 @login_required
-def go_home(request):
+def go_home(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
     if request.user.is_staff:
         return redirect("/mgmt")
-    else:
-        return redirect("/home")
+
+    return redirect("/home")
 
 
 # Admin-only page to download hunt event logs.
 @user_passes_test(lambda u: u.is_staff)
-def get_hunt_events(request):
+def get_hunt_events(request: HttpRequest) -> HttpResponse:
 
     meta = HuntEvent._meta
     field_names = [field.name for field in meta.fields]
@@ -70,7 +74,7 @@ def get_hunt_events(request):
 
 # Hunt homepage.
 @login_required
-def home(request):
+def home(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
@@ -89,7 +93,7 @@ def home(request):
 
 # Level page.
 @login_required
-def level(request):
+def level(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
@@ -99,7 +103,7 @@ def level(request):
 
 # Error page.
 @login_required
-def oops(request):
+def oops(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
@@ -113,7 +117,7 @@ def oops(request):
 
 # Map (or alt map).
 @login_required
-def map(request):
+def map(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
@@ -128,7 +132,7 @@ def map(request):
 
 # Alt map.
 @login_required
-def alt_map(request):
+def alt_map(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
@@ -139,7 +143,7 @@ def alt_map(request):
 
 # Level list.
 @login_required
-def levels(request):
+def levels(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
@@ -148,7 +152,7 @@ def levels(request):
 
 # Search request endpoint.
 @login_required
-def do_search(request):
+def do_search(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
@@ -157,7 +161,7 @@ def do_search(request):
 
 # Coordinate search page.
 @login_required
-def search(request):
+def search(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
@@ -171,7 +175,7 @@ def search(request):
 
 # Nothing here.
 @login_required
-def nothing(request):
+def nothing(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
@@ -185,7 +189,7 @@ def nothing(request):
 
 # Request a hint.
 @login_required
-def hint(request):
+def hint(request: HttpRequest) -> HttpResponse:
     if is_working_hours():
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
@@ -194,7 +198,7 @@ def hint(request):
 
 # Management home.
 @user_passes_test(lambda u: u.is_staff)
-def mgmt(request):
+def mgmt(request: HttpRequest) -> HttpResponse:
     template = loader.get_template("mgmt.html")
 
     context = {"success": request.GET.get("success")}
@@ -203,7 +207,7 @@ def mgmt(request):
 
 # Level uploader page.
 @user_passes_test(lambda u: u.is_staff)
-def hint_mgmt(request):
+def hint_mgmt(request: HttpRequest) -> HttpResponse:
     template = loader.get_template("hint-mgmt.html")
 
     next_level = request.GET.get("next")
@@ -216,5 +220,5 @@ def hint_mgmt(request):
 
 # Upload level endpoint.
 @user_passes_test(lambda u: u.is_staff)
-def add_new_hint(request):
+def add_new_hint(request: HttpRequest) -> HttpResponse:
     return redirect(hint_mgr.upload_new_hint(request))

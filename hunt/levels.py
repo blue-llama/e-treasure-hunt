@@ -1,15 +1,16 @@
 import ast
 from datetime import datetime
 
+from django.http.request import HttpRequest, HttpReponse
 from django.template import loader
 from geopy import distance
 from storages.backends.dropbox import DropBoxStorage
 
 import hunt.slack as slack
-from hunt.models import HuntEvent, HuntInfo, Level
+from hunt.models import HuntEvent, HuntInfo, Level, User
 
 
-def advance_level(user, level):
+def advance_level(user: User, level: int) -> None:
     hunt_info = HuntInfo.objects.filter(user=user)[0]
 
     # User may only advance by one level at a time
@@ -35,7 +36,7 @@ def advance_level(user, level):
             slack.cancel_pending_announcements(hunt_info.slack_channel)
 
 
-def look_for_level(request):
+def look_for_level(request: HttpRequest) -> str:
 
     # Get latitude and longitude - without these there can be no searching.
     latitude = request.GET.get("lat")
@@ -82,7 +83,7 @@ def look_for_level(request):
         return "/nothing-here?lvl=" + str(search_level)
 
 
-def maybe_load_level(request):
+def maybe_load_level(request: HttpRequest) -> str:
     # Figure out which level is being requested - this is the
     # number at the end of the URL.
     level_num = int(request.path.rsplit("/", 1)[-1])
@@ -160,7 +161,7 @@ def maybe_load_level(request):
     return template.render(context, request)
 
 
-def list_levels(request):
+def list_levels(request: HttpRequest) -> HttpReponse:
     # Get the team's current level.
     team_level = request.user.huntinfo.level
 
