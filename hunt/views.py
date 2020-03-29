@@ -1,21 +1,18 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.contrib.auth.decorators import (
-    login_required,
-    permission_required,
-    user_passes_test,
-)
-from django.template import loader
-from hunt.models import *
-from hunt.levels import *
-from hunt.hint_request import request_hint
-from hunt.hint_release import maybe_release_hint
-from . import hint_mgr
-from django.contrib.auth.models import Permission
-import os
 import csv
+import os
 
-from datetime import datetime
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.template import loader
+
+from hunt.hint_release import maybe_release_hint
+from hunt.hint_request import request_hint
+from hunt.levels import list_levels, look_for_level, maybe_load_level
+from hunt.models import AppSetting, HuntEvent, Level
+
+from . import hint_mgr
+
 
 # Simple true-false function to determine whether the hunt is live.
 def is_working_hours():
@@ -66,7 +63,7 @@ def get_hunt_events(request):
 
     queryset = HuntEvent.objects.all()
     for obj in queryset:
-        row = writer.writerow([getattr(obj, field) for field in field_names])
+        writer.writerow([getattr(obj, field) for field in field_names])
 
     return response
 
@@ -209,11 +206,11 @@ def mgmt(request):
 def hint_mgmt(request):
     template = loader.get_template("hint-mgmt.html")
 
-    next = request.GET.get("next")
-    if next == None:
-        next = 1
+    next_level = request.GET.get("next")
+    if next_level is None:
+        next_level = 1
 
-    context = {"success": request.GET.get("success"), "next": next}
+    context = {"success": request.GET.get("success"), "next": next_level}
     return HttpResponse(template.render(context, request))
 
 
@@ -221,9 +218,3 @@ def hint_mgmt(request):
 @user_passes_test(lambda u: u.is_staff)
 def add_new_hint(request):
     return redirect(hint_mgr.upload_new_hint(request))
-
-
-# Admin force hint release.
-@user_passes_test(lambda u: u.is_staff)
-def do_release_hints(request):
-    return redirect("/mgmt?success=" + str(release_hints()))

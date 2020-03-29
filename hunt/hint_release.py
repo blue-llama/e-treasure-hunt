@@ -1,8 +1,9 @@
 """
 Functions for releasing hints.
 """
-from hunt.models import *
 from datetime import datetime
+
+from hunt.models import HuntEvent
 
 
 def maybe_release_hint(user):

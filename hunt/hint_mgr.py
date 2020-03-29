@@ -1,13 +1,16 @@
-from hunt.models import HuntInfo, Level, AppSetting, HuntEvent
-from storages.backends.dropbox import DropBoxStorage
-import json
-from uuid import uuid4
 import ast
-from django.conf import settings
+import json
 from threading import Thread
-from django.core.files.uploadedfile import InMemoryUploadedFile
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.files.uploadedfile import TemporaryUploadedFile
+from uuid import uuid4
+
+from django.core.files.uploadedfile import (
+    InMemoryUploadedFile,
+    SimpleUploadedFile,
+    TemporaryUploadedFile,
+)
+from storages.backends.dropbox import DropBoxStorage
+
+from hunt.models import Level
 
 
 def delete_file(fs, name):
@@ -59,7 +62,7 @@ def upload_new_hint(request):
     fs = DropBoxStorage()
     threads = []
 
-    if (level.clues != None) and level.clues:
+    if level.clues:
         old_clues = ast.literal_eval(level.clues)
         for old_clue in old_clues:
             if fs.exists(old_clue):
@@ -106,7 +109,7 @@ def upload_new_hint(request):
 
     try:
         level.save()
-    except:
+    except Exception:
         return fail_str
 
     return "/hint-mgmt?success=True&next=" + str(int(lvl_num) + 1)

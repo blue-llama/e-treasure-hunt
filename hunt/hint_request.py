@@ -1,10 +1,10 @@
 """
 Functions for requesting hints.
 """
-from hunt.models import *
 from datetime import datetime, timedelta
 
 import hunt.slack as slack
+from hunt.models import HuntEvent, HuntInfo
 
 # Time in minutes to wait for a hint to be dropped after a request.
 LEADER_HINT_WAIT_TIME = 40
@@ -12,9 +12,10 @@ NON_LEADER_HINT_WAIT_TIME = 20
 
 
 def request_hint(request):
-    # Request must be for a specific level - not allowed to request hints for old levels.
+    # Request must be for a specific level - not allowed to request hints for old
+    # levels.
     lvl = request.GET.get("lvl")
-    if lvl == None:
+    if lvl is None:
         return "oops"
 
     # Check that this a request for the user's current level.

@@ -1,15 +1,12 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from django.template import loader
-from hunt.models import *
-from geopy import distance
 import ast
 from datetime import datetime
 
+from django.template import loader
+from geopy import distance
 from storages.backends.dropbox import DropBoxStorage
 
 import hunt.slack as slack
+from hunt.models import HuntEvent, HuntInfo, Level
 
 
 def advance_level(user, level):
@@ -41,9 +38,9 @@ def advance_level(user, level):
 def look_for_level(request):
 
     # Get latitude and longitude - without these there can be no searching.
-    lat = request.GET.get("lat")
-    long = request.GET.get("long")
-    if (lat == None) or (long == None):
+    latitude = request.GET.get("lat")
+    longitude = request.GET.get("long")
+    if (latitude is None) or (longitude is None):
         return "/search"
 
     # Every search must be for the solution to a specific level - by default,
@@ -53,7 +50,7 @@ def look_for_level(request):
 
     # See if there's a particular level specified in the request.
     lvl = request.GET.get("lvl")
-    if lvl != None:
+    if lvl is not None:
         if int(lvl) < search_level:
             # The request specified a previous level - search for that,
             # but don't advance the team's level if the search matches.
@@ -69,7 +66,7 @@ def look_for_level(request):
 
     # Get the distance between the search location and the level solution
     level_coords = (level.latitude, level.longitude)
-    search_coords = (lat, long)
+    search_coords = (latitude, longitude)
     dist = distance.distance(search_coords, level_coords).m
 
     # If the distance is small enough, accept the solution.
