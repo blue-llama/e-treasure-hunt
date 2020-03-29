@@ -28,9 +28,11 @@ def check_hint_release(hunt_info):
     Check whether we've passed the threshold to release the next hint.
     """
     time_now = datetime.now()
-    return (hunt_info.hint_requested and
-            hunt_info.next_hint_release is not None and
-            time_now > hunt_info.next_hint_release)
+    return (
+        hunt_info.hint_requested
+        and hunt_info.next_hint_release is not None
+        and time_now > hunt_info.next_hint_release
+    )
 
 
 def release_hint(hunt_info):

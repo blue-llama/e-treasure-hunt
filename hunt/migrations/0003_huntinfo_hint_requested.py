@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('hunt', '0002_auto_20200225_2222'),
-    ]
+    dependencies = [("hunt", "0002_auto_20200225_2222")]
 
     operations = [
         migrations.AddField(
-            model_name='huntinfo',
-            name='hint_requested',
+            model_name="huntinfo",
+            name="hint_requested",
             field=models.BooleanField(default=False),
-        ),
+        )
     ]

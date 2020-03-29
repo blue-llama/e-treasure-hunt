@@ -13,8 +13,8 @@ NON_LEADER_HINT_WAIT_TIME = 20
 
 def request_hint(request):
     # Request must be for a specific level - not allowed to request hints for old levels.
-    lvl = request.GET.get('lvl')
-    if (lvl == None):
+    lvl = request.GET.get("lvl")
+    if lvl == None:
         return "oops"
 
     # Check that this a request for the user's current level.

@@ -5,27 +5,23 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('hunt', '0004_userlevel_next_hint_release'),
-    ]
+    dependencies = [("hunt", "0004_userlevel_next_hint_release")]
 
     operations = [
         migrations.AddField(
-            model_name='huntinfo',
-            name='hints_shown',
+            model_name="huntinfo",
+            name="hints_shown",
             field=models.IntegerField(default=1),
         ),
         migrations.AddField(
-            model_name='huntinfo',
-            name='next_hint_release',
+            model_name="huntinfo",
+            name="next_hint_release",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='huntinfo',
-            name='slack_channel',
-            field=models.CharField(blank=True, default='', max_length=16),
+            model_name="huntinfo",
+            name="slack_channel",
+            field=models.CharField(blank=True, default="", max_length=16),
         ),
-        migrations.DeleteModel(
-            name='UserLevel',
-        ),
+        migrations.DeleteModel(name="UserLevel"),
     ]

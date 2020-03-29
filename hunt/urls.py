@@ -19,23 +19,20 @@ from . import views
 from django.contrib.admin.views.decorators import staff_member_required
 
 urlpatterns = [
-    path('', views.go_home, name='go-home'),
-
-    re_path('^level/[0-9]+$', views.level, name='level'),
-    path('levels/', views.levels, name='levels'),
-    path('search', views.search, name='search'),
-    path('do-search', views.do_search, name='do-search'),
-    path('nothing-here', views.nothing, name='nothing-here'),
-    path('hint', views.hint, name='hint'),   
-    path('home', views.home, name='home'),
-    path('map', views.map, name='map'),
-    path('alt-map', views.alt_map, name='alt-map'),
-    path('oops', views.oops, name='oops'),
-    
-    path('events', views.get_hunt_events, name='events'),
-    
-    path('mgmt', views.mgmt, name='mgmt'),
-    path('hint-mgmt', views.hint_mgmt, name='hint-mgmt'),
-    path('add-hint', views.add_new_hint, name='new-hint'),
-    path('hint-release', views.do_release_hints, name='hint-release'),
+    path("", views.go_home, name="go-home"),
+    re_path("^level/[0-9]+$", views.level, name="level"),
+    path("levels/", views.levels, name="levels"),
+    path("search", views.search, name="search"),
+    path("do-search", views.do_search, name="do-search"),
+    path("nothing-here", views.nothing, name="nothing-here"),
+    path("hint", views.hint, name="hint"),
+    path("home", views.home, name="home"),
+    path("map", views.map, name="map"),
+    path("alt-map", views.alt_map, name="alt-map"),
+    path("oops", views.oops, name="oops"),
+    path("events", views.get_hunt_events, name="events"),
+    path("mgmt", views.mgmt, name="mgmt"),
+    path("hint-mgmt", views.hint_mgmt, name="hint-mgmt"),
+    path("add-hint", views.add_new_hint, name="new-hint"),
+    path("hint-release", views.do_release_hints, name="hint-release"),
 ]

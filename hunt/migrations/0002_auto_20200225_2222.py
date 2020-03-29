@@ -9,42 +9,39 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('hunt', '0001_initial'),
+        ("hunt", "0001_initial"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='huntinfo',
-            name='hint_requested',
-        ),
-        migrations.RemoveField(
-            model_name='huntinfo',
-            name='private_hint_allowed',
-        ),
-        migrations.RemoveField(
-            model_name='huntinfo',
-            name='private_hint_requested',
-        ),
-        migrations.RemoveField(
-            model_name='huntinfo',
-            name='private_hints_shown',
-        ),
-        migrations.RemoveField(
-            model_name='level',
-            name='hint_requested',
-        ),
-        migrations.RemoveField(
-            model_name='level',
-            name='hints_shown',
-        ),
+        migrations.RemoveField(model_name="huntinfo", name="hint_requested"),
+        migrations.RemoveField(model_name="huntinfo", name="private_hint_allowed"),
+        migrations.RemoveField(model_name="huntinfo", name="private_hint_requested"),
+        migrations.RemoveField(model_name="huntinfo", name="private_hints_shown"),
+        migrations.RemoveField(model_name="level", name="hint_requested"),
+        migrations.RemoveField(model_name="level", name="hints_shown"),
         migrations.CreateModel(
-            name='UserLevel',
+            name="UserLevel",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('level', models.IntegerField()),
-                ('hints_shown', models.IntegerField(default=1)),
-                ('hint_requested', models.BooleanField(default=False)),
-                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("level", models.IntegerField()),
+                ("hints_shown", models.IntegerField(default=1)),
+                ("hint_requested", models.BooleanField(default=False)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

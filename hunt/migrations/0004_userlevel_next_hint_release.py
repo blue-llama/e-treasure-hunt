@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('hunt', '0003_huntinfo_hint_requested'),
-    ]
+    dependencies = [("hunt", "0003_huntinfo_hint_requested")]
 
     operations = [
         migrations.AddField(
-            model_name='userlevel',
-            name='next_hint_release',
+            model_name="userlevel",
+            name="next_hint_release",
             field=models.DateTimeField(blank=True, null=True),
-        ),
+        )
     ]
