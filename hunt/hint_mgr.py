@@ -3,12 +3,7 @@ import json
 from threading import Thread
 from uuid import uuid4
 
-from django.core.files.uploadedfile import (
-    InMemoryUploadedFile,
-    SimpleUploadedFile,
-    TemporaryUploadedFile,
-    UploadedFile,
-)
+from django.core.files.uploadedfile import UploadedFile
 from django.http.request import HttpRequest
 from storages.backends.dropbox import DropBoxStorage
 
@@ -21,18 +16,6 @@ def delete_file(fs: DropBoxStorage, name: str) -> None:
 
 def save_file(fs: DropBoxStorage, file_: UploadedFile, name: str) -> None:
     fs.save(name, file_)
-
-
-# # Hacky fix for django file upload bug
-# def clone_uploaded_file(data: UploadedFile) -> UploadedFile:
-#     if isinstance(data, InMemoryUploadedFile):
-#         assert data.content_type is not None
-#         return SimpleUploadedFile(data.name, data.read(), data.content_type)
-
-#     if isinstance(data, TemporaryUploadedFile):
-#         data.file.close_called = True
-
-#     return data
 
 
 def upload_new_hint(request: HttpRequest) -> str:
@@ -86,9 +69,6 @@ def upload_new_hint(request: HttpRequest) -> str:
 
         clue_name = str(uuid4()) + "." + extension
         clue_names.append(clue_name)
-
-        # # Hack - Django keeps closing files. Clone it to keep it open.
-        # file_clone = clone_uploaded_file(file_)
 
         process = Thread(target=save_file, args=[fs, file_, clue_name])
         process.start()
