@@ -79,9 +79,9 @@ def look_for_level(request: HttpRequest) -> str:
 
         # Redirect to the new level.
         return "/level/" + str(search_level + 1)
-    else:
-        # Redirect to a failure page.
-        return "/nothing-here?lvl=" + str(search_level)
+
+    # Redirect to a failure page.
+    return "/nothing-here?lvl=" + str(search_level)
 
 
 def maybe_load_level(request: HttpRequest) -> str:

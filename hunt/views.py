@@ -123,9 +123,8 @@ def map(request: HttpRequest) -> HttpResponse:
         return HttpResponse(loader.get_template("work-time.html").render({}, request))
 
     settings = AppSetting.objects.get(active=True)
-    template = loader.get_template("map-base.html")
-    if settings.use_alternative_map:
-        template = loader.get_template("maphold.html")
+    template_name = "maphold.html" if settings.use_alternative_map else "map-base.html"
+    template = loader.get_template(template_name)
 
     context = {"api_key": os.environ["GM_API_KEY"], "lvl": request.GET.get("lvl")}
     return HttpResponse(template.render(context, request))
