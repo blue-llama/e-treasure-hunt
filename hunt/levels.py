@@ -1,7 +1,8 @@
 import ast
 from datetime import datetime
 
-from django.http.request import HttpRequest, HttpReponse
+from django.http.request import HttpRequest
+from django.http.response import HttpResponse
 from django.template import loader
 from geopy import distance
 from storages.backends.dropbox import DropBoxStorage
@@ -161,7 +162,7 @@ def maybe_load_level(request: HttpRequest) -> str:
     return template.render(context, request)
 
 
-def list_levels(request: HttpRequest) -> HttpReponse:
+def list_levels(request: HttpRequest) -> HttpResponse:
     # Get the team's current level.
     team_level = request.user.huntinfo.level
 

@@ -1,10 +1,12 @@
 import csv
+
 # import datetime
 import os
 
 # import pytz
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse, HttpRequest
+from django.http.request import HttpRequest
+from django.http.response import HttpResponse
 from django.shortcuts import redirect
 from django.template import loader
 
@@ -212,7 +214,7 @@ def hint_mgmt(request: HttpRequest) -> HttpResponse:
 
     next_level = request.GET.get("next")
     if next_level is None:
-        next_level = 1
+        next_level = "1"
 
     context = {"success": request.GET.get("success"), "next": next_level}
     return HttpResponse(template.render(context, request))

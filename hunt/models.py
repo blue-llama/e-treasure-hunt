@@ -4,7 +4,7 @@ from django.db import models
 
 # Team hunt progress info.
 class HuntInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     level = models.IntegerField(default=1)
     hints_shown = models.IntegerField(default=1)
     hint_requested = models.BooleanField(default=False)

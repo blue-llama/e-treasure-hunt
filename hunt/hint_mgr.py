@@ -23,15 +23,16 @@ def save_file(fs: DropBoxStorage, file_: UploadedFile, name: str) -> None:
     fs.save(name, file_)
 
 
-# Hacky fix for django file upload bug
-def clone_uploaded_file(data: UploadedFile) -> UploadedFile:
-    if isinstance(data, InMemoryUploadedFile):
-        return SimpleUploadedFile(data.name, data.read(), data.content_type)
+# # Hacky fix for django file upload bug
+# def clone_uploaded_file(data: UploadedFile) -> UploadedFile:
+#     if isinstance(data, InMemoryUploadedFile):
+#         assert data.content_type is not None
+#         return SimpleUploadedFile(data.name, data.read(), data.content_type)
 
-    if isinstance(data, TemporaryUploadedFile):
-        data.file.close_called = True
+#     if isinstance(data, TemporaryUploadedFile):
+#         data.file.close_called = True
 
-    return data
+#     return data
 
 
 def upload_new_hint(request: HttpRequest) -> str:
@@ -42,7 +43,10 @@ def upload_new_hint(request: HttpRequest) -> str:
         return "/hint-mgmt?success=False"
 
     lvl_num = request.POST.get("lvl-num")
-    fail_str = "/hint-mgmt?success=False&next=" + str(int(lvl_num))
+    if lvl_num is None:
+        return "/hint-mgmt?success=False"
+
+    fail_str = "/hint-mgmt?success=False&next=" + lvl_num
 
     try:
         level = Level.objects.get(number=lvl_num)
@@ -77,16 +81,16 @@ def upload_new_hint(request: HttpRequest) -> str:
     clue_names = []
     for file_ in lvl_photos:
         extension = file_.name.split(".")[-1]
-        print(file_.name)
-        if (extension.lower() != "png") and (extension.lower() != "jpg"):
+        if extension.lower() not in ("png", "jpg"):
             return fail_str
+
         clue_name = str(uuid4()) + "." + extension
         clue_names.append(clue_name)
 
-        # Hack - Django keeps closing files. Clone it to keep it open.
-        file_clone = clone_uploaded_file(file_)
+        # # Hack - Django keeps closing files. Clone it to keep it open.
+        # file_clone = clone_uploaded_file(file_)
 
-        process = Thread(target=save_file, args=[fs, file_clone, clue_name])
+        process = Thread(target=save_file, args=[fs, file_, clue_name])
         process.start()
         threads.append(process)
 
@@ -104,7 +108,7 @@ def upload_new_hint(request: HttpRequest) -> str:
     level.latitude = lvl_info.get("latitude")
     level.longitude = lvl_info.get("longitude")
     level.tolerance = lvl_info.get("tolerance")
-    level.clues = clue_names
+    level.clues = str(clue_names)
 
     # We now pause execution on the main thread by 'joining' all of our started threads.
     # This ensures that each Dropbox operation completes before we return.

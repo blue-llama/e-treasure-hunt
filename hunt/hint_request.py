@@ -18,18 +18,17 @@ def request_hint(request: HttpRequest) -> str:
     # levels.
     lvl = request.GET.get("lvl")
     if lvl is None:
-        return "oops"
+        return "/oops"
 
     # Check that this a request for the user's current level.
-    lvl = int(lvl)
     hunt_info = request.user.huntinfo
-    if lvl != hunt_info.level:
+    if int(lvl) != hunt_info.level:
         return "/oops"
 
     # If a hint request is already in progress, there's nothing to do here.
     # Just send the user back to the level they're on.
     if hunt_info.hint_requested:
-        return "/level/" + str(lvl)
+        return "/level/" + lvl
 
     # Log an event to say there's been a hint request.
     event = HuntEvent()
@@ -44,11 +43,12 @@ def request_hint(request: HttpRequest) -> str:
     # If we have a slack channel for this user, schedule an announcement to coincide
     # with the hint release.
     if hunt_info.slack_channel:
+        assert hunt_info.next_hint_release is not None
         timestamp = int(hunt_info.next_hint_release.timestamp())
         slack.schedule_hint_announcement(hunt_info.slack_channel, timestamp)
 
     # Redirect back to the level in question.
-    return "/level/" + str(lvl)
+    return "/level/" + lvl
 
 
 def get_furthest_active_level() -> int:
