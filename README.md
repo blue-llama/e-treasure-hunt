@@ -35,8 +35,7 @@ You do not need to use Google Maps. If you choose not to, an alternate map is av
 ### Admin initiation
 - Navigate to <domain>/admin
 - Create a HuntInfo object for the admin user - set hints displayed to 5
-- Create an AppSetting object - tick "active" and set next hint release to now; if you are NOT using Google Maps, tick "use alternate map"
-- Create HintTime objects for all required hint release windows
+- Create an AppSetting object - tick "active"; if you are NOT using Google Maps, tick "use alternate map"
 
 ### Create levels
 - You can use the content of dummy_files.zip as a template

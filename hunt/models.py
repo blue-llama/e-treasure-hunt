@@ -26,23 +26,11 @@ class Level(models.Model):
     clues = models.CharField(max_length=500)
 
 
-# Hint release time (start of 40 minute window, UTC).
-class HintTime(models.Model):
-    time = models.TimeField()
-
-    def __str__(self) -> str:
-        string_rep = "Hint for " + str(self.time) + " UTC - expect 0-40 mins later"
-        return string_rep
-
-
 # App settings. Use Boolean primary key to ensure there's only one active.
 # Could make this into a table with string key-values, but we'd lose automatic
 # field types, and need to parse them from strings.
 class AppSetting(models.Model):
     active = models.BooleanField(primary_key=True)
-    next_hint = models.DateTimeField(default=0)
-    last_max_level = models.IntegerField(default=1)
-    max_level = models.IntegerField(default=1)
     use_alternative_map = models.BooleanField(default=False)
 
 
@@ -63,15 +51,13 @@ class HuntEvent(models.Model):
     level = models.IntegerField(default=0)
 
     def __str__(self) -> str:
-        string_rep = "At " + str(self.time) + " "
+        string_rep = "At " + str(self.time) + " " + self.team.upper() + " "
 
         if self.type == HuntEvent.HINT_REQ:
-            string_rep += (
-                self.team.upper() + " requested a hint on level " + str(self.level)
-            )
+            string_rep += "requested a hint on level " + str(self.level)
         elif self.type == HuntEvent.CLUE_ADV:
-            string_rep += self.team.upper() + " progressed to level " + str(self.level)
+            string_rep += "progressed to level " + str(self.level)
         else:
-            string_rep += "a hint was added on level " + str(self.level)
+            string_rep += "saw a hint on level " + str(self.level)
 
         return string_rep
