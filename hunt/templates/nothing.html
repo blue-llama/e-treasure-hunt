@@ -1,25 +1,24 @@
-{% extends 'base.html' %}
-
-{% block content %}
-    <h1>Nothing here...</h1>
-    <div class="story">
-      <p>
-        I'm afraid there's nothing here - at least, not at the moment. 
-      </p>
-      <p>
-        Sometimes things turn up in the strangest places, so don't assume that just because you've looked here, you shouldn't ever try that again.
-        But if you do need to come back, I'm sure there'll be a clue pointing to this location.
-      </p>
-      <p style="text-align: center">
-        For now, you should probably go back...
-      </p>
-    </div>
-    {% if team_level != latest_level %}
-      <a class="gobutton" href="/level/{{ search_level }}">
-        GO BACK TO LEVEL
-      </a>
-    {% endif %}
-    <a class="gobutton" href="/level/{{ team_level }}">
-      GO TO LATEST LEVEL
-    </a>
+{% extends 'base.html' %} {% block content %}
+<h1>Nothing here...</h1>
+<div class="story">
+  <p>
+    I'm afraid there's nothing here - at least, not at the moment.
+  </p>
+  <p>
+    Sometimes things turn up in the strangest places, so don't assume that just
+    because you've looked here, you shouldn't ever try that again. But if you do
+    need to come back, I'm sure there'll be a clue pointing to this location.
+  </p>
+  <p style="text-align: center;">
+    For now, you should probably go back...
+  </p>
+</div>
+{% if team_level != latest_level %}
+<a class="gobutton" href="/level/{{ search_level }}">
+  GO BACK TO LEVEL
+</a>
+{% endif %}
+<a class="gobutton" href="/level/{{ team_level }}">
+  GO TO LATEST LEVEL
+</a>
 {% endblock %}

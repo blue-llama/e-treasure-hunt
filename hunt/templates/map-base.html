@@ -1,57 +1,76 @@
 {% load static %}
 
-<html style="font-size: 17px">
+<html style="font-size: 17px;">
+  <head>
+    <link rel="stylesheet" href="{% static "map-style-2.css" %}">
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>eTreasure Hunt</title>
+    <style>
+      .top {
+        background-image: url("/static/colors.png");
+      }
+    </style>
+  </head>
 
-<head>
-  <link rel="stylesheet" href="{% static "map-style-2.css" %}">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>eTreasure Hunt</title>
-  <style>
-    .top { background-image: url("/static/colors.png") }
-  </style>
-</head>
-
-<body>
-
-<header class="top">
-    <div class="left"><a href="/">HOME</a></div>
-    <div class="left">
-      {% if lvl %} 
+  <body>
+    <header class="top">
+      <div class="left"><a href="/">HOME</a></div>
+      <div class="left">
+        {% if lvl %}
         <a href="/alt-map?lvl={{ lvl }}">ALT MAP</a>
-      {% else %}
+        {% else %}
         <a href="/alt-map">ALT MAP</a>
-      {% endif %}
-    </div>
-  <div class="right"><a href="/accounts/logout?next=/">Log out</a></div>
-</header>
-  
-<input id="autocomplete" class="controls" type="text" placeholder="Search">
-<button id="search-button" class="gobutton google-gobutton" onclick="showSearchAlert()">SEARCH HERE</button>
+        {% endif %}
+      </div>
+      <div class="right"><a href="/accounts/logout?next=/">Log out</a></div>
+    </header>
 
-<section class="special">
-<div id="map"></div>
-</section>
+    <input
+      id="autocomplete"
+      class="controls"
+      type="text"
+      placeholder="Search"
+    />
+    <button
+      id="search-button"
+      class="gobutton google-gobutton"
+      onclick="showSearchAlert()"
+    >
+      SEARCH HERE
+    </button>
 
-<script>
-window.gm_authFailure = function() {
-  if (confirm("Google Maps doesn't seem to be working right now. Do you want to try the alternative map instead?")) {
-    
-    var href = "/alt-map";
-    var url = new URL(window.location);
-    var lvl = url.searchParams.get("lvl");
-    
-    if (lvl != null) {
-      href += "?lvl=" + lvl;
-    }
-    
-    window.location.href = href;
-  }
-}
-</script>
-<script src="{% static "jshold.js" %}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
+    <section class="special">
+      <div id="map"></div>
+    </section>
 
-</body>
+    <script>
+      window.gm_authFailure = function () {
+        if (
+          confirm(
+            "Google Maps doesn't seem to be working right now. Do you want to try the alternative map instead?"
+          )
+        ) {
+          var href = "/alt-map";
+          var url = new URL(window.location);
+          var lvl = url.searchParams.get("lvl");
 
+          if (lvl != null) {
+            href += "?lvl=" + lvl;
+          }
+
+          window.location.href = href;
+        }
+      };
+    </script>
+    <script src="{% static "jshold.js" %}"></script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places&callback=initAutocomplete"
+      async
+      defer
+    ></script>
+  </body>
 </html>

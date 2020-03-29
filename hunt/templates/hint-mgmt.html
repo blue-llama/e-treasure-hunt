@@ -1,12 +1,18 @@
 {% extends 'mgmt-base.html' %}
-
 {% block content %}
 
 <form action="/add-hint" method="post" enctype="multipart/form-data">
-  {% csrf_token %} 
-  <div class="label">Level number</div><input class="numinput" name="lvl-num" type="number" value="{{ next }}">
-  <div class="label">Level files</div><input name="files" type="file" accept="image/gif, image/jpeg, image/png, .txt, .json" multiple>
-  <div><input class="gobutton" type="submit" value="SUBMIT"></div>
+  {% csrf_token %}
+  <div class="label">Level number</div>
+  <input class="numinput" name="lvl-num" type="number" value="{{ next }}" />
+  <div class="label">Level files</div>
+  <input
+    name="files"
+    type="file"
+    accept="image/gif, image/jpeg, image/png, .txt, .json"
+    multiple
+  />
+  <div><input class="gobutton" type="submit" value="SUBMIT" /></div>
 </form>
 
 {% endblock %}

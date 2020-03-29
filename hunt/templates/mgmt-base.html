@@ -1,36 +1,35 @@
 {% load static %}
 
-<html style="font-size: 17px">
+<html style="font-size: 17px;">
+  <head>
+    <link rel="stylesheet" href="{% static "mgmt-style.css" %}">
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>eTreasure Hunt</title>
+    <style>
+      .top {
+        background-image: url("/static/colors.png");
+      }
+    </style>
+  </head>
 
-<head>
-  <link rel="stylesheet" href="{% static "mgmt-style.css" %}">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>eTreasure Hunt</title>
-  <style>
-    .top { background-image: url("/static/colors.png") }
-  </style>
-</head>
+  <body>
+    <div class="top">
+      <div class="left"><a href="/mgmt">HOME</a></div>
+      <div class="right"><a href="/accounts/logout?next=/">Log out</a></div>
+    </div>
 
-<body>
-
-<div class="top">
-  <div class="left"><a href="/mgmt">HOME</a></div>
-  <div class="right"><a href="/accounts/logout?next=/">Log out</a></div>
-</div>
-  
-<div class="content">
-
-{% if success == "True" %}
-<div class="success">Operation completed successfully</div>
-{% elif success == "False" %}
-<div class="fail">Operation failes</div>
-{% endif %}
-
-{% block content %}
-{% endblock %}
-</div>
-
-</body>
-
+    <div class="content">
+      {% if success == "True" %}
+      <div class="success">Operation completed successfully</div>
+      {% elif success == "False" %}
+      <div class="fail">Operation failes</div>
+      {% endif %}
+      {% block content %}
+      {% endblock %}
+    </div>
+  </body>
 </html>

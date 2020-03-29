@@ -1,101 +1,122 @@
 {% load static %}
 
-<html style="font-size: 17px">
-
-<head>
-  <link rel="stylesheet" href="{% static "map-style-2.css" %}">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>eTreasure Hunt</title>
-  <style>
-    .top { background-image: url("/static/colors.png") }
-  </style>
-</head>
-
-<body>
-
-<header class="top">
-    <div class="left"><a href="/">HOME</a></div>
-    <div class="left">
-      {% if lvl %} 
-        <a href="/alt-map?lvl={{ lvl }}">ALT MAP</a>
-      {% else %}
-        <a href="/alt-map">ALT MAP</a>
-      {% endif %}
-    </div>
-  <div class="right"><a href="/accounts/logout?next=/">Log out</a></div>
-</header>
-
-<div id="map" style="padding-top:100px; box-sizing: border-box; z-index: 0;"></div>
-<button id="searchbutton" class="gobutton alt-gobutton" style="font-size: 0.9rem; position:absolute; bottom: 10px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%) z-index: 2;" onclick="Action()">SEARCH HERE</button>
-
-<!-- Load Leaflet from CDN-->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
-
-<!-- Load Esri Leaflet from CDN -->
-<script src="https://unpkg.com/esri-leaflet"></script>
-
-<!-- Esri Leaflet Geocoder -->
-<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css">
-<script src="https://unpkg.com/esri-leaflet-geocoder"></script>
-    
-<script> 
-  // Initialize the map and assign it to a variable for later use
-  var map = L.map('map', {
-      // Set latitude and longitude of the map center (required)
-      center: [30,0],
-      // Set the initial zoom level, values 0-18, where 0 is most zoomed-out (required)
-      zoom: 3
-  });
-  
-  var latlng;
-  var search_button = document.getElementById('searchbutton')
-  search_button.disabled = true;
-  search_button.classList.add('disabled');
-  
-  // Create a Tile Layer and add it to the map
-  //var tiles = new L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.png').addTo(map);
-  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    var searchControl = new L.esri.Geocoding.geosearch({ placeholder: 'Begin typing for suggestions', useMapBounds: 'false' }).addTo(map);
-    map.zoomControl.setPosition('topright');
-
-    var results = new L.LayerGroup().addTo(map);
-    L.control.scale().addTo(map);
-
-    searchControl.on('results', function(data){
-      results.clearLayers();
-      latlng = data.results[0].latlng;
-      results.addLayer(L.marker(latlng, {draggable:'true'}));
-      
-      search_button.disabled = false;
-      search_button.classList.remove('disabled');
-    });
-    
-    map.on('click', function(e) {
-      results.clearLayers();
-      latlng = e.latlng;
-      results.addLayer(L.marker(latlng, {draggable:'true'}));
-      search_button.disabled = false;
-      search_button.classList.remove('disabled');
-    });
-    
-    function Action() {
-      if ((latlng != null) && (latlng != undefined)) {
-        var url = new URL(window.location);
-        var lvl = url.searchParams.get("lvl");
-        var href_string = "/do-search?lat=" + latlng.lat + "&long=" + latlng.lng;
-        
-        if (lvl != null) {
-          href_string += "&lvl=" + lvl;
-        }
-        
-        window.location.href = href_string;
+<html style="font-size: 17px;">
+  <head>
+    <link rel="stylesheet" href="{% static "map-style-2.css" %}">
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>eTreasure Hunt</title>
+    <style>
+      .top {
+        background-image: url("/static/colors.png");
       }
-    }
-</script>
+    </style>
+  </head>
 
-</body>
+  <body>
+    <header class="top">
+      <div class="left"><a href="/">HOME</a></div>
+      <div class="left">
+        {% if lvl %}
+        <a href="/alt-map?lvl={{ lvl }}">ALT MAP</a>
+        {% else %}
+        <a href="/alt-map">ALT MAP</a>
+        {% endif %}
+      </div>
+      <div class="right"><a href="/accounts/logout?next=/">Log out</a></div>
+    </header>
+
+    <div
+      id="map"
+      style="padding-top: 100px; box-sizing: border-box; z-index: 0;"
+    ></div>
+    <button
+      id="searchbutton"
+      class="gobutton alt-gobutton"
+      style="font-size: 0.9rem; position:absolute; bottom: 10px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%) z-index: 2;"
+      onclick="Action()"
+    >
+      SEARCH HERE
+    </button>
+
+    <!-- Load Leaflet from CDN-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet-src.js"></script>
+
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet"></script>
+
+    <!-- Esri Leaflet Geocoder -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css"
+    />
+    <script src="https://unpkg.com/esri-leaflet-geocoder"></script>
+
+    <script>
+      // Initialize the map and assign it to a variable for later use
+      var map = L.map("map", {
+        // Set latitude and longitude of the map center (required)
+        center: [30, 0],
+        // Set the initial zoom level, values 0-18, where 0 is most zoomed-out (required)
+        zoom: 3,
+      });
+
+      var latlng;
+      var search_button = document.getElementById("searchbutton");
+      search_button.disabled = true;
+      search_button.classList.add("disabled");
+
+      // Create a Tile Layer and add it to the map
+      //var tiles = new L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.png').addTo(map);
+      L.tileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      var searchControl = new L.esri.Geocoding.geosearch({
+        placeholder: "Begin typing for suggestions",
+        useMapBounds: "false",
+      }).addTo(map);
+      map.zoomControl.setPosition("topright");
+
+      var results = new L.LayerGroup().addTo(map);
+      L.control.scale().addTo(map);
+
+      searchControl.on("results", function (data) {
+        results.clearLayers();
+        latlng = data.results[0].latlng;
+        results.addLayer(L.marker(latlng, { draggable: "true" }));
+
+        search_button.disabled = false;
+        search_button.classList.remove("disabled");
+      });
+
+      map.on("click", function (e) {
+        results.clearLayers();
+        latlng = e.latlng;
+        results.addLayer(L.marker(latlng, { draggable: "true" }));
+        search_button.disabled = false;
+        search_button.classList.remove("disabled");
+      });
+
+      function Action() {
+        if (latlng != null && latlng != undefined) {
+          var url = new URL(window.location);
+          var lvl = url.searchParams.get("lvl");
+          var href_string =
+            "/do-search?lat=" + latlng.lat + "&long=" + latlng.lng;
+
+          if (lvl != null) {
+            href_string += "&lvl=" + lvl;
+          }
+
+          window.location.href = href_string;
+        }
+      }
+    </script>
+  </body>
+</html>
