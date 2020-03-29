@@ -1,6 +1,10 @@
+from typing import Any, Dict, Type
+
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 # Team hunt progress info.
@@ -14,6 +18,14 @@ class HuntInfo(models.Model):
 
     def __str__(self) -> str:
         return self.user.username + "_hunt"
+
+
+@receiver(post_save, sender=User)
+def create_hunt_info(
+    sender: Type[User], instance: User, created: bool, **kwargs: Dict[str, Any]
+) -> None:
+    if created:
+        HuntInfo.objects.create(user=instance)
 
 
 # Level.
