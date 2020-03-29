@@ -1,4 +1,3 @@
-import ast
 from datetime import datetime
 
 from django.http.request import HttpRequest
@@ -110,7 +109,7 @@ def maybe_load_level(request: HttpRequest) -> str:
         num_hints = min(5, team.hints_shown)
 
         # Get the clue image names as an array, and select the ones to show.
-        hints = current_level.clues[0:num_hints]
+        hints = current_level.clues[:num_hints]
 
         # Get actual hint URLs from DropBox.
         fs = DropBoxStorage()
