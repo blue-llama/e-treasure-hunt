@@ -1,5 +1,5 @@
 {% load static %}
-
+<!DOCTYPE html>
 <html style="font-size: 17px;">
   <head>
     <link rel="stylesheet" href="{% static "map-style-2.css" %}">
@@ -29,10 +29,7 @@
       <div class="right"><a href="/accounts/logout?next=/">Log out</a></div>
     </header>
 
-    <div
-      id="map"
-      style="padding-top: 100px; box-sizing: border-box; z-index: 0;"
-    ></div>
+    <div id="map"></div>
     <button
       id="searchbutton"
       class="gobutton alt-gobutton"

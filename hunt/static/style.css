@@ -2,7 +2,7 @@ body {
   color: #567;
   font-family: "Montserrat", sans-serif;
   width: 100%;
-  margin: 0px;
+  margin: 0;
   text-align: center;
   overflow-x: hidden;
 }
@@ -40,7 +40,7 @@ body {
     font-size: 1.5rem !important;
   }
   .story p {
-    margin-bottom: 0px !important;
+    margin-bottom: 0 !important;
   }
 }
 
@@ -94,7 +94,7 @@ body {
 }
 
 .banner {
-  padding: 2vh 0px;
+  padding: 2vh 0;
   width: 100%;
   background-color: #dfe2f2;
   display: flex;
@@ -122,7 +122,7 @@ body {
 }
 
 .heading {
-  padding: 0px 5vw;
+  padding: 0 5vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -139,7 +139,7 @@ h1 {
 }
 
 .heading h2 {
-  margin-top: 0px;
+  margin-top: 0;
   margin-bottom: 5px;
   font-size: 2rem;
   color: #789;
@@ -164,16 +164,11 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 0px 10vw;
+  padding: 0 10vw;
 }
 
 .level-label {
   padding-right: 0.3rem;
-}
-
-.level-list .gobutton {
-  padding: 10px 20px;
-  margin: 10px;
 }
 
 .gobutton {
@@ -188,6 +183,11 @@ h3 {
   text-decoration: none;
   letter-spacing: 0.2em;
   border: none;
+}
+
+.level-list .gobutton {
+  padding: 10px 20px;
+  margin: 10px;
 }
 
 .gobutton:hover {
@@ -210,13 +210,13 @@ h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px 0px 40px 0px;
+  margin: 20px 0 40px 0;
   font-size: 1rem;
   width: 850px;
   max-width: 88vw;
   line-height: 2rem;
   text-align: center;
-  text-indent: 0rem;
+  text-indent: 0;
 }
 
 .story p {
@@ -242,7 +242,7 @@ h3 {
   width: 900px;
   max-width: 88vw;
   max-height: 66vw;
-  padding: 10px 0px;
+  padding: 10px 0;
   object-fit: contain;
   border-bottom: 1px solid black;
 }
