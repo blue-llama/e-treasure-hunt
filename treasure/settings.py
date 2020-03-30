@@ -22,14 +22,14 @@ SECRET_KEY = os.environ.get("DJ_KEY", "")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS = [os.environ.get("APP_URL", "")]
+ALLOWED_HOSTS = ["localhost"] if DEBUG else [os.environ.get("APP_URL", "")]
 
 # Extra settings from security check
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 X_FRAME_OPTIONS = "DENY"
 
 # Close the session when user closes the browser
@@ -132,3 +132,15 @@ USE_TZ = False
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "etreasurehunt",
+            "USER": "USER",
+            "PASSWORD": "PASSWORD",
+            "HOST": "localhost",
+            "PORT": "5432",
+        }
+    }
