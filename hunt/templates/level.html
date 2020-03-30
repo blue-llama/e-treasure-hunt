@@ -5,16 +5,13 @@
   Your team is on Level {{ team_level }}!
   <a href="/level/{{ team_level }}">Join them</a>
 </div>
-<div class="heading">
-  <h1>{{ level_name }}</h1>
-  <h2>Level {{ level_number }}</h2>
-</div>
-{% else %}
-<div class="heading">
-  <h1>{{ level_name }}</h1>
-  <h2>Level {{ level_number }}</h2>
-</div>
 {% endif %}
+
+<div class="heading">
+  <h1>{{ level_name }}</h1>
+  <h2>Level {{ level_number }}</h2>
+</div>
+
 {% if level_number > 1 %}
 <h3>{{ latitude }}, {{ longitude }}</h3>
 {% endif %}
