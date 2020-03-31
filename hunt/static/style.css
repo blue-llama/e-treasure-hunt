@@ -26,6 +26,7 @@ body {
     margin-top: 50px !important;
     font-size: 2.5rem !important;
   }
+
   h2 {
     font-size: 1.8rem !important;
   }
@@ -36,9 +37,11 @@ body {
     margin-top: 40px !important;
     font-size: 2rem !important;
   }
+
   h2 {
     font-size: 1.5rem !important;
   }
+
   .story p {
     margin-bottom: 0 !important;
   }
@@ -49,9 +52,11 @@ body {
     margin-top: 30px !important;
     font-size: 1.8rem !important;
   }
+
   h2 {
     font-size: 1.2rem !important;
   }
+
   h3 {
     font-size: 0.9rem !important;
   }
@@ -198,7 +203,7 @@ h3 {
   margin: 15px;
   padding: 25px;
   border-radius: 10px;
-  background-color: #dddddd;
+  background-color: #ddd;
   font-size: 0.8em;
   font-weight: bold;
   color: #fff;
