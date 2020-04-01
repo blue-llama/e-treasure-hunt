@@ -103,9 +103,7 @@ def maybe_load_level(request: HttpRequest) -> str:
         current_level = Level.objects.get(number=level_num)
 
         # Figure out how many images to display.  Show all hints for solved levels.
-        num_hints = (
-            5 if level_num < team_level_num else team.hints_shown
-        )
+        num_hints = 5 if level_num < team_level_num else team.hints_shown
 
         # Get the URLs for the images to show.
         fs = DropBoxStorage()
