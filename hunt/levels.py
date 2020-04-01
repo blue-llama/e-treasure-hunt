@@ -84,35 +84,32 @@ def look_for_level(request: HttpRequest) -> str:
 
 
 def maybe_load_level(request: HttpRequest) -> str:
-    # Figure out which level is being requested - this is the
-    # number at the end of the URL.
+    # Figure out which level is being requested - this is the number at the end of the
+    # URL.
     level_num = int(request.path.rsplit("/", 1)[-1])
 
-    # Get the user's hunt progress information, including current level.
-    team = request.user.huntinfo
-    team_level_num = team.level
+    # Get the user details.
+    user = request.user
+    team = user.huntinfo
 
-    # Figure out the maximum level number.
+    # Find the last level.  Staff can see everything.
     max_level_num = Level.objects.order_by("-number")[0].number
-
-    # Hack - admins can see all levels.
-    if request.user.is_staff:
-        team_level_num = max_level_num
+    team_level_num = max_level_num if user.is_staff else team.level
 
     # Only load the level if it's one the team has access to.
     if level_num <= team_level_num:
         # Get the level objects for this level and the one before.
-        last_level = Level.objects.get(number=level_num - 1)
+        previous_level = Level.objects.get(number=level_num - 1)
         current_level = Level.objects.get(number=level_num)
 
-        # Figure out how many images to display.
-        num_hints = min(5, team.hints_shown)
+        # Figure out how many images to display.  Show all hints for solved levels.
+        num_hints = (
+            5 if level_num < team_level_num else team.hints_shown
+        )
 
-        # Get the clue image names as an array, and select the ones to show.
-        hints = current_level.clues[:num_hints]
-
-        # Get actual hint URLs from DropBox.
+        # Get the URLs for the images to show.
         fs = DropBoxStorage()
+        hints = current_level.clues[:num_hints]
         hint_urls = [fs.url(hint) for hint in hints]
 
         # Is this the last level?
@@ -120,7 +117,7 @@ def maybe_load_level(request: HttpRequest) -> str:
 
         # Get the description from the previous level, and split it
         # into paragraphs for display.
-        desc_paras = last_level.description.splitlines()
+        desc_paras = previous_level.description.splitlines()
 
         # By default a hint can be requested.
         allow_hint = True
@@ -140,13 +137,13 @@ def maybe_load_level(request: HttpRequest) -> str:
         context = {
             "team_level": team_level_num,
             "level_number": current_level.number,
-            "level_name": last_level.name.upper(),
+            "level_name": previous_level.name.upper(),
             "hints": hint_urls,
             "desc_paras": desc_paras,
             "allow_hint": allow_hint,
             "reason": reason,
-            "latitude": last_level.latitude,
-            "longitude": last_level.longitude,
+            "latitude": previous_level.latitude,
+            "longitude": previous_level.longitude,
             "is_last": is_last_level,
         }
     else:
