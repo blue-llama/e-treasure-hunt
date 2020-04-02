@@ -1,0 +1,44 @@
+import datetime
+from functools import wraps
+from typing import Callable
+
+import pytz
+from django.http.request import HttpRequest
+from django.http.response import HttpResponse
+from django.template import loader
+
+RequestHandler = Callable[[HttpRequest], HttpResponse]
+
+
+# Are we in (UK) working hours?
+def is_working_hours() -> bool:
+    london = pytz.timezone("Europe/London")
+    now = datetime.datetime.now(tz=london)
+
+    # We don't work at the weekend.
+    if now.weekday() > 4:
+        return False
+
+    # We do work 9:30 - 12:30, and 13:30 - 17:30.
+    clock = now.time()
+    if datetime.time(9, 0) < clock < datetime.time(12, 30):
+        return True
+
+    if datetime.time(13, 30) < clock < datetime.time(17, 30):
+        return True
+
+    # We don't work other times.
+    return False
+
+
+# Decorator that prevents most users from accessing the site during working hours.
+def not_in_working_hours(f: RequestHandler) -> RequestHandler:
+    @wraps(f)
+    def wrapper(request: HttpRequest) -> HttpResponse:
+        if (not request.user.is_staff) and is_working_hours():
+            template = loader.get_template("work-time.html").render({}, request)
+            return HttpResponse(template)
+
+        return f(request)
+
+    return wrapper
