@@ -19,7 +19,7 @@ def is_working_hours() -> bool:
     if now.weekday() > 4:
         return False
 
-    # We do work 9:30 - 12:30, and 13:30 - 17:30.
+    # We do work 9:00 - 12:30, and 13:30 - 17:30.
     clock = now.time()
     if datetime.time(9, 0) < clock < datetime.time(12, 30):
         return True
