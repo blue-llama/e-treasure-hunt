@@ -164,9 +164,7 @@ def list_levels(request: HttpRequest) -> str:
         team_level = Level.objects.order_by("-number")[0].number
 
     # Make a list of all the levels to display.
-    levels = []
-    for level in range(team_level):
-        levels.append(level + 1)
+    levels = list(range(1, team_level + 1))
 
     # Give the level list as context to the template.
     template = loader.get_template("levels.html")
