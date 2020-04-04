@@ -14,6 +14,9 @@ import os
 
 import django_heroku
 
+# Set the environment variable DEVELOPMENT_SERVER for local development.
+development = bool(os.getenv("DEVELOPMENT_SERVER", ""))
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,15 +24,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("DJ_KEY", "")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = ["localhost"] if DEBUG else [os.environ.get("APP_URL", "")]
+DEBUG = development
+ALLOWED_HOSTS = ["localhost"] if development else [os.environ.get("APP_URL", "")]
 
 # Extra settings from security check
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-SECURE_SSL_REDIRECT = not DEBUG
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = not development
+SESSION_COOKIE_SECURE = not development
+CSRF_COOKIE_SECURE = not development
 X_FRAME_OPTIONS = "DENY"
 
 # Close the session when user closes the browser
@@ -133,7 +136,7 @@ STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-if DEBUG:
+if development:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
