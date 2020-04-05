@@ -1,4 +1,5 @@
 import json
+import os
 from threading import Thread
 from uuid import uuid4
 
@@ -35,18 +36,18 @@ def upload_new_hint(request: HttpRequest) -> str:
     except Level.DoesNotExist:
         level = Level(number=lvl_num)
 
+    def extension(filename: str) -> str:
+        """Return normalized filename extension"""
+        (_root, extension) = os.path.splitext(filename)
+        return extension.lower()
+
     lvl_files = request.FILES.getlist("files")
-    lvl_files.sort(key=lambda x: x.name)
+    lvl_info_file = next((f for f in lvl_files if extension(f.name) == ".json"), None)
+    lvl_desc_file = next((f for f in lvl_files if extension(f.name) == ".txt"), None)
+    lvl_photos = [f for f in lvl_files if extension(f.name) in (".jpg", ".png")]
+    lvl_photos.sort(key=lambda x: x.name)
 
-    lvl_info_file = lvl_files[0]
-    lvl_desc_file = lvl_files[1]
-    lvl_photos = lvl_files[2:]
-
-    if (
-        (lvl_desc_file.name != "blurb.txt")
-        or (lvl_info_file.name != "about.json")
-        or (len(lvl_photos) != 5)
-    ):
+    if (lvl_desc_file is None) or (lvl_info_file is None) or (len(lvl_photos) != 5):
         return fail_str
 
     fs = DropBoxStorage()
@@ -60,11 +61,7 @@ def upload_new_hint(request: HttpRequest) -> str:
 
     new_clues = []
     for file_ in lvl_photos:
-        extension = file_.name.split(".")[-1]
-        if extension.lower() not in ("png", "jpg"):
-            return fail_str
-
-        clue_name = str(uuid4()) + "." + extension
+        clue_name = str(uuid4()) + "." + extension(file_.name)
         new_clues.append(clue_name)
 
         process = Thread(target=save_file, args=[fs, file_, clue_name])
