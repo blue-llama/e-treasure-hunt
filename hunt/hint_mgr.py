@@ -68,15 +68,10 @@ def upload_new_hint(request: HttpRequest) -> str:
         process.start()
         threads.append(process)
 
+    lines = [line.decode("utf-8") for line in lvl_desc_file.readlines()]
+    lvl_desc = "".join(line for line in lines if line.strip())
+
     lvl_info = json.load(lvl_info_file)
-
-    lvl_desc = ""
-    lvl_desc_lines = lvl_desc_file.readlines()
-    for line_enc in lvl_desc_lines:
-        line = line_enc.decode("cp1251")
-        if line.strip():
-            lvl_desc = lvl_desc + line
-
     level.name = lvl_info.get("name")
     level.description = lvl_desc
     level.latitude = lvl_info.get("latitude")
