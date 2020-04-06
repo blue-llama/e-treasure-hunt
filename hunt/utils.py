@@ -2,6 +2,7 @@ import datetime
 from functools import wraps
 from typing import Callable
 
+import holidays
 import pytz
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
@@ -17,6 +18,10 @@ def is_working_hours() -> bool:
 
     # We don't work at the weekend.
     if now.weekday() > 4:
+        return False
+
+    # We don't work UK bank holidays.
+    if now.date() in holidays.CountryHoliday("UK"):
         return False
 
     # We do work 9:00 - 12:30, and 13:30 - 17:30.
