@@ -135,9 +135,11 @@ def search(request: HttpRequest) -> HttpResponse:
 def nothing(request: HttpRequest) -> HttpResponse:
     template = loader.get_template("nothing.html")
 
+    team_level = request.user.huntinfo.level
     lvl = request.GET.get("lvl")
+    search_level = None if lvl is None else int(lvl)
 
-    context = {"team_level": request.user.huntinfo.level, "search_level": lvl}
+    context = {"team_level": team_level, "search_level": search_level}
     return HttpResponse(template.render(context, request))
 
 

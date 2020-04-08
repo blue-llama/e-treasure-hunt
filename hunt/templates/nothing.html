@@ -14,12 +14,14 @@
     For now, you should probably go back...
   </p>
 </div>
-{% if team_level != latest_level %}
+{% if search_level is not None %}
 <a class="gobutton" href="/level/{{ search_level }}">
   GO BACK TO LEVEL
 </a>
 {% endif %}
+{% if team_level != search_level %}
 <a class="gobutton" href="/level/{{ team_level }}">
   GO TO LATEST LEVEL
 </a>
+{% endif %}
 {% endblock %}
