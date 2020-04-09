@@ -10,71 +10,58 @@ import hunt.slack as slack
 from hunt.models import HuntEvent, Level
 
 
-def advance_level(user: User, level: int) -> None:
+def advance_level(user: User) -> None:
     hunt_info = user.huntinfo
+    new_level = hunt_info.level + 1
 
-    # User may only advance by one level at a time
-    if level == hunt_info.level + 1:
+    # Log an event to record this.
+    event = HuntEvent()
+    event.time = datetime.utcnow()
+    event.type = HuntEvent.CLUE_ADV
+    event.team = user.username
+    event.level = new_level
+    event.save()
 
-        # Log an event to record this.
-        event = HuntEvent()
-        event.time = datetime.utcnow()
-        event.type = HuntEvent.CLUE_ADV
-        event.team = user.username
-        event.level = level
-        event.save()
+    # Update the team's level, clear any hint request flags and save.
+    hunt_info.level = new_level
+    hunt_info.hints_shown = 1
+    hunt_info.hint_requested = False
+    hunt_info.next_hint_release = None
+    hunt_info.save()
 
-        # Update the team's level, clear any hint request flags and save.
-        hunt_info.level = level
-        hunt_info.hints_shown = 1
-        hunt_info.hint_requested = False
-        hunt_info.next_hint_release = None
-        hunt_info.save()
-
-        # Cancel any pending slack announcements.
-        if hunt_info.slack_channel:
-            slack.cancel_pending_announcements(hunt_info.slack_channel)
+    # Cancel any pending slack announcements.
+    if hunt_info.slack_channel:
+        slack.cancel_pending_announcements(hunt_info.slack_channel)
 
 
 def look_for_level(request: HttpRequest) -> str:
-
     # Get latitude and longitude - without these there can be no searching.
     latitude = request.GET.get("lat")
     longitude = request.GET.get("long")
     if (latitude is None) or (longitude is None):
         return "/search"
 
-    # Every search must be for the solution to a specific level - by default,
-    # assume this is the team's current level.
-    search_level = int(request.user.huntinfo.level)
-    old_search = False
-
-    # See if there's a particular level specified in the request.
+    # Every search must be for the solution to a specific level - by default, assume
+    # this is the team's current level.
+    user = request.user
+    team_level = user.huntinfo.level
     lvl = request.GET.get("lvl")
-    if lvl is not None:
-        if int(lvl) < search_level:
-            # The request specified a previous level - search for that,
-            # but don't advance the team's level if the search matches.
-            old_search = True
-            search_level = int(lvl)
+    search_level = team_level if lvl is None else int(lvl)
 
-        # If the search is for a level above the one the team's on, redirect them.
-        elif int(lvl) > search_level:
-            return "/oops"
+    # Prevent searching for later levels.
+    if search_level > team_level:
+        return "/oops"
 
-    # Get the level object corresponding to the search.
+    # Get the distance between the search location and the level solution.
     level = Level.objects.get(number=search_level)
-
-    # Get the distance between the search location and the level solution
     level_coords = (level.latitude, level.longitude)
     search_coords = (latitude, longitude)
     dist = distance.distance(search_coords, level_coords).m
 
     # If the distance is small enough, accept the solution.
     if dist <= level.tolerance:
-        # If this wasn't a search for a previous level, advance.
-        if not old_search:
-            advance_level(request.user, level.number + 1)
+        if search_level == team_level:
+            advance_level(user)
 
         # Redirect to the new level.
         return "/level/" + str(search_level + 1)
