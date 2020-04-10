@@ -51,14 +51,14 @@ def get_hunt_events(request: HttpRequest) -> HttpResponse:
 def home(request: HttpRequest) -> HttpResponse:
     template = loader.get_template("welcome.html")
 
-    hunt_info = request.user.huntinfo
-    team_level = hunt_info.level
+    user = request.user
+    team_level = user.huntinfo.level
 
     # Hack - staff can see all levels.
-    if request.user.is_staff:
+    if user.is_staff:
         team_level = Level.objects.order_by("-number")[0].number
 
-    context = {"display_name": request.user.get_full_name(), "team_level": team_level}
+    context = {"display_name": user.get_username(), "team_level": team_level}
     return HttpResponse(template.render(context, request))
 
 
