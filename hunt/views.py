@@ -65,9 +65,9 @@ def home(request: HttpRequest) -> HttpResponse:
 # Level page.
 @login_required
 @not_in_working_hours
-def level(request: HttpRequest) -> HttpResponse:
+def level(request: HttpRequest, level: int) -> HttpResponse:
     maybe_release_hint(request.user)
-    return HttpResponse(maybe_load_level(request))
+    return HttpResponse(maybe_load_level(request, level))
 
 
 # Error page.

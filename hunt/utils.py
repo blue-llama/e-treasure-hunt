@@ -1,6 +1,6 @@
 import datetime
 from functools import wraps
-from typing import Callable
+from typing import Any, Callable, Dict
 
 import holidays
 import pytz
@@ -8,7 +8,7 @@ from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.template import loader
 
-RequestHandler = Callable[[HttpRequest], HttpResponse]
+RequestHandler = Callable[..., HttpResponse]
 
 
 # Are we in (UK) working hours?
@@ -39,11 +39,11 @@ def is_working_hours() -> bool:
 # Decorator that prevents most users from accessing the site during working hours.
 def not_in_working_hours(f: RequestHandler) -> RequestHandler:
     @wraps(f)
-    def wrapper(request: HttpRequest) -> HttpResponse:
+    def wrapper(request: HttpRequest, **kwargs: Dict[str, Any]) -> HttpResponse:
         if (not request.user.is_staff) and is_working_hours():
             template = loader.get_template("work-time.html").render({}, request)
             return HttpResponse(template)
 
-        return f(request)
+        return f(request, **kwargs)
 
     return wrapper

@@ -70,11 +70,7 @@ def look_for_level(request: HttpRequest) -> str:
     return "/nothing-here?lvl=" + str(search_level)
 
 
-def maybe_load_level(request: HttpRequest) -> str:
-    # Figure out which level is being requested - this is the number at the end of the
-    # URL.
-    level_num = int(request.path.rsplit("/", 1)[-1])
-
+def maybe_load_level(request: HttpRequest, level_num: int) -> str:
     # Get the user details.
     user = request.user
     team = user.huntinfo
