@@ -1,6 +1,6 @@
 import datetime
 from functools import wraps
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, List
 
 import holidays
 import pytz
@@ -39,11 +39,13 @@ def is_working_hours() -> bool:
 # Decorator that prevents most users from accessing the site during working hours.
 def not_in_working_hours(f: RequestHandler) -> RequestHandler:
     @wraps(f)
-    def wrapper(request: HttpRequest, **kwargs: Dict[str, Any]) -> HttpResponse:
+    def wrapper(
+        request: HttpRequest, *args: List[Any], **kwargs: Dict[str, Any]
+    ) -> HttpResponse:
         if (not request.user.is_staff) and is_working_hours():
             template = loader.get_template("work-time.html").render({}, request)
             return HttpResponse(template)
 
-        return f(request, **kwargs)
+        return f(request, *args, **kwargs)
 
     return wrapper
