@@ -1,7 +1,7 @@
 """
 Functions for requesting hints.
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from django.http.request import HttpRequest
 
@@ -14,8 +14,7 @@ NON_LEADER_HINT_WAIT_TIME = 20
 
 
 def request_hint(request: HttpRequest) -> str:
-    # Request must be for a specific level - not allowed to request hints for old
-    # levels.
+    # Request must be for a specific level.
     lvl = request.GET.get("lvl")
     if lvl is None:
         return "/oops"
@@ -32,7 +31,7 @@ def request_hint(request: HttpRequest) -> str:
 
     # Log an event to say there's been a hint request.
     event = HuntEvent()
-    event.time = datetime.utcnow()
+    event.time = datetime.now(timezone.utc)
     event.type = HuntEvent.HINT_REQ
     event.team = request.user.username
     event.level = lvl
@@ -91,5 +90,5 @@ def process_hint_request(hunt_info: HuntInfo) -> None:
     """
     delay = determine_hint_delay(hunt_info)
     hunt_info.hint_requested = True
-    hunt_info.next_hint_release = datetime.now() + timedelta(minutes=delay)
+    hunt_info.next_hint_release = datetime.now(timezone.utc) + timedelta(minutes=delay)
     hunt_info.save()

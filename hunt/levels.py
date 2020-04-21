@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from django.contrib.auth.models import User
 from django.http.request import HttpRequest
@@ -16,7 +16,7 @@ def advance_level(user: User) -> None:
 
     # Log an event to record this.
     event = HuntEvent()
-    event.time = datetime.utcnow()
+    event.time = datetime.now(timezone.utc)
     event.type = HuntEvent.CLUE_ADV
     event.team = user.username
     event.level = new_level
