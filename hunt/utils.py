@@ -1,13 +1,13 @@
 import datetime
 from functools import wraps
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable
 
 import pytz
-
-import holidays
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.template import loader
+
+import holidays
 
 RequestHandler = Callable[..., HttpResponse]
 
