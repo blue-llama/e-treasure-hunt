@@ -17,6 +17,12 @@ def is_working_hours() -> bool:
     london = pytz.timezone("Europe/London")
     now = datetime.datetime.now(tz=london)
 
+    # Don't allow anything before the start time - noon on the 13th April.
+    # start = datetime.datetime(2020, 4, 13, 12)
+    # start = london.localize(start)
+    # if now < start:
+    #     return True
+
     # We don't work at the weekend.
     if now.weekday() > 4:
         return False
