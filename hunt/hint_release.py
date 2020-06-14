@@ -1,9 +1,9 @@
 """
 Functions for releasing hints.
 """
-from datetime import datetime, timezone
 
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from hunt.models import HuntEvent, HuntInfo
 
@@ -16,7 +16,7 @@ def maybe_release_hint(user: User) -> None:
     hunt_info = user.huntinfo
     if check_hint_release(hunt_info):
         event = HuntEvent()
-        event.time = datetime.now(timezone.utc)
+        event.time = timezone.now()
         event.team = user.username
         event.type = HuntEvent.HINT_REL
         event.level = hunt_info.level
@@ -29,7 +29,7 @@ def check_hint_release(hunt_info: HuntInfo) -> bool:
     """
     Check whether we've passed the threshold to release the next hint.
     """
-    time_now = datetime.now(timezone.utc)
+    time_now = timezone.now()
     return (
         hunt_info.hint_requested
         and hunt_info.next_hint_release is not None

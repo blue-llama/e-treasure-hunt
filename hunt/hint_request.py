@@ -1,9 +1,10 @@
 """
 Functions for requesting hints.
 """
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
 
 from django.http.request import HttpRequest
+from django.utils import timezone
 
 import hunt.slack as slack
 from hunt.models import HuntEvent, HuntInfo
@@ -31,7 +32,7 @@ def request_hint(request: HttpRequest) -> str:
 
     # Log an event to say there's been a hint request.
     event = HuntEvent()
-    event.time = datetime.now(timezone.utc)
+    event.time = timezone.now()
     event.type = HuntEvent.HINT_REQ
     event.team = request.user.username
     event.level = lvl
@@ -90,5 +91,5 @@ def process_hint_request(hunt_info: HuntInfo) -> None:
     """
     delay = determine_hint_delay(hunt_info)
     hunt_info.hint_requested = True
-    hunt_info.next_hint_release = datetime.now(timezone.utc) + timedelta(minutes=delay)
+    hunt_info.next_hint_release = timezone.now() + timedelta(minutes=delay)
     hunt_info.save()

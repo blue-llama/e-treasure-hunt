@@ -1,9 +1,9 @@
 import sys
-from datetime import datetime, timezone
 
 from django.contrib.auth.models import User
 from django.http.request import HttpRequest
 from django.template import loader
+from django.utils import timezone
 from geopy import distance
 from storages.backends.dropbox import DropBoxStorage
 
@@ -17,7 +17,7 @@ def advance_level(user: User) -> None:
 
     # Log an event to record this.
     event = HuntEvent()
-    event.time = datetime.now(timezone.utc)
+    event.time = timezone.now()
     event.type = HuntEvent.CLUE_ADV
     event.team = user.username
     event.level = new_level
