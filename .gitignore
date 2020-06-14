@@ -1,0 +1,9 @@
+*cov*
+.idea
+/.mypy_cache
+*pytest_cache*
+*pycache*
+jquery*
+venv
+/static
+style.css

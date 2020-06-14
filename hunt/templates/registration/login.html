@@ -1,43 +1,39 @@
 {% load static %}
+<!DOCTYPE html>
+<html style="font-size: 17px;">
+  <head>
+    <link rel="stylesheet" href="{% static "welcome-style.css" %}">
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat|Raleway&amp;display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<html style="font-size: 17px">
+    <style>
+      body {
+        background-image: url("/static/colors.png");
+      }
+    </style>
+  </head>
 
-<head>
-  <link rel="stylesheet" href="{% static "welcome-style.css" %}">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat|Raleway&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <style>
-    body { background-image: url("/static/colors.png") }
-  </style>
-</head>
-
-<body>
-
-<div class="top">
-  <div class="right"></div>
-</div>
-
-<div class="content">
-  <!-- <h1>Please sign in</h1> -->
-  <form method="post" action="{% url 'login' %}">
-  {% csrf_token %}
-  <div>
-    <div class="form-label">Username</div>
-    <div class="form-field">{{ form.username }}</div>
-  </div>
-  <div>
-    <div class="form-label">Password</div>
-    <div class="form-field">{{ form.password }}</div>
-  </div>
-  <div class="submit">
-    <input type="submit" value="LOG IN" />
-    <input type="hidden" name="next" value="{{ next }}" />
-  </div>
-  </form>
-
-</div>
-
-</body>
-
+  <body>
+    <div class="content">
+      <!-- <h1>Please sign in</h1> -->
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div>
+          <div class="form-label">Username</div>
+          <div class="form-field">{{ form.username }}</div>
+        </div>
+        <div>
+          <div class="form-label">Password</div>
+          <div class="form-field">{{ form.password }}</div>
+        </div>
+        <div class="submit">
+          <input type="submit" value="LOG IN" />
+          <input type="hidden" name="next" value="{{ next }}" />
+        </div>
+      </form>
+    </div>
+  </body>
 </html>

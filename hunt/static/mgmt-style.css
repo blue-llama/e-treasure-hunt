@@ -2,7 +2,7 @@ body {
   color: #567;
   font-family: Montserrat, sans-serif;
   width: 100%;
-  margin: 0px;
+  margin: 0;
   text-align: center;
 }
 
@@ -45,7 +45,7 @@ h1 {
   flex-direction: row;
   width: 100%;
   padding-right: 30px;
-  justify-content:flex-end;
+  justify-content: flex-end;
 }
 
 .content {
@@ -67,7 +67,7 @@ h1 {
 
 .heading {
   margin-top: 20px;
-  padding: 0px 5vw;
+  padding: 0 5vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -96,15 +96,15 @@ h2 {
 }
 
 .numinput {
-    border: 2px solid #bbb;
-    height: 2.1em;
-    width: 5em;
-    border-radius: 5px;
-    background-color: #fff;
-    padding-left: 1em;
-    text-align: center;
-    color: #345;
-    font-size: 1.2em;
+  border: 2px solid #bbb;
+  height: 2.1em;
+  width: 5em;
+  border-radius: 5px;
+  background-color: #fff;
+  padding-left: 1em;
+  text-align: center;
+  color: #345;
+  font-size: 1.2em;
 }
 
 .buttons {
@@ -112,10 +112,6 @@ h2 {
   flex-direction: column;
   width: fit-content;
   justify-content: center;
-}
-
-.buttons .gobutton {
-  margin: 15px;
 }
 
 .gobutton {
@@ -132,6 +128,10 @@ h2 {
   border: none;
 }
 
+.buttons .gobutton {
+  margin: 15px;
+}
+
 .gobutton:hover {
   background-color: #e63768;
 }
@@ -140,7 +140,7 @@ h2 {
   margin: 15px;
   padding: 25px;
   border-radius: 10px;
-  background-color: #dddddd;
+  background-color: #ddd;
   font-size: 0.8em;
   font-weight: bold;
   color: #fff;
