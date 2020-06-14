@@ -1,7 +1,6 @@
 from typing import Any, Dict, Type
 
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -36,7 +35,13 @@ class Level(models.Model):
     latitude = models.DecimalField(max_digits=13, decimal_places=7)
     longitude = models.DecimalField(max_digits=13, decimal_places=7)
     tolerance = models.IntegerField()
-    clues = ArrayField(models.CharField(max_length=48), default=list)
+
+
+# Hint
+class Hint(models.Model):
+    level = models.ForeignKey(Level, on_delete=models.CASCADE)
+    number = models.IntegerField()
+    filename = models.CharField(max_length=48)
 
 
 # App settings. Use Boolean primary key to ensure there's only one active.

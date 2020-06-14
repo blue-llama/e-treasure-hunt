@@ -7,7 +7,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.http.request import HttpRequest
 from storages.backends.dropbox import DropBoxStorage
 
-from hunt.models import Level
+from hunt.models import Hint, Level
 
 
 def delete_file(fs: DropBoxStorage, name: str) -> None:
@@ -31,6 +31,7 @@ def upload_new_hint(request: HttpRequest) -> str:
 
     fail_str = "/hint-mgmt?success=False&next=" + lvl_num
 
+    # Get the existing level, or create a new one.
     try:
         level = Level.objects.get(number=lvl_num)
     except Level.DoesNotExist:
@@ -41,6 +42,7 @@ def upload_new_hint(request: HttpRequest) -> str:
         (_root, extension) = os.path.splitext(filename)
         return extension.lower()
 
+    # Gather up the needed information.
     lvl_files = request.FILES.getlist("files")
     lvl_info_file = next((f for f in lvl_files if extension(f.name) == ".json"), None)
     lvl_desc_file = next((f for f in lvl_files if extension(f.name) == ".txt"), None)
@@ -50,24 +52,7 @@ def upload_new_hint(request: HttpRequest) -> str:
     if (lvl_desc_file is None) or (lvl_info_file is None) or (len(lvl_photos) != 5):
         return fail_str
 
-    fs = DropBoxStorage()
-    threads = []
-
-    for old_clue in level.clues:
-        if fs.exists(old_clue):
-            process = Thread(target=delete_file, args=[fs, old_clue])
-            process.start()
-            threads.append(process)
-
-    new_clues = []
-    for file_ in lvl_photos:
-        clue_name = str(uuid4()) + "." + extension(file_.name)
-        new_clues.append(clue_name)
-
-        process = Thread(target=save_file, args=[fs, file_, clue_name])
-        process.start()
-        threads.append(process)
-
+    # Update the level.
     lines = [line.decode("utf-8") for line in lvl_desc_file.readlines()]
     lvl_desc = "".join(line for line in lines if line.strip())
 
@@ -77,16 +62,35 @@ def upload_new_hint(request: HttpRequest) -> str:
     level.latitude = lvl_info.get("latitude")
     level.longitude = lvl_info.get("longitude")
     level.tolerance = lvl_info.get("tolerance")
-    level.clues = new_clues
+    level.save()
 
-    # We now pause execution on the main thread by 'joining' all of our started threads.
-    # This ensures that each Dropbox operation completes before we return.
+    fs = DropBoxStorage()
+    threads = []
+
+    # Delete old hints.
+    old_hints = Hint.objects.filter(level=level)
+    for old_hint in old_hints:
+        if fs.exists(old_hint.filename):
+            process = Thread(target=delete_file, args=[fs, old_hint.filename])
+            process.start()
+            threads.append(process)
+    old_hints.delete()
+
+    # Create new hints.
+    for number, file_ in enumerate(lvl_photos):
+        filename = str(uuid4()) + "." + extension(file_.name)
+        process = Thread(target=save_file, args=[fs, file_, filename])
+        process.start()
+        threads.append(process)
+
+        hint = Hint()
+        hint.level = level
+        hint.number = number
+        hint.filename = filename
+        hint.save()
+
+    # Wait for all of our Dropbox operations to complete before returning.
     for process in threads:
         process.join()
-
-    try:
-        level.save()
-    except Exception:
-        return fail_str
 
     return "/hint-mgmt?success=True&next=" + str(int(lvl_num) + 1)

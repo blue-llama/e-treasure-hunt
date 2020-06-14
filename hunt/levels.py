@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime, timezone
 
 from django.contrib.auth.models import User
@@ -7,7 +8,7 @@ from geopy import distance
 from storages.backends.dropbox import DropBoxStorage
 
 import hunt.slack as slack
-from hunt.models import HuntEvent, Level
+from hunt.models import Hint, HuntEvent, Level
 
 
 def advance_level(user: User) -> None:
@@ -86,13 +87,14 @@ def maybe_load_level(request: HttpRequest, level_num: int) -> str:
         current_level = Level.objects.get(number=level_num)
 
         # Figure out how many images to display.  Show all hints for solved levels.
-        max_hints = len(current_level.clues)
-        num_hints = max_hints if level_num < team_level_num else team.hints_shown
+        max_hints = sys.maxsize if level_num < team_level_num else team.hints_shown
 
         # Get the URLs for the images to show.
         fs = DropBoxStorage()
-        hints = current_level.clues[:num_hints]
-        hint_urls = [fs.url(hint) for hint in hints]
+        hints = Hint.objects.filter(level=current_level, number__lt=max_hints).order_by(
+            "number"
+        )
+        hint_urls = [fs.url(hint.filename) for hint in hints]
 
         # Is this the last level?
         is_last_level = current_level.number == max_level_num

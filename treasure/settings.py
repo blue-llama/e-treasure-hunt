@@ -139,11 +139,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 if development:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "etreasurehunt",
-            "USER": "USER",
-            "PASSWORD": "PASSWORD",
-            "HOST": "localhost",
-            "PORT": "5432",
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": "treasure.sqlite",
         }
     }
