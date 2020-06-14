@@ -8,7 +8,7 @@ from geopy import distance
 from storages.backends.dropbox import DropBoxStorage
 
 import hunt.slack as slack
-from hunt.models import Hint, HuntEvent, Level
+from hunt.models import HuntEvent, Level
 
 
 def advance_level(user: User) -> None:
@@ -91,9 +91,7 @@ def maybe_load_level(request: HttpRequest, level_num: int) -> str:
 
         # Get the URLs for the images to show.
         fs = DropBoxStorage()
-        hints = Hint.objects.filter(level=current_level, number__lt=max_hints).order_by(
-            "number"
-        )
+        hints = current_level.hint_set.filter(number__lt=max_hints).order_by("number")
         hint_urls = [fs.url(hint.filename) for hint in hints]
 
         # Is this the last level?

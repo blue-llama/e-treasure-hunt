@@ -68,7 +68,7 @@ def upload_new_hint(request: HttpRequest) -> str:
     threads = []
 
     # Delete old hints.
-    old_hints = Hint.objects.filter(level=level)
+    old_hints = level.hint_set.all()
     for old_hint in old_hints:
         if fs.exists(old_hint.filename):
             process = Thread(target=delete_file, args=[fs, old_hint.filename])
