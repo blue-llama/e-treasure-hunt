@@ -7,6 +7,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.http.request import HttpRequest
 from storages.backends.dropbox import DropBoxStorage
 
+from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
 
 
@@ -49,7 +50,11 @@ def upload_new_hint(request: HttpRequest) -> str:
     lvl_photos = [f for f in lvl_files if extension(f.name) in (".jpg", ".png")]
     lvl_photos.sort(key=lambda x: x.name)
 
-    if (lvl_desc_file is None) or (lvl_info_file is None) or (len(lvl_photos) != 5):
+    if (
+        (lvl_desc_file is None)
+        or (lvl_info_file is None)
+        or (len(lvl_photos) != HINTS_PER_LEVEL)
+    ):
         return fail_str
 
     # Update the level.

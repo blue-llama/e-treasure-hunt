@@ -7,6 +7,7 @@ from django.http.request import HttpRequest
 from django.utils import timezone
 
 import hunt.slack as slack
+from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import HuntEvent, HuntInfo
 
 # Time in minutes to wait for a hint to be dropped after a request.
@@ -23,6 +24,10 @@ def request_hint(request: HttpRequest) -> str:
     # Check that this a request for the user's current level.
     hunt_info = request.user.huntinfo
     if int(lvl) != hunt_info.level:
+        return "/oops"
+
+    # Prevent requesting more hints than there are.
+    if hunt_info.hints_shown >= HINTS_PER_LEVEL:
         return "/oops"
 
     # If a hint request is already in progress, there's nothing to do here.

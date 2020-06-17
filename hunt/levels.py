@@ -1,5 +1,3 @@
-import sys
-
 from django.contrib.auth.models import User
 from django.http.request import HttpRequest
 from django.template import loader
@@ -8,6 +6,7 @@ from geopy import distance
 from storages.backends.dropbox import DropBoxStorage
 
 import hunt.slack as slack
+from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import HuntEvent, Level
 
 
@@ -87,11 +86,11 @@ def maybe_load_level(request: HttpRequest, level_num: int) -> str:
         current_level = Level.objects.get(number=level_num)
 
         # Figure out how many images to display.  Show all hints for solved levels.
-        max_hints = sys.maxsize if level_num < team_level_num else team.hints_shown
+        num_hints = HINTS_PER_LEVEL if level_num < team_level_num else team.hints_shown
 
         # Get the URLs for the images to show.
         fs = DropBoxStorage()
-        hints = current_level.hint_set.filter(number__lt=max_hints).order_by("number")
+        hints = current_level.hint_set.filter(number__lt=num_hints).order_by("number")
         hint_urls = [fs.url(hint.filename) for hint in hints]
 
         # Is this the last level?
@@ -110,7 +109,7 @@ def maybe_load_level(request: HttpRequest, level_num: int) -> str:
         if team.hint_requested:
             allow_hint = False
             reason = "Your team has already requested a hint."
-        elif team.hints_shown >= max_hints:
+        elif team.hints_shown >= HINTS_PER_LEVEL:
             allow_hint = False
             reason = "No more hints are available on this level."
 
