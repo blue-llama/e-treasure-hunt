@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db.models import Max
 from django.http.request import HttpRequest
 from django.template import loader
 from django.utils import timezone
@@ -76,7 +77,7 @@ def maybe_load_level(request: HttpRequest, level_num: int) -> str:
     team = user.huntinfo
 
     # Find the last level.  Staff can see everything.
-    max_level_num = Level.objects.order_by("-number")[0].number
+    max_level_num = Level.objects.all().aggregate(Max("number"))["number__max"]
     team_level_num = max_level_num if user.is_staff else team.level
 
     # Only load the level if it's one the team has access to.
@@ -138,12 +139,13 @@ def maybe_load_level(request: HttpRequest, level_num: int) -> str:
 
 
 def list_levels(request: HttpRequest) -> str:
-    # Get the team's current level.
-    team_level = request.user.huntinfo.level
-
-    # Hack - staff can see all levels.
-    if request.user.is_staff:
-        team_level = Level.objects.order_by("-number")[0].number
+    # Get the team's current level.  Staff can see all levels.
+    user = request.user
+    team_level = (
+        Level.objects.all().aggregate(Max("number"))["number__max"]
+        if user.is_staff
+        else user.huntinfo.level
+    )
 
     # Make a list of all the levels to display.
     levels = list(range(1, team_level + 1))

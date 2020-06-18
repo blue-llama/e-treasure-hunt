@@ -2,6 +2,7 @@ import csv
 import os
 
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Max
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import redirect
@@ -51,12 +52,13 @@ def get_hunt_events(request: HttpRequest) -> HttpResponse:
 def home(request: HttpRequest) -> HttpResponse:
     template = loader.get_template("welcome.html")
 
+    # Staff can see all levels.
     user = request.user
-    team_level = user.huntinfo.level
-
-    # Hack - staff can see all levels.
-    if user.is_staff:
-        team_level = Level.objects.order_by("-number")[0].number
+    team_level = (
+        Level.objects.all().aggregate(Max("number"))["number__max"]
+        if user.is_staff
+        else user.huntinfo.level
+    )
 
     context = {"display_name": user.get_username(), "team_level": team_level}
     return HttpResponse(template.render(context, request))
