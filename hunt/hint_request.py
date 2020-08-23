@@ -3,6 +3,7 @@ Functions for requesting hints.
 """
 from datetime import timedelta
 
+from django.contrib.auth.models import User
 from django.http.request import HttpRequest
 from django.utils import timezone
 
@@ -43,58 +44,64 @@ def request_hint(request: HttpRequest) -> str:
     event.level = lvl
     event.save()
 
-    process_hint_request(hunt_info)
-
-    # If we have a slack channel for this user, schedule an announcement to coincide
-    # with the hint release.
-    if hunt_info.slack_channel:
-        assert hunt_info.next_hint_release is not None
-        timestamp = int(hunt_info.next_hint_release.timestamp())
-        slack.schedule_hint_announcement(hunt_info.slack_channel, timestamp)
+    # Record that a hint has been requested.
+    hunt_info.hint_requested = True
+    hunt_info.save()
 
     # Redirect back to the level in question.
     return "/level/" + lvl
 
 
-def get_furthest_active_level() -> int:
-    """
-    Finds the furthest level anyone has reached in the hunt.
-    """
-    hunts = HuntInfo.objects.all()
-    return max(hunt.level for hunt in hunts if not hunt.user.is_staff)
-
-
-def in_the_lead(hunt_info: HuntInfo) -> bool:
-    """
-    A user is in the lead if they are at the furthest active level
-    anyone has reached and have received the most (or joint most)
-    hints for that level.
-    """
-    if hunt_info.level < get_furthest_active_level():
-        return False
-
-    hunts = HuntInfo.objects.filter(level=hunt_info.level)
-    max_hints = max(hunt.hints_shown for hunt in hunts if not hunt.user.is_staff)
-    return hunt_info.hints_shown == max_hints
-
-
 def determine_hint_delay(hunt_info: HuntInfo) -> int:
     """
-    Determine how long a user has to wait before seeing the next
-    hint. Users who are in the lead have to wait longer than others.
+    Determine how long a user has to wait before seeing the next hint, in minutes.
     """
-    if in_the_lead(hunt_info):
-        return LEADER_HINT_WAIT_TIME
-
-    return NON_LEADER_HINT_WAIT_TIME
+    delay = 20 * hunt_info.hints_shown
+    return delay
 
 
-def process_hint_request(hunt_info: HuntInfo) -> None:
+def prepare_next_hint(hunt_info: HuntInfo) -> None:
     """
-    Sets fields on the HuntInfo to indicate that a hint request is in
-    progress.
+    Prepare to release the next hint, by calculating when it will become available.
     """
+    # Don't try to release more hints than there are.
+    if hunt_info.hints_shown >= HINTS_PER_LEVEL:
+        return
+
+    # Calculate when to release the next hint.
+    now = timezone.now()
     delay = determine_hint_delay(hunt_info)
-    hunt_info.hint_requested = True
-    hunt_info.next_hint_release = timezone.now() + timedelta(minutes=delay)
+    hunt_info.next_hint_release = now + timedelta(minutes=delay)
     hunt_info.save()
+
+    # If we have a slack channel for this user, schedule an announcement to coincide
+    # with the hint becoming available.
+    if hunt_info.slack_channel:
+        timestamp = int(hunt_info.next_hint_release.timestamp())
+        slack.schedule_hint_announcement(hunt_info.slack_channel, timestamp)
+
+
+def maybe_release_hint(user: User) -> None:
+    """
+    Release any requested hint that has been delayed for the appropriate length of time.
+    """
+    hunt_info = user.huntinfo
+    now = timezone.now()
+    if (
+        hunt_info.hint_requested
+        and hunt_info.next_hint_release is not None
+        and now > hunt_info.next_hint_release
+    ):
+        # Record the event.
+        event = HuntEvent()
+        event.time = now
+        event.team = user.username
+        event.type = HuntEvent.HINT_REL
+        event.level = hunt_info.level
+        event.save()
+
+        # Release this hint.
+        hunt_info.hints_shown += 1
+        hunt_info.hint_requested = False
+        hunt_info.next_hint_release = None
+        hunt_info.save()

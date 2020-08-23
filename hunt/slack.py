@@ -22,7 +22,7 @@ def schedule_hint_announcement(channel_id: str, utc_seconds: int) -> None:
     json = {
         "channel": channel_id,
         "post_at": utc_seconds,
-        "text": "A hint has been released!",
+        "text": "A hint is available!",
     }
     requests.post(schedule_url, json=json, headers=headers)
 

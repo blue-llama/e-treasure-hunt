@@ -9,8 +9,7 @@ from django.shortcuts import redirect
 from django.template import loader
 
 from hunt.hint_mgr import upload_new_hint
-from hunt.hint_release import maybe_release_hint
-from hunt.hint_request import request_hint
+from hunt.hint_request import maybe_release_hint, prepare_next_hint, request_hint
 from hunt.levels import list_levels, look_for_level, maybe_load_level
 from hunt.models import AppSetting, HuntEvent, Level
 from hunt.utils import not_in_working_hours
@@ -29,7 +28,6 @@ def go_home(request: HttpRequest) -> HttpResponse:
 # Admin-only page to download hunt event logs.
 @user_passes_test(lambda u: u.is_staff)
 def get_hunt_events(request: HttpRequest) -> HttpResponse:
-
     meta = HuntEvent._meta
     field_names = [field.name for field in meta.fields]
 
@@ -68,7 +66,16 @@ def home(request: HttpRequest) -> HttpResponse:
 @login_required
 @not_in_working_hours
 def level(request: HttpRequest, level: int) -> HttpResponse:
-    maybe_release_hint(request.user)
+    # Release a hint, if appropriate.
+    user = request.user
+    maybe_release_hint(user)
+
+    # Prepare the next hint, if appropriate.
+    hunt_info = user.huntinfo
+    if hunt_info.next_hint_release is None:
+        prepare_next_hint(hunt_info)
+
+    # Show the level.
     return HttpResponse(maybe_load_level(request, level))
 
 
