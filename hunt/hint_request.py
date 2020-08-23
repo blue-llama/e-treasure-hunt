@@ -57,6 +57,18 @@ def determine_hint_delay(hunt_info: HuntInfo) -> int:
     Determine how long a user has to wait before seeing the next hint, in minutes.
     """
     delay = 20 * hunt_info.hints_shown
+
+    # The leading two teams are made to wait a bit longer.
+    hunts = HuntInfo.objects.filter(user__is_staff=False).order_by(
+        "-level", "-hints_shown"
+    )
+    if len(hunts) > 1:
+        second = hunts[1]
+        second_place = (second.level, second.hints_shown)
+        user_place = (hunt_info.level, hunt_info.hints_shown)
+        if user_place >= second_place:
+            delay += 20
+
     return delay
 
 
