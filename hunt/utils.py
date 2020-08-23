@@ -2,14 +2,21 @@ import datetime
 from functools import wraps
 from typing import Any, Callable
 
+import holidays
 import pytz
+from django.db.models import Max
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.template import loader
 
-import holidays
+from hunt.models import Level
 
 RequestHandler = Callable[..., HttpResponse]
+
+
+def max_level() -> int:
+    max_level: int = Level.objects.all().aggregate(Max("number"))["number__max"]
+    return max_level
 
 
 # Are we in (UK) working hours?

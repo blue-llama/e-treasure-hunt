@@ -2,7 +2,6 @@ import csv
 import os
 
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.db.models import Max
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import redirect
@@ -11,8 +10,8 @@ from django.template import loader
 from hunt.hint_mgr import upload_new_hint
 from hunt.hint_request import maybe_release_hint, prepare_next_hint, request_hint
 from hunt.levels import list_levels, look_for_level, maybe_load_level
-from hunt.models import AppSetting, HuntEvent, Level
-from hunt.utils import not_in_working_hours
+from hunt.models import AppSetting, HuntEvent
+from hunt.utils import max_level, not_in_working_hours
 
 
 # Send users to the hunt and admins to management.
@@ -52,11 +51,7 @@ def home(request: HttpRequest) -> HttpResponse:
 
     # Staff can see all levels.
     user = request.user
-    team_level = (
-        Level.objects.all().aggregate(Max("number"))["number__max"]
-        if user.is_staff
-        else user.huntinfo.level
-    )
+    team_level = max_level() if user.is_staff else user.huntinfo.level
 
     context = {"display_name": user.get_username(), "team_level": team_level}
     return HttpResponse(template.render(context, request))

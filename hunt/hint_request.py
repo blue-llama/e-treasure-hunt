@@ -10,10 +10,7 @@ from django.utils import timezone
 import hunt.slack as slack
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import HuntEvent, HuntInfo
-
-# Time in minutes to wait for a hint to be dropped after a request.
-LEADER_HINT_WAIT_TIME = 40
-NON_LEADER_HINT_WAIT_TIME = 20
+from hunt.utils import max_level
 
 
 def request_hint(request: HttpRequest) -> str:
@@ -78,6 +75,10 @@ def prepare_next_hint(hunt_info: HuntInfo) -> None:
     """
     # Don't try to release more hints than there are.
     if hunt_info.hints_shown >= HINTS_PER_LEVEL:
+        return
+
+    # Don't try to release hints on the last level.
+    if hunt_info.level >= max_level():
         return
 
     # Calculate when to release the next hint.
