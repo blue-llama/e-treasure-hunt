@@ -14,15 +14,23 @@ from hunt.utils import max_level
 
 
 def request_hint(request: HttpRequest) -> str:
-    # Request must be for a specific level.
+    hunt_info = request.user.huntinfo
+
+    # Check that this is a request for the user's current level.
     lvl = request.GET.get("lvl")
     if lvl is None:
         return "/oops"
 
-    # Check that this a request for the user's current level.
-    hunt_info = request.user.huntinfo
     if int(lvl) != hunt_info.level:
         return "/oops"
+
+    # Check that this request is for the expected hint.
+    hint = request.GET.get("hint")
+    if hint is None:
+        return "/oops"
+
+    if int(hint) != hunt_info.hints_shown:
+        return "/level/" + lvl
 
     # Prevent requesting more hints than there are.
     if hunt_info.hints_shown >= HINTS_PER_LEVEL:
