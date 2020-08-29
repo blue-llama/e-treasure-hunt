@@ -23,6 +23,16 @@ isort = "^5.4.2"
 mypy = "^0.770"
 django-stubs = "^1.5.0"
 
+[tool.isort]
+# Black compatible settings
+# see https://github.com/psf/black#the-black-code-style
+multi_line_output=3
+include_trailing_comma=true
+force_grid_wrap=0
+use_parentheses=true
+ensure_newline_before_comments=true
+line_length=88
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
