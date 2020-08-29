@@ -17,7 +17,7 @@ requests = "^2.23.0"
 holidays = "^0.10.1"
 
 [tool.poetry.dev-dependencies]
-black = "^19.10b0"
+black = "^20.8b1"
 flake8 = "^3.7.9"
 isort = "^5.4.2"
 mypy = "^0.770"
