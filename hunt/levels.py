@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.http.request import HttpRequest
 from django.template import loader
 from django.utils import timezone
-from geopy import distance
+from geopy import distance, Point
 from storages.backends.dropbox import DropBoxStorage
 
 import hunt.slack as slack
@@ -53,11 +53,16 @@ def look_for_level(request: HttpRequest) -> str:
     if search_level > team_level:
         return "/oops"
 
+    # Make sure we're searching in a valid place.
+    try:
+        search_point = Point(latitude, longitude)
+    except ValueError:
+        return "/oops"
+
     # Get the distance between the search location and the level solution.
     level = Level.objects.get(number=search_level)
-    level_coords = (level.latitude, level.longitude)
-    search_coords = (latitude, longitude)
-    dist = distance.distance(search_coords, level_coords).m
+    level_point = Point(level.latitude, level.longitude)
+    dist = distance.distance(search_point, level_point).m
 
     # If the distance is small enough, accept the solution.
     if dist <= level.tolerance:
