@@ -83,7 +83,7 @@ def upload_new_hint(request: HttpRequest) -> str:
 
     # Create new hints.
     for number, file_ in enumerate(lvl_photos):
-        filename = str(uuid4()) + "." + extension(file_.name)
+        filename = str(uuid4()) + extension(file_.name)
         process = Thread(target=save_file, args=[fs, file_, filename])
         process.start()
         threads.append(process)
