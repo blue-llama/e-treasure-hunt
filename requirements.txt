@@ -19,9 +19,9 @@ django==3.1.1 \
 django-heroku==0.3.1 \
     --hash=sha256:6af4bc3ae4a9b55eaad6dbe5164918982d2762661aebc9f83d9fa49f6009514e \
     --hash=sha256:2bc690aab89eedbe01311752320a9a12e7548e3b0ed102681acc5736a41a4762
-django-storages==1.10 \
-    --hash=sha256:36ed8dab33d761954498189592ce005920095fcbc02dab4184eb51393c370991 \
-    --hash=sha256:1e37da57678e6cf1e9914f84099a305323e4e1f261afe54fdb703cae7aa6fbc3
+django-storages==1.10.1 \
+    --hash=sha256:652275ab7844538c462b62810276c0244866f345878256a9e0e86f5b1283ae18 \
+    --hash=sha256:12de8fb2605b9b57bfaf54b075280d7cbb3b3ee1ca4bc9b9add147af87fe3a2c
 dropbox==10.4.1 \
     --hash=sha256:b4f137ced64c521f67dca7fc4daecddd4edcd70bf2b4e16c5730aad1fe21253c \
     --hash=sha256:2aaca4eded7dd8516fa1b0187bf32a5836181dec17c23b5506914330f3b1b7ad \
