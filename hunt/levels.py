@@ -1,14 +1,13 @@
 from django.contrib.auth.models import User
-from django.http.request import HttpRequest
 from django.template import loader
 from django.utils import timezone
-from geopy import distance, Point
+from geopy import Point, distance
 from storages.backends.dropbox import DropBoxStorage
 
 import hunt.slack as slack
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import HuntEvent, Level
-from hunt.utils import max_level
+from hunt.utils import AuthenticatedHttpRequest, max_level
 
 
 def advance_level(user: User) -> None:
@@ -35,7 +34,7 @@ def advance_level(user: User) -> None:
         slack.cancel_pending_announcements(hunt_info.slack_channel)
 
 
-def look_for_level(request: HttpRequest) -> str:
+def look_for_level(request: AuthenticatedHttpRequest) -> str:
     # Get latitude and longitude - without these there can be no searching.
     latitude = request.GET.get("lat")
     longitude = request.GET.get("long")
@@ -76,7 +75,7 @@ def look_for_level(request: HttpRequest) -> str:
     return "/nothing-here?lvl=" + str(search_level)
 
 
-def maybe_load_level(request: HttpRequest, level_num: int) -> str:
+def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
     # Get the user details.
     user = request.user
     team = user.huntinfo
@@ -143,7 +142,7 @@ def maybe_load_level(request: HttpRequest, level_num: int) -> str:
     return rendered
 
 
-def list_levels(request: HttpRequest) -> str:
+def list_levels(request: AuthenticatedHttpRequest) -> str:
     # Get the team's current level.  Staff can see all levels.
     user = request.user
     team_level = max_level() if user.is_staff else user.huntinfo.level

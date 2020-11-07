@@ -4,16 +4,15 @@ Functions for requesting hints.
 from datetime import timedelta
 
 from django.contrib.auth.models import User
-from django.http.request import HttpRequest
 from django.utils import timezone
 
 import hunt.slack as slack
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import HuntEvent, HuntInfo
-from hunt.utils import max_level
+from hunt.utils import AuthenticatedHttpRequest, max_level
 
 
-def request_hint(request: HttpRequest) -> str:
+def request_hint(request: AuthenticatedHttpRequest) -> str:
     hunt_info = request.user.huntinfo
 
     # Check that this is a request for the user's current level.

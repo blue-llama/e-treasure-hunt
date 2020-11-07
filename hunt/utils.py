@@ -4,12 +4,18 @@ from typing import Any, Callable
 
 import holidays
 import pytz
+from django.contrib.auth.models import User
 from django.db.models import Max
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.template import loader
 
 from hunt.models import Level
+
+
+class AuthenticatedHttpRequest(HttpRequest):
+    user: User
+
 
 RequestHandler = Callable[..., HttpResponse]
 
