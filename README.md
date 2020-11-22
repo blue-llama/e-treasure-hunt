@@ -20,8 +20,10 @@ Either way you will need:
 
 - A Dropbox account, with an app set up with read/write permission to a specific
   folder to hold the level images, and a corresponding OAuth key
+  - <https://www.dropbox.com/developers/apps>
 - If you are using Google Maps: a Google Cloud account with Places and Maps
   JavaScript APIs enabled, and API key
+  - <https://console.cloud.google.com/apis/dashboard>
   - NOTE: this API key is passed to clients, so you must ensure you have
     appropriate usage limits configured to avoid being charged if it is
     mis-used.
