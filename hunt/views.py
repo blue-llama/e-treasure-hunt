@@ -91,10 +91,12 @@ def oops(request: HttpRequest) -> HttpResponse:
 @not_in_working_hours
 def map(request: HttpRequest) -> HttpResponse:
     settings = AppSetting.objects.get(active=True)
-    template_name = "maphold.html" if settings.use_alternative_map else "map-base.html"
-    template = loader.get_template(template_name)
+    if settings.use_alternative_map:
+        return alt_map(request)
 
+    template = loader.get_template("google-map")
     context = {"api_key": os.environ["GM_API_KEY"], "lvl": request.GET.get("lvl")}
+
     return HttpResponse(template.render(context, request))
 
 
@@ -102,7 +104,7 @@ def map(request: HttpRequest) -> HttpResponse:
 @login_required
 @not_in_working_hours
 def alt_map(request: HttpRequest) -> HttpResponse:
-    template = loader.get_template("maphold.html")
+    template = loader.get_template("alternate-map.html")
     context = {"lvl": request.GET.get("lvl")}
     return HttpResponse(template.render(context, request))
 
