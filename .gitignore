@@ -1,9 +1,7 @@
-*cov*
-.idea
-/.mypy_cache
-*pytest_cache*
-*pycache*
-jquery*
-venv
-/static
-style.css
+/.mypy_cache/
+/hunt/__pycache__/
+/static/
+/treasure/__pycache__/
+hunt/migrations/__pycache__
+settings.env
+treasure.sqlite
