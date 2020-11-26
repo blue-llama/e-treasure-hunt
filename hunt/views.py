@@ -11,7 +11,7 @@ from hunt.hint_mgr import upload_new_hint
 from hunt.hint_request import maybe_release_hint, prepare_next_hint, request_hint
 from hunt.levels import list_levels, look_for_level, maybe_load_level
 from hunt.models import AppSetting, HuntEvent
-from hunt.utils import max_level, not_in_working_hours
+from hunt.utils import AuthenticatedHttpRequest, max_level, not_in_working_hours
 
 
 # Send users to the hunt and admins to management.
@@ -46,7 +46,7 @@ def get_hunt_events(request: HttpRequest) -> HttpResponse:
 # Hunt homepage.
 @login_required
 @not_in_working_hours
-def home(request: HttpRequest) -> HttpResponse:
+def home(request: AuthenticatedHttpRequest) -> HttpResponse:
     template = loader.get_template("welcome.html")
 
     # Staff can see all levels.
@@ -60,7 +60,7 @@ def home(request: HttpRequest) -> HttpResponse:
 # Level page.
 @login_required
 @not_in_working_hours
-def level(request: HttpRequest, level: int) -> HttpResponse:
+def level(request: AuthenticatedHttpRequest, level: int) -> HttpResponse:
     # Release a hint, if appropriate.
     user = request.user
     maybe_release_hint(user)
@@ -77,7 +77,7 @@ def level(request: HttpRequest, level: int) -> HttpResponse:
 # Error page.
 @login_required
 @not_in_working_hours
-def oops(request: HttpRequest) -> HttpResponse:
+def oops(request: AuthenticatedHttpRequest) -> HttpResponse:
     # Shouldn't be here. Show an error page.
     template = loader.get_template("oops.html")
     context = {"team_level": request.user.huntinfo.level}
@@ -89,7 +89,7 @@ def oops(request: HttpRequest) -> HttpResponse:
 # Map (or alt map).
 @login_required
 @not_in_working_hours
-def map(request: HttpRequest) -> HttpResponse:
+def map(request: AuthenticatedHttpRequest) -> HttpResponse:
     settings = AppSetting.objects.get(active=True)
     if settings.use_alternative_map:
         return alt_map(request)
@@ -103,7 +103,7 @@ def map(request: HttpRequest) -> HttpResponse:
 # Alt map.
 @login_required
 @not_in_working_hours
-def alt_map(request: HttpRequest) -> HttpResponse:
+def alt_map(request: AuthenticatedHttpRequest) -> HttpResponse:
     template = loader.get_template("alternate-map.html")
     context = {"lvl": request.GET.get("lvl")}
     return HttpResponse(template.render(context, request))
@@ -112,14 +112,14 @@ def alt_map(request: HttpRequest) -> HttpResponse:
 # Level list.
 @login_required
 @not_in_working_hours
-def levels(request: HttpRequest) -> HttpResponse:
+def levels(request: AuthenticatedHttpRequest) -> HttpResponse:
     return HttpResponse(list_levels(request))
 
 
 # Search request endpoint.
 @login_required
 @not_in_working_hours
-def do_search(request: HttpRequest) -> HttpResponse:
+def do_search(request: AuthenticatedHttpRequest) -> HttpResponse:
     return redirect(look_for_level(request))
 
 
@@ -138,7 +138,7 @@ def search(request: HttpRequest) -> HttpResponse:
 # Nothing here.
 @login_required
 @not_in_working_hours
-def nothing(request: HttpRequest) -> HttpResponse:
+def nothing(request: AuthenticatedHttpRequest) -> HttpResponse:
     template = loader.get_template("nothing.html")
 
     team_level = request.user.huntinfo.level
@@ -152,7 +152,7 @@ def nothing(request: HttpRequest) -> HttpResponse:
 # Request a hint.
 @login_required
 @not_in_working_hours
-def hint(request: HttpRequest) -> HttpResponse:
+def hint(request: AuthenticatedHttpRequest) -> HttpResponse:
     return redirect(request_hint(request))
 
 
