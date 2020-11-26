@@ -1,5 +1,6 @@
 /.mypy_cache/
 /hunt/__pycache__/
+/media/
 /static/
 /treasure/__pycache__/
 hunt/migrations/__pycache__

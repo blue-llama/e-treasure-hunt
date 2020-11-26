@@ -41,7 +41,7 @@ class Level(models.Model):
 class Hint(models.Model):
     level = models.ForeignKey(Level, on_delete=models.CASCADE)
     number = models.IntegerField()
-    filename = models.CharField(max_length=48)
+    image = models.FileField(upload_to="hints")
 
 
 # App settings. Use Boolean primary key to ensure there's only one active.

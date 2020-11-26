@@ -39,8 +39,14 @@ X_FRAME_OPTIONS = "DENY"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 CSRF_COOKIE_AGE = 5184000
 
-# DropBox
-DEFAULT_FILE_STORAGE = "storages.backends.dropbox.DropBoxStorage"
+# Image storage.
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+DEFAULT_FILE_STORAGE = (
+    "django.core.files.storage.FileSystemStorage"
+    if development
+    else "storages.backends.dropbox.DropBoxStorage"
+)
 DROPBOX_OAUTH2_TOKEN = os.environ.get("DB_TOKEN", "")
 DROPBOX_ROOT_PATH = "/"
 
@@ -126,7 +132,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

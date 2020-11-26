@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.template import loader
 from django.utils import timezone
 from geopy import Point, distance
-from storages.backends.dropbox import DropBoxStorage
 
 import hunt.slack as slack
 from hunt.constants import HINTS_PER_LEVEL
@@ -94,9 +93,8 @@ def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
         num_hints = HINTS_PER_LEVEL if level_num < team_level_num else team.hints_shown
 
         # Get the URLs for the images to show.
-        fs = DropBoxStorage()
         hints = current_level.hint_set.filter(number__lt=num_hints).order_by("number")
-        hint_urls = [fs.url(hint.filename) for hint in hints]
+        hint_urls = [hint.image.url for hint in hints]
 
         # Is this the last level?
         is_last_level = current_level.number == max_level_num
