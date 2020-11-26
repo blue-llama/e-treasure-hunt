@@ -16,18 +16,17 @@ used to generate revenue.
 
 You can either deploy this app hosted (on Heroku) or locally.
 
-Either way you will need:
+If you are deploying on Herok you will need a Dropbox account, with an app set
+up with read/write permission to a specific folder to hold the level images, and
+a corresponding OAuth key.
+See <https://www.dropbox.com/developers/apps>.
 
-- A Dropbox account, with an app set up with read/write permission to a specific
-  folder to hold the level images, and a corresponding OAuth key
-  - <https://www.dropbox.com/developers/apps>
-- If you are using Google Maps: a Google Cloud account with Places and Maps
-  JavaScript APIs enabled, and API key
-  - <https://console.cloud.google.com/apis/dashboard>
+If you are using Google Maps you will need a Google Cloud account with Places
+and Maps JavaScript APIs enabled, and API key.
+  - See <https://console.cloud.google.com/apis/dashboard>.
   - NOTE: this API key is passed to clients, so you must ensure you have
     appropriate usage limits configured to avoid being charged if it is
-    mis-used.
-    You may also wish to employ additional security measures e.g.
+    mis-used.  You may also wish to employ additional security measures e.g.
     configuring an allowed redirect URI.
 
 ## How to deploy using Heroku
@@ -88,13 +87,6 @@ docker run \
   e-treasure-hunt createsuperuser
 ```
 
-Create a file `settings.env` containing your Dropbox token and (if you are using
-Google Maps) your Google Maps API key:
-```
-DB_TOKEN=db_token
-GM_API_KEY=api_key
-```
-
 With this setup done you can run the app as below, and should find it in your
 browser at <https://localhost:80>.
 
@@ -103,10 +95,12 @@ docker run \
   --user "$EUID":"${GROUPS[0]}" \
   --rm \
   --mount type=bind,source=$PWD,target=/usr/src/app \
-  --env-file settings.env \
   --publish 80:8000 \
   e-treasure-hunt
 ```
+
+To use Google maps, you will also need to pass `GM_API_KEY` to this container as
+an environment variable.
 
 # Initiating the app
 
