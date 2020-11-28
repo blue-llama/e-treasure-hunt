@@ -23,11 +23,12 @@ See <https://www.dropbox.com/developers/apps>.
 
 If you are using Google Maps you will need a Google Cloud account with Places
 and Maps JavaScript APIs enabled, and an API key.
-  - See <https://console.cloud.google.com/apis/dashboard>.
-  - NOTE: this API key is passed to clients, so you must ensure you have
-    appropriate usage limits configured to avoid being charged if it is
-    mis-used.  You may also wish to employ additional security measures e.g.
-    configuring an allowed redirect URI.
+
+- See <https://console.cloud.google.com/apis/dashboard>.
+- NOTE: this API key is passed to clients, so you must ensure you have
+  appropriate usage limits configured to avoid being charged if it is
+  mis-used. You may also wish to employ additional security measures e.g.
+  configuring an allowed redirect URI.
 
 ## How to deploy using Heroku
 
@@ -53,15 +54,27 @@ and Maps JavaScript APIs enabled, and an API key.
 - Use the CLI to run `heroku run -a <app_name> python manage.py createsuperuser`
   and set up an admin user
 
+### Other useful heroku commands
+
+Commands that I have previously searched for, dumped here to jog the memory
+later.
+
+- `heroku maintenance:on` and `heroku maintenance:off`
+- `heroku ps:scale web=0` and `heroku ps:scale web=1`
+- `heroku pg:reset`
+- `heroku logs --tail -a <app_name>`
+
 ## How to deploy locally
 
 To save on dependency-chasing, a Dockerfile is provided.
 Build the image:
+
 ```
 docker build --tag e-treasure-hunt .
 ```
 
 Collect static files (you should re-run this if you change the templates):
+
 ```
 docker run \
   --user "$EUID":"${GROUPS[0]}" \
@@ -71,6 +84,7 @@ docker run \
 ```
 
 Run database migrations and create the admin user:
+
 ```
 docker run \
   --user "$EUID":"${GROUPS[0]}" \
