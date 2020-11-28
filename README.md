@@ -107,8 +107,8 @@ an environment variable.
 ## Admin initiation
 
 - Navigate to <domain>/admin
-- Create an AppSetting object - tick "active"; if you are NOT using Google Maps,
-  tick "use alternate map"
+- Create an AppSetting object - tick "active"
+  - Here you can force use of the alternate map
 
 ## Create levels
 
@@ -119,6 +119,8 @@ an environment variable.
   page)
 - `clue.png` is the first image - the dummy file contains a background
 - `hint1.png`-`hint4.png` are the hints, in order
+  - The five images must be in alphabetical order, but otherwise the exact
+    filenames are not important
 
 ## Level upload
 
