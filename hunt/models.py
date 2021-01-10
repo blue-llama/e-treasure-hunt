@@ -16,7 +16,7 @@ class HuntInfo(models.Model):
     slack_channel = models.CharField(max_length=16, default="", blank=True)
 
     def __str__(self) -> str:
-        return self.user.username + "_hunt"
+        return self.user.get_username() + "_hunt"
 
 
 @receiver(post_save, sender=User)
@@ -69,7 +69,7 @@ class HuntEvent(models.Model):
     level = models.IntegerField()
 
     def __str__(self) -> str:
-        string_rep = "At " + str(self.time) + " " + self.user.username + " "
+        string_rep = "At " + str(self.time) + " " + self.user.get_username() + " "
 
         if self.type == HuntEvent.HINT_REQ:
             string_rep += "requested a hint on level " + str(self.level)

@@ -40,8 +40,8 @@ def look_for_level(request: AuthenticatedHttpRequest) -> str:
     if (latitude is None) or (longitude is None):
         return "/search"
 
-    # Every search must be for the solution to a specific level - by default, assume
-    # this is the team's current level.
+    # Every search must be for a specific level - by default, assume this is the team's
+    # current level.
     user = request.user
     team_level = user.huntinfo.level
     lvl = request.GET.get("lvl")
@@ -85,38 +85,32 @@ def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
 
     # Only load the level if it's one the team has access to.
     if level_num <= team_level_num:
-        # Get the level objects for this level and the one before.
-        previous_level = Level.objects.get(number=level_num - 1)
+        # Get this level and the one before.
         current_level = Level.objects.get(number=level_num)
+        previous_level = Level.objects.get(number=level_num - 1)
 
-        # Figure out how many images to display.  Show all hints for solved levels.
+        # Decide how many images to display.  Show all hints for solved levels.
         num_hints = HINTS_PER_LEVEL if level_num < team_level_num else team.hints_shown
 
         # Get the URLs for the images to show.
         hints = current_level.hint_set.filter(number__lt=num_hints).order_by("number")
         hint_urls = [hint.image.url for hint in hints]
 
-        # Is this the last level?
-        is_last_level = current_level.number == max_level_num
-
-        # Get the description from the previous level, and split it
-        # into paragraphs for display.
-        desc_paras = previous_level.description.splitlines()
-
-        # By default a hint can be requested.
-        allow_hint = True
-        reason = ""
-
-        # Don't allow a hint if one's already been requested by the team, or
-        # if max hints are already shown.
+        # Don't allow a hint if one has already been requested by the team, or if max
+        # hints are already shown.
         if team.hint_requested:
             allow_hint = False
             reason = "Your team has already requested a hint."
         elif team.hints_shown >= HINTS_PER_LEVEL:
             allow_hint = False
             reason = "No more hints are available on this level."
+        else:
+            allow_hint = True
+            reason = ""
 
-        # Prepare the template and context.
+        is_last_level = current_level.number == max_level_num
+        desc_paras = previous_level.description.splitlines()
+
         template = loader.get_template("level.html")
         context = {
             "team_level": team_level_num,
@@ -135,7 +129,6 @@ def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
         template = loader.get_template("oops.html")
         context = {"team_level": team_level_num}
 
-    # Return the rendered template.
     rendered: str = template.render(context, request)
     return rendered
 
@@ -145,13 +138,9 @@ def list_levels(request: AuthenticatedHttpRequest) -> str:
     user = request.user
     team_level = max_level() if user.is_staff else user.huntinfo.level
 
-    # Make a list of all the levels to display.
     levels = list(range(1, team_level + 1))
-
-    # Give the level list as context to the template.
     template = loader.get_template("levels.html")
     context = {"team_level": team_level, "levels": levels}
 
-    # Return the rendered template.
     rendered: str = template.render(context, request)
     return rendered
