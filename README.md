@@ -59,6 +59,7 @@ and Maps JavaScript APIs enabled, and an API key.
 Commands that I have previously searched for, dumped here to jog the memory
 later.
 
+- `heroku git:remote -a <app_name>`
 - `heroku maintenance:on` and `heroku maintenance:off`
 - `heroku ps:scale web=0` and `heroku ps:scale web=1`
 - `heroku pg:reset`
