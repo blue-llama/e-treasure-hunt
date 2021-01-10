@@ -17,7 +17,7 @@ def advance_level(user: User) -> None:
     event = HuntEvent()
     event.time = timezone.now()
     event.type = HuntEvent.CLUE_ADV
-    event.team = user.username
+    event.user = user
     event.level = new_level
     event.save()
 

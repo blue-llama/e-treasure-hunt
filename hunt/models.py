@@ -65,11 +65,11 @@ class HuntEvent(models.Model):
 
     time = models.DateTimeField()
     type = models.CharField(max_length=3, choices=EVENT_TYPES)
-    team = models.CharField(max_length=127, default="")
-    level = models.IntegerField(default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    level = models.IntegerField()
 
     def __str__(self) -> str:
-        string_rep = "At " + str(self.time) + " " + self.team.upper() + " "
+        string_rep = "At " + str(self.time) + " " + self.user.username + " "
 
         if self.type == HuntEvent.HINT_REQ:
             string_rep += "requested a hint on level " + str(self.level)
