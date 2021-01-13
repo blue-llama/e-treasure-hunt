@@ -136,6 +136,7 @@ an environment variable.
 - `hint1.png`-`hint4.png` are the hints, in order
   - The five images must be in alphabetical order, but otherwise the exact
     filenames are not important
+  - `.png` and `.jpg` are acceptable formats
 
 ## Level upload
 
@@ -146,6 +147,15 @@ an environment variable.
 - Upload a dummy level N+1 using the dummy level files - replace clue with an
   image for the final page
 - Navigate to <domain>/home and check your level(s) display correctly
+
+The server is not very helpful if you don't get things just right.
+
+- If level upload is failing:
+  - Make sure that you are uploading exactly one `.txt` file, one `.json` file
+    and five images
+  - Make sure that the contents of the JSON file describing the level match the
+    example `about.json`
+- You really do need to upload both the dummy levels 0 and N+1
 
 ## Create users
 
