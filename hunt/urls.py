@@ -33,7 +33,7 @@ urlpatterns = [
     path("oops", views.oops, name="oops"),
     path("events", views.get_hunt_events, name="events"),
     path("mgmt", views.mgmt, name="mgmt"),
-    path("level-mgmt", views.hint_mgmt, name="level-mgmt"),
+    path("level-mgmt", views.level_mgmt, name="level-mgmt"),
     path("add-level", views.add_new_level, name="new-level"),
 ]
 if settings.DEBUG:

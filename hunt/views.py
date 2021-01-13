@@ -174,7 +174,7 @@ def mgmt(request: HttpRequest) -> HttpResponse:
 
 # Level uploader page.
 @user_passes_test(lambda u: u.is_staff)
-def hint_mgmt(request: HttpRequest) -> HttpResponse:
+def level_mgmt(request: HttpRequest) -> HttpResponse:
     template = loader.get_template("level-mgmt.html")
 
     next_level = request.GET.get("next")
