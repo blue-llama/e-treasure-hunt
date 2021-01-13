@@ -1,7 +1,7 @@
 {% extends 'mgmt-base.html' %}
 {% block content %}
 
-<form action="/add-hint" method="post" enctype="multipart/form-data">
+<form action="/add-level" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="label">Level number</div>
   <input class="numinput" name="lvl-num" type="number" value="{{ next }}" />

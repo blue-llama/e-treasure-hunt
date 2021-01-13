@@ -8,18 +8,18 @@ from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
 
 
-def upload_new_hint(request: HttpRequest) -> str:
+def upload_new_level(request: HttpRequest) -> str:
     if not request.user.has_perm("hunt.add_level"):
-        return "/hint-mgmt?success=False"
+        return "/level-mgmt?success=False"
 
     if not request.POST:
-        return "/hint-mgmt?success=False"
+        return "/level-mgmt?success=False"
 
     lvl_num = request.POST.get("lvl-num")
     if lvl_num is None:
-        return "/hint-mgmt?success=False"
+        return "/level-mgmt?success=False"
 
-    fail_str = "/hint-mgmt?success=False&next=" + lvl_num
+    fail_str = "/level-mgmt?success=False&next=" + lvl_num
 
     # Get the existing level, or create a new one.
     try:
@@ -72,4 +72,4 @@ def upload_new_hint(request: HttpRequest) -> str:
         hint.number = number
         hint.image.save(filename, file_)
 
-    return "/hint-mgmt?success=True&next=" + str(int(lvl_num) + 1)
+    return "/level-mgmt?success=True&next=" + str(int(lvl_num) + 1)

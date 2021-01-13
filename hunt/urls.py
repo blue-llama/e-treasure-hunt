@@ -33,8 +33,8 @@ urlpatterns = [
     path("oops", views.oops, name="oops"),
     path("events", views.get_hunt_events, name="events"),
     path("mgmt", views.mgmt, name="mgmt"),
-    path("hint-mgmt", views.hint_mgmt, name="hint-mgmt"),
-    path("add-hint", views.add_new_hint, name="new-hint"),
+    path("level-mgmt", views.hint_mgmt, name="level-mgmt"),
+    path("add-level", views.add_new_level, name="new-level"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
