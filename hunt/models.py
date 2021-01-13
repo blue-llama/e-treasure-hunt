@@ -1,4 +1,4 @@
-from typing import Any, Dict, Type
+from typing import Any, Type
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -21,7 +21,7 @@ class HuntInfo(models.Model):
 
 @receiver(post_save, sender=User)
 def create_hunt_info(
-    sender: Type[User], instance: User, created: bool, **kwargs: Dict[str, Any]
+    sender: Type[User], instance: User, created: bool, **kwargs: Any
 ) -> None:
     if created:
         HuntInfo.objects.create(user=instance)
