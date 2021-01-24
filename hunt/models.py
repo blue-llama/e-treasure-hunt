@@ -45,8 +45,6 @@ class Hint(models.Model):
 
 
 # App settings. Use Boolean primary key to ensure there's only one active.
-# Could make this into a table with string key-values, but we'd lose automatic
-# field types, and need to parse them from strings.
 class AppSetting(models.Model):
     active = models.BooleanField(primary_key=True)
     use_alternative_map = models.BooleanField(default=False)
