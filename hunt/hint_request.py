@@ -45,7 +45,7 @@ def request_hint(request: AuthenticatedHttpRequest) -> str:
     event.time = timezone.now()
     event.type = HuntEvent.HINT_REQ
     event.user = request.user
-    event.level = lvl
+    event.level = hunt_info.level
     event.save()
 
     # Record that a hint has been requested.
