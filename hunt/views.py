@@ -90,12 +90,17 @@ def oops(request: AuthenticatedHttpRequest) -> HttpResponse:
 @login_required
 @not_in_working_hours
 def map(request: AuthenticatedHttpRequest) -> HttpResponse:
-    # If we're configured to use the alt map, or if we don't have a Google Maps API key,
-    # then use the alt map.
-    settings = AppSetting.objects.get(active=True)
-    if settings.use_alternative_map:
+    # If we're configured to use the alt map, do so.
+    try:
+        settings = AppSetting.objects.get(active=True)
+    except AppSetting.DoesNotExist:
+        settings = None
+
+    use_alternative_map = False if settings is None else settings.use_alternative_map
+    if use_alternative_map:
         return alt_map(request)
 
+    # If we don't have a Google Maps API key, use the alt map.
     gm_api_key = os.environ.get("GM_API_KEY")
     if gm_api_key is None:
         return alt_map(request)
