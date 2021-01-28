@@ -43,7 +43,7 @@ def look_for_level(request: AuthenticatedHttpRequest) -> str:
     # Every search must be for a specific level - by default, assume this is the team's
     # current level.
     user = request.user
-    team_level = user.huntinfo.level
+    team_level = max_level() if user.is_staff else user.huntinfo.level
     lvl = request.GET.get("lvl")
     search_level = team_level if lvl is None else int(lvl)
 
