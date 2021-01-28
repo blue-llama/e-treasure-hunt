@@ -148,7 +148,7 @@ typing-extensions = "*"
 
 [[package]]
 name = "dropbox"
-version = "11.0.0"
+version = "11.1.0"
 description = "Official Dropbox API Client"
 category = "main"
 optional = false
@@ -453,7 +453,7 @@ python-versions = "*"
 
 [[package]]
 name = "urllib3"
-version = "1.26.2"
+version = "1.26.3"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
@@ -540,9 +540,9 @@ django-stubs = [
     {file = "django_stubs-1.7.0-py3-none-any.whl", hash = "sha256:30a7d99c694acf79c5d93d69a5a8e4b54d2a8c11dd672aa869006789e2189fa6"},
 ]
 dropbox = [
-    {file = "dropbox-11.0.0-py2-none-any.whl", hash = "sha256:3b8fb347a872aba094be3c554f4d0f969468a98c04077e5c858ef4b9b2b7499e"},
-    {file = "dropbox-11.0.0-py3-none-any.whl", hash = "sha256:d1bed59d2c43af7396de27f9cda6d8761eb2c2617bf68dfa90a5972578ed1d64"},
-    {file = "dropbox-11.0.0.tar.gz", hash = "sha256:4e168d334e73e315bdb541494c2f5834ba0102d86a282a2cd541915a6a97c464"},
+    {file = "dropbox-11.1.0-py2-none-any.whl", hash = "sha256:d38c98be27447dc6b9ca02e12a390f05e26caca415e7a103a8e62723976aeb71"},
+    {file = "dropbox-11.1.0-py3-none-any.whl", hash = "sha256:88754600890bb0c67de25217c3fe4a2ff73ab21897290741b2f46ada5a1a21fc"},
+    {file = "dropbox-11.1.0.tar.gz", hash = "sha256:5741120a056abb11cd6ca20ce43bed4d9253f8cdf8b6dd2a0e20d33c749a2c04"},
 ]
 ephem = [
     {file = "ephem-3.7.7.1-cp27-cp27m-macosx_10_6_intel.whl", hash = "sha256:0a6d6ed003383f702695094399728052981c567d423b25aa7163b3fd40de3d5a"},
@@ -784,8 +784,8 @@ typing-extensions = [
     {file = "typing_extensions-3.7.4.3.tar.gz", hash = "sha256:99d4073b617d30288f569d3f13d2bd7548c3a7e4c8de87db09a9d29bb3a4a60c"},
 ]
 urllib3 = [
-    {file = "urllib3-1.26.2-py2.py3-none-any.whl", hash = "sha256:d8ff90d979214d7b4f8ce956e80f4028fc6860e4431f731ea4a8c08f23f99473"},
-    {file = "urllib3-1.26.2.tar.gz", hash = "sha256:19188f96923873c92ccb987120ec4acaa12f0461fa9ce5d3d0772bc965a39e08"},
+    {file = "urllib3-1.26.3-py2.py3-none-any.whl", hash = "sha256:1b465e494e3e0d8939b50680403e3aedaa2bc434b7d5af64dfd3c958d7f5ae80"},
+    {file = "urllib3-1.26.3.tar.gz", hash = "sha256:de3eedaad74a2683334e282005cd8d7f22f4d55fa690a2a1020a416cb0a47e73"},
 ]
 whitenoise = [
     {file = "whitenoise-5.2.0-py2.py3-none-any.whl", hash = "sha256:05d00198c777028d72d8b0bbd234db605ef6d60e9410125124002518a48e515d"},
