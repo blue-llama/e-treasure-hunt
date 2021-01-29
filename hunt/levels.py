@@ -37,7 +37,7 @@ def look_for_level(request: AuthenticatedHttpRequest) -> str:
     # Get latitude and longitude - without these there can be no searching.
     latitude = request.GET.get("lat")
     longitude = request.GET.get("long")
-    if (latitude is None) or (longitude is None):
+    if latitude is None or longitude is None:
         return "/search"
 
     # Every search must be for a specific level - by default, assume this is the team's
