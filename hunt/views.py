@@ -91,10 +91,11 @@ def oops(request: AuthenticatedHttpRequest) -> HttpResponse:
 @not_in_working_hours
 def map(request: AuthenticatedHttpRequest) -> HttpResponse:
     # If we're configured to use the alt map, do so.
+    settings = None
     try:
         settings = AppSetting.objects.get(active=True)
     except AppSetting.DoesNotExist:
-        settings = None
+        pass
 
     use_alternative_map = False if settings is None else settings.use_alternative_map
     if use_alternative_map:
