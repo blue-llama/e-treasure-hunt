@@ -4,5 +4,4 @@
 /static/
 /treasure/__pycache__/
 hunt/migrations/__pycache__
-settings.env
 treasure.sqlite
