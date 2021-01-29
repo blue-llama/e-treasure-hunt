@@ -119,12 +119,6 @@ an environment variable.
 
 # Initiating the app
 
-## Admin initiation
-
-- Navigate to <domain>/admin
-- Create an AppSetting object - tick "active"
-  - Here you can force use of the alternate map
-
 ## Create levels
 
 - You can use the content of `dummy_files.zip` as a template
