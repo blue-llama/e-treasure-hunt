@@ -56,6 +56,7 @@ def upload_new_level(request: HttpRequest) -> str:
     level.latitude = lvl_info.get("latitude")
     level.longitude = lvl_info.get("longitude")
     level.tolerance = lvl_info.get("tolerance")
+    level.full_clean()
     level.save()
 
     # Delete old hints.

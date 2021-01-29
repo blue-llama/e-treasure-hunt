@@ -1,6 +1,7 @@
 from typing import Any, Type
 
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -32,8 +33,16 @@ class Level(models.Model):
     number = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=5000)
-    latitude = models.DecimalField(max_digits=13, decimal_places=7)
-    longitude = models.DecimalField(max_digits=13, decimal_places=7)
+    latitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=7,
+        validators=[MinValueValidator(-90), MaxValueValidator(90)],
+    )
+    longitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=7,
+        validators=[MinValueValidator(-180), MaxValueValidator(180)],
+    )
     tolerance = models.IntegerField()
 
 
