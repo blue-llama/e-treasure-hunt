@@ -55,8 +55,9 @@ class Hint(models.Model):
 
 # App settings. Use Boolean primary key to ensure there's only one active.
 class AppSetting(models.Model):
-    active = models.BooleanField(primary_key=True)
+    active = models.BooleanField(primary_key=True, default=True)
     use_alternative_map = models.BooleanField(default=False)
+    start_time = models.DateTimeField(null=True, blank=True)
 
 
 # Event log for the hunt.
