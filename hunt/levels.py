@@ -81,16 +81,16 @@ def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
 
     # Find the last level.  Staff can see everything.
     max_level_num = max_level()
-    team_level_num = max_level_num if user.is_staff else team.level
+    team_level = max_level_num if user.is_staff else team.level
 
     # Only load the level if it's one the team has access to.
-    if level_num <= team_level_num:
+    if level_num <= team_level:
         # Get this level and the one before.
         current_level = Level.objects.get(number=level_num)
         previous_level = Level.objects.get(number=level_num - 1)
 
         # Decide how many images to display.  Show all hints for solved levels.
-        num_hints = HINTS_PER_LEVEL if level_num < team_level_num else team.hints_shown
+        num_hints = HINTS_PER_LEVEL if level_num < team_level else team.hints_shown
 
         # Get the URLs for the images to show.
         hints = current_level.hint_set.filter(number__lt=num_hints).order_by("number")
@@ -113,7 +113,7 @@ def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
 
         template = loader.get_template("level.html")
         context = {
-            "team_level": team_level_num,
+            "team_level": team_level,
             "level_number": current_level.number,
             "level_name": previous_level.name.upper(),
             "hints": hint_urls,
@@ -127,7 +127,7 @@ def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
     else:
         # Shouldn't be here. Show an error page.
         template = loader.get_template("oops.html")
-        context = {"team_level": team_level_num}
+        context = {"team_level": team_level}
 
     rendered: str = template.render(context, request)
     return rendered
