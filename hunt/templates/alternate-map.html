@@ -27,7 +27,7 @@
       id="searchbutton"
       class="gobutton alt-gobutton"
       style="font-size: 0.9rem; position:absolute; bottom: 10px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%) z-index: 2;"
-      onclick="Action()"
+      onclick="searchHere()"
     >
       SEARCH HERE
     </button>
@@ -65,66 +65,6 @@
       crossorigin=""
     ></script>
 
-    <script>
-      // Initialize the map and assign it to a variable for later use
-      var map = L.map("map", {
-        // Set latitude and longitude of the map center (required)
-        center: [30, 0],
-        // Set the initial zoom level, values 0-18, where 0 is most zoomed-out (required)
-        zoom: 3,
-      });
-
-      var latlng;
-      var search_button = document.getElementById("searchbutton");
-      search_button.disabled = true;
-      search_button.classList.add("disabled");
-
-      // Create a Tile Layer and add it to the map
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
-
-      var searchControl = new L.esri.Geocoding.geosearch({
-        placeholder: "Begin typing for suggestions",
-        useMapBounds: "false",
-      }).addTo(map);
-      map.zoomControl.setPosition("topright");
-
-      var results = new L.LayerGroup().addTo(map);
-      L.control.scale().addTo(map);
-
-      searchControl.on("results", function (data) {
-        results.clearLayers();
-        latlng = data.results[0].latlng;
-        results.addLayer(L.marker(latlng, { draggable: "true" }));
-
-        search_button.disabled = false;
-        search_button.classList.remove("disabled");
-      });
-
-      map.on("click", function (e) {
-        results.clearLayers();
-        latlng = e.latlng;
-        results.addLayer(L.marker(latlng, { draggable: "true" }));
-        search_button.disabled = false;
-        search_button.classList.remove("disabled");
-      });
-
-      function Action() {
-        if (latlng != null && latlng != undefined) {
-          var url = new URL(window.location);
-          var lvl = url.searchParams.get("lvl");
-          var href_string =
-            "/do-search?lat=" + latlng.lat + "&long=" + latlng.lng;
-
-          if (lvl != null) {
-            href_string += "&lvl=" + lvl;
-          }
-
-          window.location.href = href_string;
-        }
-      }
-    </script>
+    <script src="{% static "alternate-map.js" %}"></script>
   </body>
 </html>

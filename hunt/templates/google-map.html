@@ -38,7 +38,7 @@
     <button
       id="search-button"
       class="gobutton google-gobutton"
-      onclick="showSearchAlert()"
+      onclick="searchHere()"
     >
       SEARCH HERE
     </button>
@@ -47,26 +47,7 @@
       <div id="map"></div>
     </section>
 
-    <script>
-      window.gm_authFailure = function () {
-        if (
-          confirm(
-            "Google Maps doesn't seem to be working right now. Do you want to try the alternative map instead?"
-          )
-        ) {
-          var href = "/alt-map";
-          var url = new URL(window.location);
-          var lvl = url.searchParams.get("lvl");
-
-          if (lvl != null) {
-            href += "?lvl=" + lvl;
-          }
-
-          window.location.href = href;
-        }
-      };
-    </script>
-    <script src="{% static "jshold.js" %}"></script>
+    <script src="{% static "google-map.js" %}"></script>
     <script
       src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&amp;libraries=places&amp;callback=initAutocomplete"
       async
