@@ -100,8 +100,8 @@ function searchHere() {
   if (marker !== null && marker.getPosition() !== null) {
     const searchPos = marker.getPosition();
 
-    let url = new URL(window.location);
-    let lvl = url.searchParams.get("lvl");
+    const url = new URL(window.location);
+    const lvl = url.searchParams.get("lvl");
     let href = "/do-search?lat=" + searchPos.lat() + "&long=" + searchPos.lng();
 
     if (lvl !== null) {
