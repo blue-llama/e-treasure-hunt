@@ -69,11 +69,12 @@ def determine_hint_delay(hunt_info: HuntInfo) -> int:
     hunts = HuntInfo.objects.filter(user__is_staff=False).order_by(
         "-level", "-hints_shown"
     )
-    if len(hunts) > 1:
+    count = len(hunts)
+    if count > 1:
         user_place = (hunt_info.level, hunt_info.hints_shown)
         if user_place > (hunts[1].level, hunts[1].hints_shown):
             delay += 10
-        elif user_place < (hunts[-2].level, hunts[-2].hints_shown):
+        elif user_place < (hunts[count - 2].level, hunts[count - 2].hints_shown):
             delay -= 10
 
     return delay
