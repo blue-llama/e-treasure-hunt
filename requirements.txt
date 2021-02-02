@@ -18,9 +18,9 @@ django-heroku==0.3.1 \
 django-storages==1.11.1; python_version >= "3.5" \
     --hash=sha256:c823dbf56c9e35b0999a13d7e05062b837bae36c518a40255d522fbe3750fbb4 \
     --hash=sha256:f28765826d507a0309cfaa849bd084894bc71d81bf0d09479168d44785396f80
-django==3.1.5; python_version >= "3.6" \
-    --hash=sha256:efa2ab96b33b20c2182db93147a0c3cd7769d418926f9e9f140a60dca7c64ca9 \
-    --hash=sha256:2d78425ba74c7a1a74b196058b261b9733a8570782f4e2828974777ccca7edf7
+django==3.1.6; python_version >= "3.6" \
+    --hash=sha256:169e2e7b4839a7910b393eec127fd7cbae62e80fa55f89c6510426abf673fe5f \
+    --hash=sha256:c6c0462b8b361f8691171af1fb87eceb4442da28477e12200c40420176206ba7
 dropbox==11.1.0; python_version >= "3.5" \
     --hash=sha256:d38c98be27447dc6b9ca02e12a390f05e26caca415e7a103a8e62723976aeb71 \
     --hash=sha256:88754600890bb0c67de25217c3fe4a2ff73ab21897290741b2f46ada5a1a21fc \
@@ -93,9 +93,9 @@ psycopg2==2.8.6; python_version >= "2.7" and python_full_version < "3.0.0" or py
 python-dateutil==2.8.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" \
     --hash=sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c \
     --hash=sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a
-pytz==2020.5 \
-    --hash=sha256:16962c5fb8db4a8f63a26646d8886e9d769b6c511543557bc84e9569fb9a9cb4 \
-    --hash=sha256:180befebb1927b16f6b57101720075a984c019ac16b1b7575673bea42c6c3da5
+pytz==2021.1 \
+    --hash=sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798 \
+    --hash=sha256:83a4a90894bf38e243cf052c8b58f381bfe9a7a483f6a9cab140bc7f702ac4da
 requests==2.25.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0") \
     --hash=sha256:c210084e36a42ae6b9219e00e48287def368a26d03a048ddad7bfee44f75871e \
     --hash=sha256:27973dd4a904a4f13b263a19c866c13b92a39ed1c964655f025f3f8d3d75b804
