@@ -76,14 +76,6 @@ docker build --tag e-treasure-hunt .
 
 Collect static files (you should re-run this if you change the templates):
 
-```
-docker run \
-  --user "$EUID":"${GROUPS[0]}" \
-  --rm \
-  --mount type=bind,source=$PWD,target=/usr/src/app \
-  e-treasure-hunt collectstatic --no-input
-```
-
 Run database migrations and create the admin user:
 
 ```
