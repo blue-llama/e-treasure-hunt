@@ -2,7 +2,7 @@ FROM python:3.9
 
 WORKDIR /usr/src/app
 COPY requirements.txt ./
-RUN pip install -r requirements.txt && rm requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
 
 ENV DEVELOPMENT_SERVER=1
 ENV DJ_KEY=ThisIsASecret
