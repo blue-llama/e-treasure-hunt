@@ -74,8 +74,6 @@ Build the image:
 docker build --tag e-treasure-hunt .
 ```
 
-Collect static files (you should re-run this if you change the templates):
-
 Run database migrations and create the admin user:
 
 ```
