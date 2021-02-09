@@ -79,7 +79,7 @@ class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignor
         except Level.DoesNotExist:
             return Response(
                 f"Level {pk} not found",
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_404_NOT_FOUND
             )
 
         # Update the old hint, if it exists, else create a new one.
