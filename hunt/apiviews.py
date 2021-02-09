@@ -83,14 +83,17 @@ class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignor
             )
 
         # Update the old hint, if it exists, else create a new one.
+        created = False
         try:
             hint = level.hints.get(number=number)
             hint.image.delete()
         except Hint.DoesNotExist:
             hint = Hint(level=level, number=number)
+            created = True
 
         filename = str(uuid4()) + extension
         hint.image.save(filename, upload.file)
 
         serializer = HintSerializer(hint, context={'request': request})
-        return Response(serializer.data)
+        status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
+        return Response(serializer.data, status=status_code)
