@@ -77,10 +77,7 @@ class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignor
         try:
             level = Level.objects.get(number=pk)
         except Level.DoesNotExist:
-            return Response(
-                f"Level {pk} not found",
-                status=status.HTTP_404_NOT_FOUND
-            )
+            return Response(f"Level {pk} not found", status=status.HTTP_404_NOT_FOUND)
 
         # Update the old hint, if it exists, else create a new one.
         created = False
@@ -94,6 +91,6 @@ class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignor
         filename = str(uuid4()) + extension
         hint.image.save(filename, upload.file)
 
-        serializer = HintSerializer(hint, context={'request': request})
+        serializer = HintSerializer(hint, context={"request": request})
         status_code = status.HTTP_201_CREATED if created else status.HTTP_200_OK
         return Response(serializer.data, status=status_code)
