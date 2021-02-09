@@ -92,4 +92,5 @@ class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignor
         filename = str(uuid4()) + extension
         hint.image.save(filename, upload.file)
 
-        return Response()
+        serializer = HintSerializer(hint, context={'request': request})
+        return Response(serializer.data)
