@@ -45,18 +45,14 @@ class Level(models.Model):
     )
     tolerance = models.IntegerField()
 
-    class Meta:
-        ordering = ["number"]
-
 
 # Hint
 class Hint(models.Model):
     level = models.ForeignKey(Level, related_name="hints", on_delete=models.CASCADE)
     number = models.IntegerField()
-    image = models.FileField(upload_to="hints")
+    image = models.ImageField(upload_to="hints")
 
     class Meta:
-        ordering = ["level", "number"]
         constraints = [
             models.UniqueConstraint(fields=["level", "number"], name="unique hint")
         ]

@@ -6,6 +6,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from hunt.apimixin import AllowPUTAsCreateMixin
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
 
@@ -15,7 +16,6 @@ EXTENSIONS = {"image/jpeg": "jpg", "image/png": "png"}
 class HintSerializer(serializers.HyperlinkedModelSerializer):  # type: ignore
     class Meta:
         model = Hint
-        ordering = ["-level", "-number"]
         fields = [
             "level",
             "number",
@@ -39,13 +39,13 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):  # type: ignore
         ]
 
 
-class HintViewSet(viewsets.ModelViewSet):  # type: ignore
-    queryset = Hint.objects.all()
+class HintViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignore
+    queryset = Hint.objects.all().order_by("level", "number")
     serializer_class = HintSerializer
 
 
-class LevelViewSet(viewsets.ModelViewSet):  # type: ignore
-    queryset = Level.objects.all()
+class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignore
+    queryset = Level.objects.all().order_by("number")
     serializer_class = LevelSerializer
 
     @action(
