@@ -93,7 +93,7 @@ def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
         num_hints = HINTS_PER_LEVEL if level_num < team_level else team.hints_shown
 
         # Get the URLs for the images to show.
-        hints = current_level.hint_set.filter(number__lt=num_hints).order_by("number")
+        hints = current_level.hints.filter(number__lt=num_hints).order_by("number")
         hint_urls = [hint.image.url for hint in hints]
 
         # Don't allow a hint if one has already been requested by the team, or if max

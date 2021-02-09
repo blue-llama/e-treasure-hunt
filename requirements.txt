@@ -22,6 +22,9 @@ django-storages==1.11.1; python_version >= "3.5" \
 django==3.1.6; python_version >= "3.6" \
     --hash=sha256:169e2e7b4839a7910b393eec127fd7cbae62e80fa55f89c6510426abf673fe5f \
     --hash=sha256:c6c0462b8b361f8691171af1fb87eceb4442da28477e12200c40420176206ba7
+djangorestframework==3.12.2; python_version >= "3.5" \
+    --hash=sha256:0209bafcb7b5010fdfec784034f059d512256424de2a0f084cb82b096d6dd6a7 \
+    --hash=sha256:0898182b4737a7b584a2c73735d89816343369f259fea932d90dc78e35d8ac33
 dropbox==11.1.0; python_version >= "3.5" \
     --hash=sha256:d38c98be27447dc6b9ca02e12a390f05e26caca415e7a103a8e62723976aeb71 \
     --hash=sha256:88754600890bb0c67de25217c3fe4a2ff73ab21897290741b2f46ada5a1a21fc \
