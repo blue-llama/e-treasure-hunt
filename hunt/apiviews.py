@@ -88,7 +88,7 @@ class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignor
             hint = Hint(level=level, number=number)
             created = True
 
-        filename = str(uuid4()) + extension
+        filename = f"{uuid4()}.{extension}"
         hint.image.save(filename, upload.file)
 
         serializer = HintSerializer(hint, context={"request": request})
