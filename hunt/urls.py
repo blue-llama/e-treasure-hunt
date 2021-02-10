@@ -19,11 +19,10 @@ from django.urls import include, path
 from rest_framework import routers
 
 from hunt import views
-from hunt.apiviews import HintViewSet, LevelViewSet
+from hunt.apiviews import LevelViewSet
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register("levels", LevelViewSet, basename="level")
-router.register("hints", HintViewSet, basename="hint")
 
 urlpatterns = [
     path("", views.go_home, name="go-home"),

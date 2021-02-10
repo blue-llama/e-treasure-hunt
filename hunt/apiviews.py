@@ -10,7 +10,7 @@ from hunt.apimixin import AllowPUTAsCreateMixin
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
 
-EXTENSIONS = {"image/jpeg": "jpg", "image/png": "png"}
+EXTENSIONS = {"image/jpeg": ".jpg", "image/png": ".png"}
 
 
 class HintSerializer(serializers.HyperlinkedModelSerializer):  # type: ignore
@@ -39,14 +39,10 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):  # type: ignore
         ]
 
 
-class HintViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignore
-    queryset = Hint.objects.all().order_by("level", "number")
-    serializer_class = HintSerializer
-
-
 class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignore
     queryset = Level.objects.all().order_by("number")
     serializer_class = LevelSerializer
+    http_method_names = ["delete", "get", "head", "patch", "put"]
 
     @action(
         detail=True,
@@ -88,7 +84,7 @@ class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignor
             hint = Hint(level=level, number=number)
             created = True
 
-        filename = f"{uuid4()}.{extension}"
+        filename = f"{uuid4()}{extension}"
         hint.image.save(filename, upload.file)
 
         serializer = HintSerializer(hint, context={"request": request})
