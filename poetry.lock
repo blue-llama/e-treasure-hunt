@@ -163,7 +163,7 @@ django = ">=2.2"
 
 [[package]]
 name = "dropbox"
-version = "11.1.0"
+version = "11.2.0"
 description = "Official Dropbox API Client"
 category = "main"
 optional = false
@@ -577,9 +577,9 @@ djangorestframework = [
     {file = "djangorestframework-3.12.2.tar.gz", hash = "sha256:0898182b4737a7b584a2c73735d89816343369f259fea932d90dc78e35d8ac33"},
 ]
 dropbox = [
-    {file = "dropbox-11.1.0-py2-none-any.whl", hash = "sha256:d38c98be27447dc6b9ca02e12a390f05e26caca415e7a103a8e62723976aeb71"},
-    {file = "dropbox-11.1.0-py3-none-any.whl", hash = "sha256:88754600890bb0c67de25217c3fe4a2ff73ab21897290741b2f46ada5a1a21fc"},
-    {file = "dropbox-11.1.0.tar.gz", hash = "sha256:5741120a056abb11cd6ca20ce43bed4d9253f8cdf8b6dd2a0e20d33c749a2c04"},
+    {file = "dropbox-11.2.0-py2-none-any.whl", hash = "sha256:ea8ed65604216744f2fadc3aee3c2aaa3cbfc00cef5d13778d5547c22a41c374"},
+    {file = "dropbox-11.2.0-py3-none-any.whl", hash = "sha256:1282f9c2c9f756403a326536c4d61e65925874436416036b37b983f5464af599"},
+    {file = "dropbox-11.2.0.tar.gz", hash = "sha256:d52f6387ff2eb8e90c95e989b6d43e1fd588b48b7b0e447c9c705a33cff88656"},
 ]
 flake8 = [
     {file = "flake8-3.8.4-py2.py3-none-any.whl", hash = "sha256:749dbbd6bfd0cf1318af27bf97a14e28e5ff548ef8e5b1566ccfb25a11e7c839"},
