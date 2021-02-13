@@ -8,6 +8,7 @@ SLACK_AUTH_TOKEN = os.environ.get("SLACK_AUTH_TOKEN")
 def schedule_hint_announcement(channel_id: str, utc_seconds: int) -> None:
     """
     Schedule a message announcing the release of a hint.
+
     :param channel_id: The slack channel ID.
     :param utc_seconds: Timestamp at which to make the announcement, in seconds since
     the epoch.
@@ -30,6 +31,7 @@ def schedule_hint_announcement(channel_id: str, utc_seconds: int) -> None:
 def cancel_pending_announcements(channel_id: str) -> None:
     """
     Cancel any announcements that we currently have pending to a slack channel.
+
     :param channel_id: The slack channel ID.
     """
     if SLACK_AUTH_TOKEN is None:
