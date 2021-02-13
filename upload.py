@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from hunt.constants import HINTS_PER_LEVEL
 import glob
 import json
 import os
@@ -19,6 +20,13 @@ CONTENT_TYPES = {
 
 
 def upload_hint(level: int, hint: int, image: str) -> None:
+    """
+    Upload a hint.
+
+    :param level: The level that the hint belongs to.  The level must already exist.
+    :param number: The hint number.  Zero-indexed.
+    :param image: The file containing the hint.
+    """
     root, ext = os.path.splitext(image)
     content_type = CONTENT_TYPES.get(ext)
     if content_type is None:
@@ -38,6 +46,13 @@ def upload_hint(level: int, hint: int, image: str) -> None:
 
 
 def upload_level(level: int, about: str, blurb: str) -> None:
+    """
+    Upload a level, without creating any of its hints.
+
+    :param level: The level to upload.
+    :param about: The file containing the JSON description of the level.
+    :param blurb: The file containing the level blurb (shown on the _next_ level).
+    """
     with open(about) as f:
         data = json.load(f)
 
@@ -56,6 +71,12 @@ def upload_level(level: int, about: str, blurb: str) -> None:
 
 
 def upload_directory(level: int, dir: str) -> None:
+    """
+    Upload a level from a directory, creating all of its hints.
+
+    :param level: The level to upload.
+    :param dir: A directory, containing about.json, blurb.txt, and five images.
+    """
     # Create the level.
     upload_level(
         level,
@@ -68,8 +89,8 @@ def upload_directory(level: int, dir: str) -> None:
     for extension in CONTENT_TYPES:
         images.extend(glob.glob(os.path.join(dir, f"*{extension}")))
 
-    # Should find exactly five - check the file extensions if not.
-    if len(images) != 5:
+    # Should find exactly the right number - check the file extensions if not.
+    if len(images) != HINTS_PER_LEVEL:
         raise RuntimeError(f"Found {len(images)} images in {dir}")
 
     # Upload them.

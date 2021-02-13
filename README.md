@@ -93,14 +93,14 @@ docker run \
 ```
 
 With this setup done you can run the app as below, and should find it in your
-browser at <https://localhost:80>.
+browser at <http://localhost:8000>.
 
 ```
 docker run \
   --user "$EUID":"${GROUPS[0]}" \
   --rm \
   --mount type=bind,source=$PWD,target=/usr/src/app \
-  --publish 80:8000 \
+  --publish 8000:8000 \
   e-treasure-hunt
 ```
 
@@ -124,6 +124,10 @@ an environment variable.
 
 ## Level upload
 
+Levels can be uploaded either through the UI or via a REST API.
+
+### Level upload through the UI
+
 - Navigate to <domain>/mgmt
 - Upload a dummy level 0 using the dummy level files - replace blurb.txt and the
   level name in about.json with text for the start of the hunt
@@ -132,7 +136,17 @@ an environment variable.
   image for the final page
 - Navigate to <domain>/home and check your level(s) display correctly
 
-The server is not very helpful if you don't get things just right.
+### Level upload through the API
+
+[upload.py](upload.py) contains utilities for uploading levels and hints.
+
+You'll need to update the `PASSWORD` at the top of the file, and then re-arrange
+`main()` as needed to upload your levels.
+
+### Troubleshooting
+
+The server is not very helpful if you don't get things just right, especially
+via the UI.
 
 - If level upload is failing:
   - Make sure that you are uploading exactly one `.txt` file, one `.json` file
