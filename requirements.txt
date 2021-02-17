@@ -104,8 +104,8 @@ psycopg2==2.8.6; python_version >= "2.7" and python_full_version < "3.0.0" or py
     --hash=sha256:2c93d4d16933fea5bbacbe1aaf8fa8c1348740b2e50b3735d1b0bf8154cbf0f3 \
     --hash=sha256:d5062ae50b222da28253059880a871dc87e099c25cb68acf613d9d227413d6f7 \
     --hash=sha256:fb23f6c71107c37fd667cb4ea363ddeb936b348bbd6449278eb92c189699f543
-pymeeus==0.3.7; python_version >= "3.5" \
-    --hash=sha256:56430209e6f9a039f1ba73f107ab0b23121548e2a67ed2855f2416c3749a5662
+pymeeus==0.3.9; python_version >= "3.5" \
+    --hash=sha256:116937baaa45897929ad3f1bd3f6dd4cb407c22bf06b194b700bcc7d3159f1d7
 python-dateutil==2.8.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" \
     --hash=sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c \
     --hash=sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a
