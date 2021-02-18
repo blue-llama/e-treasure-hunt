@@ -62,7 +62,7 @@ def determine_hint_delay(hunt_info: HuntInfo) -> int:
     """
     # Default to 30 minutes, tweak according to the team's position in the race:
     #
-    # - outright leader gets a ten minute extra delay
+    # - leaders get a ten minute extra delay
     # - outright last place gets a ten minute reduction.
     delay = 30
 
@@ -72,7 +72,7 @@ def determine_hint_delay(hunt_info: HuntInfo) -> int:
     count = len(hunts)
     if count > 1:
         user_place = (hunt_info.level, hunt_info.hints_shown)
-        if user_place > (hunts[1].level, hunts[1].hints_shown):
+        if user_place == (hunts[0].level, hunts[0].hints_shown):
             delay += 10
         elif user_place < (hunts[count - 2].level, hunts[count - 2].hints_shown):
             delay -= 10
