@@ -32,7 +32,7 @@ def create_hunt_info(
 class Level(models.Model):
     number = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
-    description = models.TextField(max_length=5000)
+    description = models.TextField(max_length=5000, default="", blank=True)
     latitude = models.DecimalField(
         max_digits=10,
         decimal_places=7,
