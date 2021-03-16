@@ -5,10 +5,10 @@ this app are set up with adequate security measures and usage caps, such that if
 they are compromised, no charges or problems will arise.**
 
 You can check where a given credential is used by searching the code for the
-name of the environment variable that holds it (see Setup below).
+name of the environment variable that holds it.
 
-Due to the the terms of certain dependencies, this application may **not** be
-used to generate revenue.
+Due to the terms of certain dependencies, this application may not be used to
+generate revenue.
 
 ---
 
@@ -16,10 +16,11 @@ used to generate revenue.
 
 You can either deploy this app hosted (on Heroku) or locally.
 
-If you are deploying on Heroku you will need a Dropbox account, with an app set
-up with read/write permission to a specific folder to hold the level images, and
-a corresponding OAuth key.
-See <https://www.dropbox.com/developers/apps>.
+Either way, you will need an [ArcGIS for Developers
+account](https://developers.arcgis.com/en/plans).
+This is a [condition of
+use](https://github.com/Esri/esri-leaflet-geocoder#terms-and-conditions) of the
+esri-leaflet-geocoder project; see also the ArcGIS website.
 
 If you are using Google Maps you will need a Google Cloud account with Places
 and Maps JavaScript APIs enabled, and an API key.
@@ -36,6 +37,10 @@ and Maps JavaScript APIs enabled, and an API key.
 
 - Heroku account
 - Heroku CLI installed
+- Dropbox account
+  - an app set up with read/write permission to a specific folder (to hold
+    images), and a corresponding OAuth key.
+  - See <https://www.dropbox.com/developers/apps>.
 
 ### Setup
 

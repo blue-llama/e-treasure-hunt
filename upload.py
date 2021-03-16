@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-from hunt.constants import HINTS_PER_LEVEL
 import glob
 import json
 import os
 
 import requests
+
+from hunt.constants import HINTS_PER_LEVEL
 
 SERVER = "http://localhost:8000"
 USERNAME = "admin"
@@ -17,6 +18,31 @@ CONTENT_TYPES = {
     ".jpg": "image/jpeg",
     ".png": "image/png",
 }
+
+
+def upload_level(level: int, about: str, blurb: str) -> None:
+    """
+    Upload a level, without creating any of its hints.
+
+    :param level: The level to upload.
+    :param about: The file containing the JSON description of the level.
+    :param blurb: The file containing the level blurb (shown on the _next_ level).
+    """
+    with open(about) as f:
+        data = json.load(f)
+
+    data["number"] = level
+    with open(blurb) as f:
+        data["description"] = f.read()
+
+    url = f"{SERVER}/api/levels/{level}"
+    r = requests.put(url, auth=(USERNAME, PASSWORD), json=data)
+
+    if not r.ok:
+        print(f"Error uploading level {level}")
+        print(r.text)
+
+    r.raise_for_status()
 
 
 def upload_hint(level: int, hint: int, image: str) -> None:
@@ -40,31 +66,6 @@ def upload_hint(level: int, hint: int, image: str) -> None:
 
     if not r.ok:
         print(f"Error uploading level {level} hint {hint}")
-        print(r.text)
-
-    r.raise_for_status()
-
-
-def upload_level(level: int, about: str, blurb: str) -> None:
-    """
-    Upload a level, without creating any of its hints.
-
-    :param level: The level to upload.
-    :param about: The file containing the JSON description of the level.
-    :param blurb: The file containing the level blurb (shown on the _next_ level).
-    """
-    with open(about) as f:
-        data = json.load(f)
-
-    data["number"] = level
-    with open(blurb) as f:
-        data["description"] = f.read()
-
-    url = f"{SERVER}/api/levels/{level}"
-    r = requests.put(url, auth=(USERNAME, PASSWORD), json=data)
-
-    if not r.ok:
-        print(f"Error uploading level {level}")
         print(r.text)
 
     r.raise_for_status()
