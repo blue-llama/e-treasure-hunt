@@ -173,7 +173,7 @@ elif DEPLOYMENT == Deployment.AZURE:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DBNAME", "treasurehuntdb"),
+            "NAME": os.getenv("DBNAME", ""),
             "USER": f"{user}@{host}",
             "PASSWORD": os.getenv("DBPASS", ""),
             "HOST": host,
