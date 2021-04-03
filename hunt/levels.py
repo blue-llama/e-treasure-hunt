@@ -84,7 +84,7 @@ def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
     team_level = max_level_num if user.is_staff else team.level
 
     # Only load the level if it's one the team has access to.
-    if level_num <= team_level:
+    if 0 < level_num <= team_level:
         # Get this level and the one before.
         current_level = Level.objects.get(number=level_num)
         previous_level = Level.objects.get(number=level_num - 1)
