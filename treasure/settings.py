@@ -31,7 +31,11 @@ DEBUG = LOCAL
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", "insecure" if LOCAL else "")
 
-ALLOWED_HOSTS = ["localhost"] if LOCAL else [os.environ.get("APP_URL", "")]
+ALLOWED_HOSTS = (
+    ["localhost"]
+    if LOCAL
+    else ["www.e-treasure-hunt.com", os.environ.get("APP_URL", "")]
+)
 
 # Extra settings from security check
 SECURE_CONTENT_TYPE_NOSNIFF = True
