@@ -113,6 +113,7 @@ resource "azurerm_app_service" "treasure" {
     "DBPASS"             = azurerm_postgresql_server.treasure.administrator_login_password
     "DBUSER"             = azurerm_postgresql_server.treasure.administrator_login
     "DEPLOYMENT"         = "AZURE"
+    "GM_API_KEY"         = var.google_maps_api_key
     "SECRET_KEY"         = random_password.secret_key.result
     "SLACK_AUTH_TOKEN"   = var.slack_auth_token
   }
