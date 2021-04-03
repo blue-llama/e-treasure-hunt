@@ -55,7 +55,7 @@ if DEPLOYMENT == Deployment.LOCAL:
 elif DEPLOYMENT == Deployment.AZURE:
     DEFAULT_FILE_STORAGE = "hunt.backend.AzureMediaStorage"
     STATICFILES_STORAGE = "hunt.backend.AzureStaticStorage"
-    AZURE_ACCOUNT_NAME = os.getenv("AZURE_ACCOUNT_NAME", "etreasurehuntstorage")
+    AZURE_ACCOUNT_NAME = os.getenv("AZURE_ACCOUNT_NAME")
     AZURE_ACCOUNT_KEY = os.getenv("AZURE_ACCOUNT_KEY")
     AZURE_MEDIA_CONTAINER = os.getenv("AZURE_MEDIA_CONTAINER", "media")
     AZURE_STATIC_CONTAINER = os.getenv("AZURE_STATIC_CONTAINER", "static")
