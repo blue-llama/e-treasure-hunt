@@ -45,12 +45,13 @@ and Maps JavaScript APIs enabled, and an API key.
 ### Setup
 
 - Create your Heroku app
-- Set the `DJ_KEY` environment variable to a secret string
-- Set the `DB_TOKEN` environment variable to your DropBox OAuth token
+- Set the `DEPLOYMENT` environment variable to `HEROKU`
+- Set the `SECRET_KEY` environment variable to a secret string
+- Set the `DROPBOX_OAUTH2_TOKEN` environment variable to your DropBox OAuth token
 - If you are using Google Maps: Set the `GM_API_KEY` environment variable to your
   Google API key
 - Set the `APP_URL` environment variable to the root domain for your app (e.g.
-  example.com)
+  `e-treasure-hunt.herokuapp.com`)
 - Add a Heroku Postgres add-on to your app
 
 ### Deploy

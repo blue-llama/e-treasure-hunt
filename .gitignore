@@ -1,7 +1,9 @@
+/.azure/
+/.gitignore/
 /.mypy_cache/
 /hunt/__pycache__/
+/hunt/migrations/__pycache__
 /media/
 /static/
+/treasure.sqlite
 /treasure/__pycache__/
-hunt/migrations/__pycache__
-treasure.sqlite
