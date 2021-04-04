@@ -31,12 +31,6 @@ resource "azurerm_storage_account" "treasure" {
   min_tls_version          = "TLS1_2"
 }
 
-resource "azurerm_storage_container" "static" {
-  name                  = "static"
-  storage_account_name  = azurerm_storage_account.treasure.name
-  container_access_type = "blob"
-}
-
 resource "azurerm_storage_container" "media" {
   name                  = "media"
   storage_account_name  = azurerm_storage_account.treasure.name

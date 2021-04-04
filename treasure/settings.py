@@ -55,23 +55,23 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 if deployment_type == Deployment.LOCAL:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 elif deployment_type == Deployment.AZURE:
-    DEFAULT_FILE_STORAGE = "hunt.backend.AzureMediaStorage"
-    STATICFILES_STORAGE = "hunt.backend.AzureStaticStorage"
+    DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
     AZURE_ACCOUNT_NAME = os.getenv("AZURE_ACCOUNT_NAME")
     AZURE_ACCOUNT_KEY = os.getenv("AZURE_ACCOUNT_KEY")
-    AZURE_MEDIA_CONTAINER = os.getenv("AZURE_MEDIA_CONTAINER", "media")
-    AZURE_STATIC_CONTAINER = os.getenv("AZURE_STATIC_CONTAINER", "static")
+    AZURE_CONTAINER = os.getenv("AZURE_CONTAINER", "media")
+    AZURE_URL_EXPIRATION_SECS = 900
 elif deployment_type == Deployment.HEROKU:
     DEFAULT_FILE_STORAGE = "storages.backends.dropbox.DropBoxStorage"
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
     DROPBOX_OAUTH2_TOKEN = os.environ.get("DROPBOX_OAUTH2_TOKEN", "")
     DROPBOX_ROOT_PATH = "/"
 
 # Application definition
 INSTALLED_APPS = [
+    "whitenoise.runserver_nostatic",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -85,10 +85,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-]
-if deployment_type == Deployment.HEROKU:
-    MIDDLEWARE.append("whitenoise.middleware.WhiteNoiseMiddleware")
-MIDDLEWARE += [
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
