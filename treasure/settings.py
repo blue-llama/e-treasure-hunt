@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 from enum import Enum
 from pathlib import Path
+from typing import Any, Dict
 
 
 # Where is the app being deployed?
@@ -22,27 +23,26 @@ class Deployment(Enum):
     AZURE = 3
 
 
-DEPLOYMENT = Deployment[os.getenv("DEPLOYMENT", "LOCAL")]
-LOCAL = DEPLOYMENT == Deployment.LOCAL
+deployment_type = Deployment[os.getenv("DEPLOYMENT", "LOCAL")]
+local_deploy = deployment_type == Deployment.LOCAL
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = LOCAL
+DEBUG = local_deploy
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", "insecure" if LOCAL else "")
+SECRET_KEY = os.environ.get("SECRET_KEY", "insecure" if local_deploy else "")
 
-ALLOWED_HOSTS = (
-    ["localhost"]
-    if LOCAL
-    else ["www.e-treasure-hunt.com", os.environ.get("APP_URL", "")]
-)
+ALLOWED_HOSTS = ["localhost", "www.e-treasure-hunt.com"]
+app_url = os.environ.get("APP_URL")
+if app_url is not None:
+    ALLOWED_HOSTS.append(app_url)
 
 # Extra settings from security check
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-SECURE_SSL_REDIRECT = DEPLOYMENT == Deployment.HEROKU
-SESSION_COOKIE_SECURE = not LOCAL
-CSRF_COOKIE_SECURE = not LOCAL
+SECURE_SSL_REDIRECT = deployment_type == Deployment.HEROKU
+SESSION_COOKIE_SECURE = not local_deploy
+CSRF_COOKIE_SECURE = not local_deploy
 X_FRAME_OPTIONS = "DENY"
 
 # Close the session when user closes the browser
@@ -55,16 +55,16 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-if DEPLOYMENT == Deployment.LOCAL:
+if deployment_type == Deployment.LOCAL:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
-elif DEPLOYMENT == Deployment.AZURE:
+elif deployment_type == Deployment.AZURE:
     DEFAULT_FILE_STORAGE = "hunt.backend.AzureMediaStorage"
     STATICFILES_STORAGE = "hunt.backend.AzureStaticStorage"
     AZURE_ACCOUNT_NAME = os.getenv("AZURE_ACCOUNT_NAME")
     AZURE_ACCOUNT_KEY = os.getenv("AZURE_ACCOUNT_KEY")
     AZURE_MEDIA_CONTAINER = os.getenv("AZURE_MEDIA_CONTAINER", "media")
     AZURE_STATIC_CONTAINER = os.getenv("AZURE_STATIC_CONTAINER", "static")
-elif DEPLOYMENT == Deployment.HEROKU:
+elif deployment_type == Deployment.HEROKU:
     DEFAULT_FILE_STORAGE = "storages.backends.dropbox.DropBoxStorage"
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
     DROPBOX_OAUTH2_TOKEN = os.environ.get("DROPBOX_OAUTH2_TOKEN", "")
@@ -86,7 +86,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
 ]
-if DEPLOYMENT == Deployment.HEROKU:
+if deployment_type == Deployment.HEROKU:
     MIDDLEWARE.append("whitenoise.middleware.WhiteNoiseMiddleware")
 MIDDLEWARE += [
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -129,7 +129,7 @@ LOGGING = {
     },
 }
 
-if DEPLOYMENT == Deployment.HEROKU:
+if deployment_type == Deployment.HEROKU:
     import django_heroku
 
     django_heroku.settings(locals(), logging=False)
@@ -160,25 +160,29 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
 }
 
-if DEPLOYMENT == Deployment.LOCAL:
+DATABASES: Dict[str, Any]
+if deployment_type == Deployment.LOCAL:
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": "treasure.sqlite",
         }
     }
-elif DEPLOYMENT == Deployment.AZURE:
+elif deployment_type == Deployment.AZURE:
     user = os.getenv("DBUSER", "")
     host = os.getenv("DBHOST", "")
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql",
+            "ENGINE": "mssql",
             "NAME": os.getenv("DBNAME", ""),
             "USER": f"{user}@{host}",
             "PASSWORD": os.getenv("DBPASS", ""),
             "HOST": host,
+            "OPTIONS": {
+                "driver": "ODBC Driver 17 for SQL Server",
+            },
         }
     }
-elif DEPLOYMENT == Deployment.HEROKU:
+elif deployment_type == Deployment.HEROKU:
     # Heroku takes care of this automatically.
     pass

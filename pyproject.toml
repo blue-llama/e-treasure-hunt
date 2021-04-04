@@ -18,6 +18,7 @@ psycopg2 = "^2.8.6"
 pytz = ">=2020.1"
 requests = "^2.23.0"
 whitenoise = "^5.2.0"
+mssql-django = "^1.0b1"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"

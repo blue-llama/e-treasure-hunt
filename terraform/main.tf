@@ -43,39 +43,37 @@ resource "azurerm_storage_container" "media" {
   container_access_type = "private"
 }
 
-resource "random_password" "postgresql_admin_password" {
+resource "random_password" "sql_admin_password" {
   length      = 16
   min_lower   = 1
   min_upper   = 1
   min_numeric = 1
 }
 
-resource "azurerm_postgresql_server" "treasure" {
-  name                             = "${var.app_name}-pg-server"
-  resource_group_name              = azurerm_resource_group.treasure.name
-  location                         = azurerm_resource_group.treasure.location
-  version                          = "11"
-  sku_name                         = "B_Gen5_1"
-  administrator_login              = "treasure"
-  administrator_login_password     = random_password.postgresql_admin_password.result
-  ssl_enforcement_enabled          = true
-  ssl_minimal_tls_version_enforced = "TLS1_2"
+resource "azurerm_sql_server" "treasure" {
+  name                         = "${var.app_name}-sql-server"
+  resource_group_name          = azurerm_resource_group.treasure.name
+  location                     = azurerm_resource_group.treasure.location
+  version                      = "12.0"
+  administrator_login          = "treasure"
+  administrator_login_password = random_password.sql_admin_password.result
+  connection_policy            = "Redirect"
 }
 
-resource "azurerm_postgresql_firewall_rule" "treasure" {
-  name                = "azure"
-  resource_group_name = azurerm_resource_group.treasure.name
-  server_name         = azurerm_postgresql_server.treasure.name
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "0.0.0.0"
-}
-
-resource "azurerm_postgresql_database" "treasure" {
+resource "azurerm_sql_database" "treasure" {
   name                = "treasurehunt"
   resource_group_name = azurerm_resource_group.treasure.name
-  server_name         = azurerm_postgresql_server.treasure.name
-  charset             = "UTF8"
-  collation           = "English_United States.1252"
+  location            = azurerm_resource_group.treasure.location
+  server_name         = azurerm_sql_server.treasure.name
+  edition             = "Basic"
+}
+
+resource "azurerm_sql_firewall_rule" "treasure" {
+  name                = "azure"
+  resource_group_name = azurerm_resource_group.treasure.name
+  server_name         = azurerm_sql_server.treasure.name
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
 }
 
 resource "azurerm_app_service_plan" "treasure" {
@@ -108,10 +106,10 @@ resource "azurerm_app_service" "treasure" {
     "APP_URL"            = "${var.app_name}.azurewebsites.net"
     "AZURE_ACCOUNT_KEY"  = azurerm_storage_account.treasure.primary_access_key
     "AZURE_ACCOUNT_NAME" = azurerm_storage_account.treasure.name
-    "DBHOST"             = azurerm_postgresql_server.treasure.fqdn
-    "DBNAME"             = azurerm_postgresql_database.treasure.name
-    "DBPASS"             = azurerm_postgresql_server.treasure.administrator_login_password
-    "DBUSER"             = azurerm_postgresql_server.treasure.administrator_login
+    "DBHOST"             = azurerm_sql_server.treasure.fully_qualified_domain_name
+    "DBNAME"             = azurerm_sql_database.treasure.name
+    "DBPASS"             = azurerm_sql_server.treasure.administrator_login_password
+    "DBUSER"             = azurerm_sql_server.treasure.administrator_login
     "DEPLOYMENT"         = "AZURE"
     "GM_API_KEY"         = var.google_maps_api_key
     "SECRET_KEY"         = random_password.secret_key.result
