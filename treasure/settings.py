@@ -32,7 +32,7 @@ DEBUG = local_deploy
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "insecure" if local_deploy else os.environ["SECRET_KEY"]
 
-ALLOWED_HOSTS = ["localhost", "www.e-treasure-hunt.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "www.e-treasure-hunt.com"]
 app_url = os.getenv("APP_URL")
 if app_url is not None:
     ALLOWED_HOSTS.append(app_url)
