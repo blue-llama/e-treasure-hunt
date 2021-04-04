@@ -25,7 +25,6 @@ resource "azurerm_storage_account" "treasure" {
   name                     = replace(var.app_name, "/\\W/", "")
   resource_group_name      = azurerm_resource_group.treasure.name
   location                 = azurerm_resource_group.treasure.location
-  allow_blob_public_access = true
   account_replication_type = "LRS"
   account_tier             = "Standard"
   min_tls_version          = "TLS1_2"
