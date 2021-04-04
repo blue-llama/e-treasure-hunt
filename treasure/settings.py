@@ -30,10 +30,10 @@ local_deploy = deployment_type == Deployment.LOCAL
 DEBUG = local_deploy
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", "insecure" if local_deploy else "")
+SECRET_KEY = "insecure" if local_deploy else os.environ["SECRET_KEY"]
 
 ALLOWED_HOSTS = ["localhost", "www.e-treasure-hunt.com"]
-app_url = os.environ.get("APP_URL")
+app_url = os.getenv("APP_URL")
 if app_url is not None:
     ALLOWED_HOSTS.append(app_url)
 
@@ -60,13 +60,13 @@ if deployment_type == Deployment.LOCAL:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 elif deployment_type == Deployment.AZURE:
     DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
-    AZURE_ACCOUNT_NAME = os.getenv("AZURE_ACCOUNT_NAME")
-    AZURE_ACCOUNT_KEY = os.getenv("AZURE_ACCOUNT_KEY")
-    AZURE_CONTAINER = os.getenv("AZURE_CONTAINER", "media")
+    AZURE_ACCOUNT_NAME = os.environ["AZURE_ACCOUNT_NAME"]
+    AZURE_ACCOUNT_KEY = os.environ["AZURE_ACCOUNT_KEY"]
+    AZURE_CONTAINER = os.environ["AZURE_CONTAINER"]
     AZURE_URL_EXPIRATION_SECS = 900
 elif deployment_type == Deployment.HEROKU:
     DEFAULT_FILE_STORAGE = "storages.backends.dropbox.DropBoxStorage"
-    DROPBOX_OAUTH2_TOKEN = os.environ.get("DROPBOX_OAUTH2_TOKEN", "")
+    DROPBOX_OAUTH2_TOKEN = os.environ["DROPBOX_OAUTH2_TOKEN"]
     DROPBOX_ROOT_PATH = "/"
 
 # Application definition
@@ -166,14 +166,14 @@ if deployment_type == Deployment.LOCAL:
         }
     }
 elif deployment_type == Deployment.AZURE:
-    user = os.getenv("DBUSER", "")
-    host = os.getenv("DBHOST", "")
+    user = os.environ["DBUSER"]
+    host = os.environ["DBHOST"]
     DATABASES = {
         "default": {
             "ENGINE": "mssql",
-            "NAME": os.getenv("DBNAME", ""),
+            "NAME": os.environ["DBNAME"],
             "USER": f"{user}@{host}",
-            "PASSWORD": os.getenv("DBPASS", ""),
+            "PASSWORD": os.environ["DBPASS"],
             "HOST": host,
             "OPTIONS": {
                 "driver": "ODBC Driver 17 for SQL Server",

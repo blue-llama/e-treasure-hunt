@@ -100,6 +100,7 @@ resource "azurerm_app_service" "treasure" {
     "APP_URL"            = "${var.app_name}.azurewebsites.net"
     "AZURE_ACCOUNT_KEY"  = azurerm_storage_account.treasure.primary_access_key
     "AZURE_ACCOUNT_NAME" = azurerm_storage_account.treasure.name
+    "AZURE_CONTAINER"    = azurerm_storage_container.media.name
     "DBHOST"             = azurerm_sql_server.treasure.fully_qualified_domain_name
     "DBNAME"             = azurerm_sql_database.treasure.name
     "DBPASS"             = azurerm_sql_server.treasure.administrator_login_password
