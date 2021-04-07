@@ -9,7 +9,7 @@ from django.dispatch import receiver
 
 # Team hunt progress info.
 class HuntInfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     level = models.IntegerField(default=1)
     hints_shown = models.IntegerField(default=1)
     hint_requested = models.BooleanField(default=False)

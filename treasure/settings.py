@@ -49,6 +49,9 @@ X_FRAME_OPTIONS = "DENY"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 CSRF_COOKIE_AGE = 5184000
 
+# Django 3.2 default.
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 # Storage.
 BASE_DIR = Path(__file__).parents[1]
 MEDIA_URL = "/media/"
