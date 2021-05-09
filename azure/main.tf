@@ -22,12 +22,13 @@ resource "azurerm_resource_group" "treasure" {
 }
 
 resource "azurerm_storage_account" "treasure" {
-  name                     = replace(var.app_name, "/\\W/", "")
-  resource_group_name      = azurerm_resource_group.treasure.name
-  location                 = azurerm_resource_group.treasure.location
-  account_replication_type = "LRS"
-  account_tier             = "Standard"
-  min_tls_version          = "TLS1_2"
+  name                      = replace(var.app_name, "/\\W/", "")
+  resource_group_name       = azurerm_resource_group.treasure.name
+  location                  = azurerm_resource_group.treasure.location
+  account_replication_type  = "LRS"
+  account_tier              = "Standard"
+  min_tls_version           = "TLS1_2"
+  enable_https_traffic_only = true
 }
 
 resource "azurerm_storage_container" "media" {
@@ -59,14 +60,6 @@ resource "azurerm_sql_database" "treasure" {
   location            = azurerm_resource_group.treasure.location
   server_name         = azurerm_sql_server.treasure.name
   edition             = "Basic"
-}
-
-resource "azurerm_sql_firewall_rule" "treasure" {
-  name                = "azure"
-  resource_group_name = azurerm_resource_group.treasure.name
-  server_name         = azurerm_sql_server.treasure.name
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "0.0.0.0"
 }
 
 resource "azurerm_app_service_plan" "treasure" {
@@ -117,5 +110,15 @@ resource "azurerm_app_service" "treasure" {
     scm_type         = "LocalGit"
     min_tls_version  = "1.2"
     ftps_state       = "Disabled"
+    http2_enabled    = true
   }
+}
+
+resource "azurerm_sql_firewall_rule" "treasure" {
+  name                = "app-service-${each.key}"
+  for_each            = toset(azurerm_app_service.treasure.possible_outbound_ip_address_list)
+  resource_group_name = azurerm_resource_group.treasure.name
+  server_name         = azurerm_sql_server.treasure.name
+  start_ip_address    = each.key
+  end_ip_address      = each.key
 }
