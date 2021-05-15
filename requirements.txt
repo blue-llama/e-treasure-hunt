@@ -73,9 +73,9 @@ cryptography==3.4.7; python_version >= "3.6" \
 django-storages==1.11.1; python_version >= "3.5" \
     --hash=sha256:c823dbf56c9e35b0999a13d7e05062b837bae36c518a40255d522fbe3750fbb4 \
     --hash=sha256:f28765826d507a0309cfaa849bd084894bc71d81bf0d09479168d44785396f80
-django==3.1.10; python_version >= "3.6" \
-    --hash=sha256:973c968e63518859732f018975364785dd96f0581b1e4b12e2a4b749415ac43a \
-    --hash=sha256:cd6ec37db950a384dba3341b135394fdc776ede4d149fc7abde1e45a21ec4f22
+django==3.1.11; python_version >= "3.6" \
+    --hash=sha256:c79245c488411d1ae300b8f7a08ac18a496380204cf3035aff97ad917a8de999 \
+    --hash=sha256:9a0a2f3d34c53032578b54db7ec55929b87dda6fec27a06cc2587afbea1965e5
 djangorestframework==3.12.4; python_version >= "3.5" \
     --hash=sha256:6d1d59f623a5ad0509fe0d6bfe93cbdfe17b8116ebc8eda86d45f6e16e819aaf \
     --hash=sha256:f747949a8ddac876e879190df194b925c177cdeb725a099db1460872f7c0a7f2
