@@ -6,7 +6,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from hunt.apimixin import AllowPUTAsCreateMixin
+from hunt.third_party.apimixin import AllowPUTAsCreateMixin
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
 

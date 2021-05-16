@@ -90,7 +90,6 @@ resource "azurerm_app_service" "treasure" {
 
   app_settings = {
     "APP_URL"            = "${var.app_name}.azurewebsites.net"
-    "AZURE_ACCOUNT_KEY"  = azurerm_storage_account.treasure.primary_access_key
     "AZURE_ACCOUNT_NAME" = azurerm_storage_account.treasure.name
     "AZURE_CONTAINER"    = azurerm_storage_container.media.name
     "DBHOST"             = azurerm_sql_server.treasure.fully_qualified_domain_name
@@ -112,6 +111,16 @@ resource "azurerm_app_service" "treasure" {
     ftps_state       = "Disabled"
     http2_enabled    = true
   }
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
+
+resource "azurerm_role_assignment" "storage_contributor" {
+  scope                = azurerm_storage_account.treasure.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_app_service.treasure.identity.0.principal_id
 }
 
 resource "azurerm_sql_firewall_rule" "treasure" {

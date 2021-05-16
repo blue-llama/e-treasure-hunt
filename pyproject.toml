@@ -16,13 +16,20 @@ pytz = ">=2020.1"
 requests = "^2.23.0"
 whitenoise = "^5.2.0"
 
-# Things needed for azure deployment.
-django-storages = { version = "^1.9.1", extras = ["azure"] }
-mssql-django = "^1.0b1"
-
 # Things needed for heroku deployment.
 # django-heroku = "^0.3.1"
 # django-storages = { version = "^1.9.1", extras = ["dropbox"] }
+
+# Things needed for azure deployment.
+#
+# If <https://github.com/jschneier/django-storages/pull/805> is ever merged we
+# can use the Azure storage implementation from that project again.
+#
+# django-storages = { version = "^1.9.1", extras = ["azure"] }
+azure-identity = "^1.6.0"
+azure-storage-blob = "^12.8.1"
+django-storages = "^1.9.1"
+mssql-django = "^1.0b1"
 
 [tool.poetry.dev-dependencies]
 black = "^21.5b0"

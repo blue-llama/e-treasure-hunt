@@ -62,9 +62,11 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 if deployment_type == Deployment.LOCAL:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 elif deployment_type == Deployment.AZURE:
-    DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
+    from azure.identity import DefaultAzureCredential
+
+    DEFAULT_FILE_STORAGE = "hunt.third_party.storage.AzureStorage"
+    AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
     AZURE_ACCOUNT_NAME = os.environ["AZURE_ACCOUNT_NAME"]
-    AZURE_ACCOUNT_KEY = os.environ["AZURE_ACCOUNT_KEY"]
     AZURE_CONTAINER = os.environ["AZURE_CONTAINER"]
     AZURE_URL_EXPIRATION_SECS = 900
 elif deployment_type == Deployment.HEROKU:
@@ -129,11 +131,6 @@ LOGGING = {
     },
 }
 
-if deployment_type == Deployment.HEROKU:
-    import django_heroku
-
-    django_heroku.settings(locals(), logging=False)
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -184,5 +181,6 @@ elif deployment_type == Deployment.AZURE:
         }
     }
 elif deployment_type == Deployment.HEROKU:
-    # Heroku takes care of this automatically.
-    pass
+    import django_heroku
+
+    django_heroku.settings(locals(), logging=False)
