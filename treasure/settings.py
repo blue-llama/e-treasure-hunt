@@ -166,17 +166,15 @@ if deployment_type == Deployment.LOCAL:
         }
     }
 elif deployment_type == Deployment.AZURE:
-    user = os.environ["DBUSER"]
-    host = os.environ["DBHOST"]
     DATABASES = {
         "default": {
             "ENGINE": "mssql",
+            "HOST": os.environ["DBHOST"],
             "NAME": os.environ["DBNAME"],
-            "USER": f"{user}@{host}",
-            "PASSWORD": os.environ["DBPASS"],
-            "HOST": host,
+            "Trusted_Connection": "no",
             "OPTIONS": {
                 "driver": "ODBC Driver 17 for SQL Server",
+                "extra_params": "Authentication=ActiveDirectoryMsi",
             },
         }
     }
