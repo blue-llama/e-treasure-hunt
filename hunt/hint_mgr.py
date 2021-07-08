@@ -1,4 +1,12 @@
-from hunt.models import HuntInfo, Level, HintTime, AppSetting, HuntEvent
+from hunt.models import (
+    HuntInfo,
+    Level,
+    HintTime,
+    AppSetting,
+    HuntEvent,
+    Answer,
+    Location,
+)
 from storages.backends.dropbox import DropBoxStorage
 import json
 from uuid import uuid4
@@ -9,12 +17,15 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.files.uploadedfile import TemporaryUploadedFile
 
+
 def delete_file(fs, name):
     fs.delete(name)
 
+
 def save_file(fs, file, name):
     fs.save(name, file)
-    
+
+
 # Hacky fix for django file upload bug
 def clone_uploaded_file(data):
     if isinstance(data, InMemoryUploadedFile):
@@ -22,83 +33,116 @@ def clone_uploaded_file(data):
     elif isinstance(data, TemporaryUploadedFile):
         data.file.close_called = True
     return data
-     
-def upload_new_hint(request):
-    if (not request.user.has_perm('hunt.add_level')):
-        return '/hint-mgmt?success=False'
-    
-    if(not request.POST):
-        return '/hint-mgmt?success=False'
-    
-    lvl_num = request.POST.get('lvl-num') 
-    fail_str = '/hint-mgmt?success=False&next=' + str(int(lvl_num))
-    
-    try:
-        level = Level.objects.get(number=lvl_num)
-    except Level.DoesNotExist:
-        level = Level(number=lvl_num)
-    
-    lvl_files = request.FILES.getlist('files')
-    lvl_files.sort(key=lambda x: x.name)
-    
-    lvl_info_file = lvl_files[0]
-    lvl_desc_file = lvl_files[1]
-    lvl_photos = lvl_files[2:]
-    
-    if((lvl_desc_file.name != 'blurb.txt') or (lvl_info_file.name != 'about.json') or (len(lvl_photos) != 5)):
-        return fail_str
-        
+
+
+def delete_old_clue_threads(level):
+    """
+    Delete any existing clues for a given level.
+    """
     fs = DropBoxStorage()
     threads = []
-    
-    if ((level.clues != None) and level.clues):
+    if level.clues:
         old_clues = ast.literal_eval(level.clues)
         for old_clue in old_clues:
             if fs.exists(old_clue):
                 process = Thread(target=delete_file, args=[fs, old_clue])
                 process.start()
                 threads.append(process)
-            
-    clue_names = []    
-    for file in lvl_photos:
-        extension =  file.name.split('.')[-1]
-        print (file.name)
-        if ((extension.lower() != 'png') and (extension.lower() != 'jpg')):
-            return fail_str
-        clue_name = str(uuid4()) + "." + extension
-        clue_names.append(clue_name)
-        
-        # Hack - Django keeps closing files. Clone it to keep it open.
-        file_clone = clone_uploaded_file(file)
-        
-        process = Thread(target=save_file, args=[fs, file_clone, clue_name])
-        process.start()
-        threads.append(process)
-        
-    lvl_info = json.load(lvl_info_file)
-    
-    lvl_desc = ""
-    lvl_desc_lines = lvl_desc_file.readlines()
-    for line_enc in lvl_desc_lines:
-        line = line_enc.decode("cp1251")
-        if (line.strip()):
-            lvl_desc = lvl_desc + line
-           
-    level.name = lvl_info.get('name');
-    level.description = lvl_desc;
-    level.latitude = lvl_info.get('latitude');
-    level.longitude = lvl_info.get('longitude');
-    level.tolerance = lvl_info.get('tolerance');
-    level.clues = clue_names
-    
+
     # We now pause execution on the main thread by 'joining' all of our started threads.
     # This ensures that each Dropbox operation completes before we return.
     for process in threads:
         process.join()
-    
+
+    return
+
+
+def create_file_thread(fs, threads, file):
+    """
+    Create a thread that will upload this file.
+
+    :return: Name of this clue file
+    """
+    extension = file.name.split(".")[-1]
+    clue_name = str(uuid4()) + "." + extension
+
+    # Hack - Django keeps closing files. Clone it to keep it open.
+    file_clone = clone_uploaded_file(file)
+
+    process = Thread(target=save_file, args=[fs, file_clone, clue_name])
+    process.start()
+    threads.append(process)
+    return clue_name
+
+
+def create_clues_and_hints(level_number, file_dict):
+    fs = DropBoxStorage()
+    threads = []
+    clue_names = []
+
+    for file_name in ["clue", "hint1", "hint2", "hint3", "hint4"]:
+        file = file_dict.get(file_name)
+        if file:
+            clue_names.append(create_file_thread(fs, threads, file))
+        else:
+            # If we're not uploading
+            clue_names.append("")
+
+    # We now pause execution on the main thread by 'joining' all of our started threads.
+    # This ensures that each Dropbox operation completes before we return.
+    for process in threads:
+        process.join()
+    return clue_names
+
+
+def create_first_level(baseanswerform_data, file_dict):
+    # Seek to the beginning of the file because the validator may have read the file
     try:
-        level.save()
-    except:
-        return fail_str
-    
-    return '/hint-mgmt?success=True&next=' + str(int(lvl_num) + 1)
+        level = Level.objects.get(number=0)
+    except Level.DoesNotExist:
+        level = Level(number=0)
+
+    level.clues = ""
+    level.save()
+    location = Location.objects.create()
+    description = baseanswerform_data.get("description").file.read().decode("utf-8")
+    Answer.objects.create(
+        location=location,
+        solves_level=level,
+        name=baseanswerform_data.get("name"),
+        description=description,
+    )
+    return
+
+
+def create_level(levelform_data, file_dict):
+    level_number = levelform_data.get("number")
+    try:
+        level = Level.objects.get(number=level_number)
+        delete_old_clue_threads(level)
+    except Level.DoesNotExist:
+        level = Level(number=level_number)
+
+    clue_names = create_clues_and_hints(level_number, file_dict)
+    level.clues = clue_names
+
+    level.save()
+    return level
+
+
+def create_answer(level, answerform_data):
+    # Seek to the beginning of the file because the validator may have read the file
+    answerform_data.get("info").file.seek(0)
+    json_data = json.loads(answerform_data.get("info").file.read())
+    description = answerform_data.get("description").file.read().decode("utf-8")
+    location = Location.objects.create(
+        latitude=json_data.get("latitude"),
+        longitude=json_data.get("longitude"),
+        tolerance=json_data.get("tolerance"),
+    )
+    Answer.objects.create(
+        location=location,
+        solves_level=level,
+        name=answerform_data.get("name"),
+        description=description,
+    )

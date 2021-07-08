@@ -1,0 +1,52 @@
+{% extends 'mgmt-base.html' %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static "graph.css" %}">
+{% endblock %}
+
+
+{% block content %}
+<script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+<script src="https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.js"></script>
+<script src="https://dagrejs.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
+
+<script type="text/javascript">
+function DrawGraph() {
+	var g = new dagreD3.graphlib.Graph()
+	  .setGraph({})
+	  .setDefaultEdgeLabel(function() { return {}; });
+	
+	{% for level in levels %}
+	g.setNode({{ level.number }}, { label: {{ level.number }} });
+	{% endfor %}
+	{% for answer in answers %}
+	{% if answer.solves_level and answer.leads_to_level %}
+	g.setEdge({{ answer.solves_level.number }}, {{ answer.leads_to_level.number }}, { label: "{{ answer.name }}" });
+	{% endif %}
+	{% endfor %}
+	
+	//dagre.layout(g)
+	
+	// Create the renderer
+	var render = new dagreD3.render();
+	
+	// Set up an SVG group so that we can translate the final graph.
+	var svg = d3.select("svg"),
+	    svgGroup = svg.append("g");
+	
+	// Run the renderer. This is what draws the final graph.
+	render(d3.select("svg g"), g);
+	
+	// Center the graph
+	var xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+	svgGroup.attr("transform", "translate(" + xCenterOffset + ", 20)");
+	svg.attr("height", g.graph().height + 40);
+}
+</script>
+
+<body onload="DrawGraph()">
+	<svg width="1000" height="1000"></svg>
+</body>
+
+{% endblock %}

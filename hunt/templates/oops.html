@@ -11,7 +11,9 @@
         <li>You clicked a link that was out of date.</li>
       </ul>
     </div>
-    <a class="gobutton" href="/level/{{ team_level }}">
-      GO BACK TO THE CURRENT LEVEL
-    </a>
+    {% for level in levels %}
+      <a class="gobutton" href="/level/{{ level }}">
+        GO BACK TO LEVEL {{ level }}
+      </a>
+    {% endfor %}
 {% endblock %}

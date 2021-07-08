@@ -3,184 +3,234 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from hunt.models import *
+from hunt.utilities import (
+    get_users_active_levels,
+    get_user_level_for_level,
+    get_max_level_number,
+    get_all_level_numbers,
+)
 from geopy import distance
 import ast
 from datetime import datetime
 
 from storages.backends.dropbox import DropBoxStorage
 
-def advance_level(user, level):
-    hunt_info = HuntInfo.objects.filter(user=user)[0]
+
+def advance_level(hunt, answer):
+    """ Carry out all the necessary admin to advance a level. """
+    create_new_user_level(hunt, answer.leads_to_level)
+    log_level_advance(hunt, answer)
+
+
+def log_level_advance(hunt, answer):
+    """ Log an event that a level has been solved. """
+    event = HuntEvent()
+    event.time = datetime.utcnow()
+    event.type = HuntEvent.CLUE_ADV
+    event.team = hunt.user.username
+    event.level = answer.leads_to_level.number
+    event.save()
+
+
+def get_latitude_longitude(request):
+    """ 
+    Gets the latitude and longitude of this guess.
+    Note, the request is always a GET because the map uses javascripts window.location.href to redirect.
+    """
+    return request.GET.get("lat"), request.GET.get("long")
+
+
+def valid_search(request):
+    """ Determines if this is a valid search. """
+    latitude, longitude = get_latitude_longitude(request)
+    return (latitude != None) and (longitude != None)
+
+
+def get_distance(search_coords, answer_coords):
+    """ Get the distance between the guess and the answer in metres. """
+    return distance.distance(search_coords, answer_coords).m
+
+
+def is_correct_answer(latitude, longitude, location):
+    """ Determine if a given co-ordinate satisfies an answer. """
+    distance = get_distance(
+        (latitude, longitude), (location.latitude, location.longitude)
+    )
+    if distance <= location.tolerance:
+        return True
+
+    return False
+
+
+def create_new_user_level(hunt, level, hints_shown=1):
+    UserLevel.objects.create(hunt=hunt, level=level, hints_shown=hints_shown)
+
+
+def update_active_levels(hunt, answer):
+    """ Update the hunt info's list of active levels. """
     
-    # User may only advance by one level at a time
-    if (level == hunt_info.level + 1):
 
-        # Log an event to record this.
-        event = HuntEvent()
-        event.time = datetime.utcnow()
-        event.type = HuntEvent.CLUE_ADV
-        event.team = user.username
-        event.level = level
-        event.save()
 
-        # Update the team's level, clear any hint request flags and save.
-        hunt_info.level = level
-        hunt_info.hint_requested = False
-        hunt_info.private_hint_requested = False
-        hunt_info.private_hints_shown = 0
-        hunt_info.save()
-    
-def look_for_level(request):
+def get_search_level(request):
+    return request.GET.get("lvl")
 
-    # Get latitude and longitude - without these there can be no searching.
-    lat = request.GET.get('lat')
-    long = request.GET.get('long')
-    if ((lat == None) or (long == None)):
+
+def look_for_answers(request):
+    """
+    Look to see if this search matches any answers to levels this user is currently on
+    """
+    if not valid_search(request):
         return "/search"
-        
-    # Every search must be for the solution to a specific level - by default, 
-    # assume this is the team's current level.
-    search_level = int(request.user.huntinfo.level)
-    old_search = False
-    
-    # See if there's a particular level specified in the request.
-    lvl = request.GET.get('lvl')
-    if (lvl != None):
-        if (int(lvl) < search_level):
-            # The request specified a previous level - search for that,
-            # but don't advance the team's level if the search matches.        
-            old_search = True
-            search_level = int(lvl)
-     
-        # If the search is for a level above the one the team's on, redirect them.
-        elif (int(lvl) > search_level):
-            return "/oops"
-    
-    # Get the level object corresponding to the search.
-    level = Level.objects.filter(number = search_level)[0]
-    
-    # Get the distance between the search location and the level solution
-    level_coords = (level.latitude, level.longitude)
-    search_coords = (lat, long)
-    
-    # TODO: This doesn't work well around the antipode of the solution.
-    # Consider simply catching the resulting exception and rejecting the 
-    # guess - it could hardly be further from the right answer!
-    dist = distance.vincenty(search_coords, level_coords).m
-    
-    # If the distance is small enough, accept the solution.
-    if (dist <= level.tolerance):
-        # If this wasn't a search for a previous level, advance.
-        if (not old_search):
-            advance_level(request.user, level.number + 1)
-            
-        # Redirect to the new level.
-        return "/level/" + str(search_level + 1)
+
+    latitude, longitude = get_latitude_longitude(request)
+
+    # Get all the levels the user is currently working on
+    hunt = request.user.huntinfo
+    active_level_objects = hunt.active_levels.all()
+
+    # For each active level, check if this is an answer
+    for user_level in active_level_objects:
+        for answer in user_level.level.answers.all():
+            if is_correct_answer(latitude, longitude, answer.location):
+                advance_level(hunt, answer)
+                return "/level/" + str(answer.leads_to_level.number)
+
+    # No correct answer found, redirect to a failure page.
+    return "/nothing-here"
+
+
+def get_hints_to_show(level, user_level):
+    """
+    Gets the images to show for this level.
+    """
+    num_hints = min(5, user_level.hints_shown)
+
+    # Get the clue image names as an array, and select the ones to show.
+    hints = ast.literal_eval(level.clues)
+    hints_temp = hints[0:num_hints]
+
+    # Get actual hint URLs from DropBox.
+    hints_to_show = []
+    fs = DropBoxStorage()
+    for hint in hints_temp:
+        hints_to_show.append(fs.url(hint))
+    return hints_to_show
+
+
+def can_request_hint(user_level):
+    """
+    Can a hint be requested for this user level.
+    A hint can't be requested if:
+    - A hint has already been requested
+    - We've displayed all the hints available
+    """
+    allow_hint = True
+    reason = ""
+
+    # Don't allow a hint if one's already been requested by the team, or
+    # if max hints are already shown.
+    if user_level.hint_requested:
+        allow_hint = False
+        reason = "Your team has already requested a hint."
+    elif user_level.hints_shown >= 5:
+        allow_hint = False
+        reason = "No more hints are available on this level."
+
+    return allow_hint, reason
+
+
+def get_level_numbers(request):
+    # If this user is staff, return all the levels
+    if request.user.is_staff:
+        level_numbers = get_all_level_numbers()
     else:
-        # Redirect to a failure page.
-        return "/nothing-here?lvl=" + str(search_level)
+        level_numbers = get_users_active_levels(request.user.huntinfo)
+
+    return level_numbers
+
+
+def get_answer_for_last_level(level_num):
+    """
+    Get the answer for the last level, that is, an answer which leads to this level.
+    
+    There may be multiple levels that lead to this level, assume the first has all the necessary information.
+    """
+    try:
+        return Answer.objects.filter(leads_to_level__number=level_num)[0]
+    except:
+        return None
+
 
 def maybe_load_level(request):
-    # Figure out which level is being requested - this is the 
+    # Figure out which level is being requested - this is the
     # number at the end of the URL.
-    level_num = int(request.path.rsplit('/', 1)[-1])
-    
-    # Get the user's hunt progress information, including current level.
-    team = request.user.huntinfo
-    team_level = team.level
-    
-    # Figure out the maximum level number.
-    max_level_num = Level.objects.order_by('-number')[0].number
-    
-    # Hack - admins can see all levels.
-    if (request.user.is_staff):
-        team_level = max_level_num
-    
-    # Only load the level if it's one the team has access to.
-    if level_num <= team_level:
+    level_num = int(request.path.rsplit("/", 1)[-1])
+    active_level_numbers = get_level_numbers(request)
+
+    # Only load the level if it's one the team has access (staff have access to all levels).
+    if level_num in active_level_numbers:
         # Get the level objects for this level and the one before.
-        last_level = Level.objects.filter(number = level_num - 1)[0]
-        current_level = Level.objects.filter(number = level_num)[0]
-        
+        answer_for_last_level = get_answer_for_last_level(level_num)
+        # If we can't find any answers that lead to this page then something has gone wrong.
+        if not answer_for_last_level:
+            template = loader.get_template("oops.html")
+            context = {"levels": sorted(active_level_numbers, reverse=True)}
+            return template.render(context, request)
+
+        current_level = Level.objects.get(number=level_num)
+
         # Figure out how many images to display. This is the base number for
         # the level plus any private hints the team might have access to.
-        num_hints = min(5, current_level.hints_shown + team.private_hints_shown)
-        
-        # Get the clue image names as an array, and select the ones to show.
-        hints = ast.literal_eval(current_level.clues)        
-        hints_temp = hints[0:num_hints]
-        
-        # Get actual hint URLs from DropBox.
-        hints_to_show = []
-        fs = DropBoxStorage()
-        for hint in hints_temp:
-            hints_to_show.append(fs.url(hint))
-            
+        # If this is a staff member, they may not have a user level so create one
+        # for them.
+        try:
+            user_level = get_user_level_for_level(current_level, request.user)
+        except RuntimeError:
+            if request.user.is_staff:
+                create_new_user_level(request.user.huntinfo, current_level, 5)
+                user_level = get_user_level_for_level(current_level, request.user)
+
+        hints_to_show = get_hints_to_show(current_level, user_level)
+
         # Is this the last level?
-        is_last_level = (current_level.number == max_level_num)
-        
-        # Get the description from the previous level, and split it 
+        is_last_level = current_level.number == get_max_level_number()
+
+        # Get the description from the previous level, and split it
         # into paragraphs for display.
-        desc_paras = last_level.description.splitlines()
-        
+        desc_paras = answer_for_last_level.description.splitlines()
+
         # By default a hint can be requested.
-        allow_hint = True
-        reason = ""
-        
-        # Don't allow a hint if one's already been requested by the team, or 
-        # if max hints are already shown.
-        if (team.hint_requested):
-            allow_hint = False
-            reason = "Your team has already requested a hint."
-        elif (current_level.hints_shown >= 5):
-            allow_hint = False
-            reason = "No more hints are available on this level."
-        
+        allow_hint, reason = can_request_hint(user_level)
+
         # Prepare the template and context.
-        template = loader.get_template('level.html')
+        template = loader.get_template("level.html")
         context = {
-            'team_level': team_level,
-            'level_number': current_level.number,
-            'level_name': last_level.name.upper(),
-            'hints': hints_to_show,
-            'desc_paras': desc_paras,
-            'allow_hint': allow_hint,
-            'reason': reason,
-            'latitude': last_level.latitude,
-            'longitude': last_level.longitude,
-            'is_last': is_last_level,
+            "highest_level": active_level_numbers[0],
+            "current_level": current_level.number,
+            "level_name": answer_for_last_level.name.upper(),
+            "hints": hints_to_show,
+            "desc_paras": desc_paras,
+            "allow_hint": allow_hint,
+            "reason": reason,
+            "latitude": answer_for_last_level.location.latitude,
+            "longitude": answer_for_last_level.location.longitude,
+            "is_last": is_last_level,
         }
     else:
         # Shouldn't be here. Show an error page.
-        template = loader.get_template('oops.html')
-        context = {
-            'team_level': team_level
-        }
-        
-    # Return the rendered template.
-    return template.render(context, request)   
-    
-def list_levels(request):
-    # Get the team's current level.
-    team_level = request.user.huntinfo.level
-    
-    # Hack - staff can see all levels.
-    if (request.user.is_staff):
-        team_level = Level.objects.order_by('-number')[0].number
-    
-    # Make a list of all the levels to display.
-    levels = []
-    for level in range(team_level):
-        levels.append(level + 1)
-        
-    # Give the level list as context to the template.
-    template = loader.get_template('levels.html')
-    context = {
-        'team_level': team_level,
-        'levels': levels
-    }
-     
+        template = loader.get_template("oops.html")
+        context = {"levels": sorted(active_level_numbers, reverse=True)}
+
     # Return the rendered template.
     return template.render(context, request)
 
-    
+
+def list_levels(request):
+    level_numbers = get_level_numbers(request)
+
+    # Give the level list as context to the template.
+    template = loader.get_template("levels.html")
+    context = {"levels": level_numbers}
+
+    # Return the rendered template.
+    return template.render(context, request)

@@ -1,0 +1,35 @@
+{% extends 'mgmt-base.html' %}
+
+{% block content %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<form action="/level-mgmt" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h3>Level</h3>
+    {{ level.as_p }}
+    {{ formset.management_form }}
+    <h3>Answers</h3>
+    <div id="form_set">
+        {% for form in formset.forms %}
+            <div class="row form-row spacer">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+    </div>
+    <div><input type="button" value="+" id="add_more"></div>
+    <div id="empty_form" style="display:none">
+        <hr>
+        <table class='no_error'>
+            {{ formset.empty_form.as_p }}
+        </table>
+    </div>
+    <div><input class="gobutton" type="submit" value="SUBMIT"></div>
+</form>
+<script>
+    $('#add_more').click(function() {
+        var form_idx = $('#id_form-TOTAL_FORMS').val();
+        $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+        $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+</script>
+{% endblock %}

@@ -21,7 +21,7 @@ SECRET_KEY = os.environ.get('DJ_KEY','')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-ALLOWED_HOSTS =  [os.environ.get('APP_URL','')]
+ALLOWED_HOSTS = [os.environ.get('APP_URL','')]
 
 # Extra settings from security check
 SECURE_CONTENT_TYPE_NOSNIFF = True
