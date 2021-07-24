@@ -19,7 +19,7 @@ idna==3.2; python_version >= "3.5" and python_full_version < "3.0.0" or python_f
 isodate==0.6.0
 korean-lunar-calendar==0.2.1; python_version >= "3.6"
 msal-extensions==0.3.0
-msal==1.12.0
+msal==1.13.0
 msrest==0.6.21
 mssql-django==1.0rc1
 oauthlib==3.1.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
