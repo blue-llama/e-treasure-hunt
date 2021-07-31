@@ -4,7 +4,7 @@ azure-identity==1.6.0
 azure-storage-blob==12.8.1
 certifi==2021.5.30; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 cffi==1.14.6; python_version >= "3.6"
-charset-normalizer==2.0.3; python_full_version >= "3.6.0" and python_version >= "3"
+charset-normalizer==2.0.4; python_full_version >= "3.6.0" and python_version >= "3"
 convertdate==2.3.2; python_version >= "3.6"
 cryptography==3.4.7; python_version >= "3.6"
 django-storages==1.11.1; python_version >= "3.5"
