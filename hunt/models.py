@@ -14,7 +14,6 @@ class HuntInfo(models.Model):
     hints_shown = models.IntegerField(default=1)
     hint_requested = models.BooleanField(default=False)
     next_hint_release = models.DateTimeField(null=True, blank=True)
-    slack_channel = models.CharField(max_length=16, default="", blank=True)
 
     def __str__(self) -> str:
         return self.user.get_username() + "_hunt"

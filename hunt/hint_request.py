@@ -6,7 +6,6 @@ from datetime import timedelta
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-import hunt.slack as slack
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import HuntEvent, HuntInfo
 from hunt.utils import AuthenticatedHttpRequest, max_level
@@ -97,12 +96,6 @@ def prepare_next_hint(hunt_info: HuntInfo) -> None:
     delay = determine_hint_delay(hunt_info)
     hunt_info.next_hint_release = now + timedelta(minutes=delay)
     hunt_info.save()
-
-    # If we have a slack channel for this user, schedule an announcement to coincide
-    # with the hint becoming available.
-    if hunt_info.slack_channel:
-        timestamp = int(hunt_info.next_hint_release.timestamp())
-        slack.schedule_hint_announcement(hunt_info.slack_channel, timestamp)
 
 
 def maybe_release_hint(user: User) -> None:

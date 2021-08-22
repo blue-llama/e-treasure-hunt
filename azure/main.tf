@@ -125,7 +125,6 @@ resource "azurerm_app_service" "treasure" {
     "DEPLOYMENT"         = "AZURE"
     "GM_API_KEY"         = var.google_maps_api_key
     "SECRET_KEY"         = random_password.secret_key.result
-    "SLACK_AUTH_TOKEN"   = var.slack_auth_token
   }
 
   https_only = true

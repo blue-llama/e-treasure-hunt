@@ -3,7 +3,6 @@ from django.template import loader
 from django.utils import timezone
 from geopy import Point, distance
 
-import hunt.slack as slack
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import HuntEvent, Level
 from hunt.utils import AuthenticatedHttpRequest, max_level
@@ -27,10 +26,6 @@ def advance_level(user: User) -> None:
     hunt_info.hint_requested = False
     hunt_info.next_hint_release = None
     hunt_info.save()
-
-    # Cancel any pending slack announcements.
-    if hunt_info.slack_channel:
-        slack.cancel_pending_announcements(hunt_info.slack_channel)
 
 
 def look_for_level(request: AuthenticatedHttpRequest) -> str:

@@ -12,9 +12,3 @@ variable "google_maps_api_key" {
   sensitive = true
   default   = null
 }
-
-variable "slack_auth_token" {
-  type      = string
-  sensitive = true
-  default   = null
-}
