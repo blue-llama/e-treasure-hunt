@@ -118,7 +118,8 @@ def map(request: AuthenticatedHttpRequest) -> HttpResponse:
 @not_in_working_hours
 def alt_map(request: AuthenticatedHttpRequest) -> HttpResponse:
     template = loader.get_template("alternate-map.html")
-    context = {"lvl": request.GET.get("lvl")}
+    arcgis_api_key = os.environ.get("ARCGIS_API_KEY")
+    context = {"api_key": arcgis_api_key, "lvl": request.GET.get("lvl")}
     return HttpResponse(template.render(context, request))
 
 

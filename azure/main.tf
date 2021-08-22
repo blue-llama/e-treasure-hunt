@@ -123,6 +123,7 @@ resource "azurerm_app_service" "treasure" {
     "DBHOST"             = azurerm_mssql_server.treasure.fully_qualified_domain_name
     "DBNAME"             = azurerm_mssql_database.treasure.name
     "DEPLOYMENT"         = "AZURE"
+    "ARCGIS_API_KEY"     = var.arcgis_api_key
     "GM_API_KEY"         = var.google_maps_api_key
     "SECRET_KEY"         = random_password.secret_key.result
   }

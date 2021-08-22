@@ -17,19 +17,19 @@ generate revenue.
 You can either deploy this app hosted (on Heroku) or locally.
 
 Either way, you will need an [ArcGIS for Developers
-account](https://developers.arcgis.com/en/plans).
+account](https://developers.arcgis.com/en/plans) and API key.
 This is a [condition of
 use](https://github.com/Esri/esri-leaflet-geocoder#terms-and-conditions) of the
 esri-leaflet-geocoder project; see also the ArcGIS website.
 
 If you are using Google Maps you will need a Google Cloud account with Places
 and Maps JavaScript APIs enabled, and an API key.
+See <https://console.cloud.google.com/apis/dashboard>.
 
-- See <https://console.cloud.google.com/apis/dashboard>.
-- NOTE: this API key is passed to clients, so you must ensure you have
-  appropriate usage limits configured to avoid being charged if it is
-  mis-used. You may also wish to employ additional security measures e.g.
-  configuring an allowed redirect URI.
+NOTE: these API key are passed to clients, so you must ensure you have
+appropriate usage limits configured to avoid being charged in case of mis-use.
+You may also wish to employ additional security measures e.g. configuring an
+allowed redirect URI.
 
 ## How to deploy using Heroku
 
@@ -48,6 +48,7 @@ and Maps JavaScript APIs enabled, and an API key.
 - Set the `DEPLOYMENT` environment variable to `HEROKU`
 - Set the `SECRET_KEY` environment variable to a secret string
 - Set the `DROPBOX_OAUTH2_TOKEN` environment variable to your DropBox OAuth token
+- Set the `ARCGIS_API_KEY` environment variable to your ArcGIS API key
 - If you are using Google Maps: Set the `GM_API_KEY` environment variable to your
   Google API key
 - Set the `APP_URL` environment variable to the root domain for your app (e.g.
@@ -102,7 +103,9 @@ With this setup done you can run the app as below, and should find it in your
 browser at <http://localhost:8000>.
 
 ```
+export ARCGIS_API_KEY=<your API key>
 docker run \
+  --env ARCGIS_API_KEY \
   --user "$EUID":"${GROUPS[0]}" \
   --rm \
   --mount type=bind,source=$PWD,target=/usr/src/app \

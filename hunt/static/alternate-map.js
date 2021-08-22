@@ -14,6 +14,11 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 const searchControl = new L.esri.Geocoding.geosearch({
+  providers: [
+      L.esri.Geocoding.arcgisOnlineProvider({
+          apikey: api_key
+      })
+  ],
   placeholder: "Begin typing for suggestions",
   useMapBounds: "false",
 }).addTo(map);
