@@ -32,8 +32,15 @@ def upload_level(level: int, about: str, blurb: str) -> None:
         data = json.load(f)
 
     data["number"] = level
-    with open(blurb) as f:
-        data["description"] = f.read()
+
+    # It's OK for there to be no blurb, but we report it in case that wasn't what was
+    # intended.
+    try:
+        with open(blurb) as f:
+            data["description"] = f.read()
+    except FileNotFoundError:
+        print(f"Setting empty description at level {level}")
+        data["description"] = ""
 
     url = f"{SERVER}/api/levels/{level}"
     r = requests.put(url, auth=(USERNAME, PASSWORD), json=data)

@@ -33,29 +33,31 @@ def upload_new_level(request: HttpRequest) -> str:
         return extension.lower()
 
     # Gather up the needed information.
-    lvl_files = request.FILES.getlist("files")
-    lvl_info_file = next((f for f in lvl_files if extension(f.name) == ".json"), None)
-    lvl_desc_file = next((f for f in lvl_files if extension(f.name) == ".txt"), None)
-    lvl_photos = [f for f in lvl_files if extension(f.name) in (".jpg", ".png")]
-    lvl_photos.sort(key=lambda x: x.name)
+    files = request.FILES.getlist("files")
+    about_file = next((f for f in files if extension(f.name) == ".json"), None)
+    description_file = next((f for f in files if extension(f.name) == ".txt"), None)
+    images = [f for f in files if extension(f.name) in (".jpg", ".png")]
+    images.sort(key=lambda x: x.name)
 
-    if (
-        (lvl_desc_file is None)
-        or (lvl_info_file is None)
-        or (len(lvl_photos) != HINTS_PER_LEVEL)
-    ):
+    # Level info and images are mandatory, we can manage without a description.
+    if (about_file is None) or (len(images) != HINTS_PER_LEVEL):
         return fail_str
 
-    # Update the level.
-    lines = [line.decode("utf-8") for line in lvl_desc_file.readlines()]
-    lvl_desc = "".join(line for line in lines if line.strip())
+    # Read level info, and read or default level description.
+    about = json.load(about_file)
+    lines = (
+        []
+        if description_file is None
+        else [line.decode("utf-8") for line in description_file.readlines()]
+    )
+    description = "".join(line for line in lines if line.strip())
 
-    lvl_info = json.load(lvl_info_file)
-    level.name = lvl_info.get("name")
-    level.description = lvl_desc
-    level.latitude = lvl_info.get("latitude")
-    level.longitude = lvl_info.get("longitude")
-    level.tolerance = lvl_info.get("tolerance")
+    # Update the level.
+    level.name = about.get("name")
+    level.description = description
+    level.latitude = about.get("latitude")
+    level.longitude = about.get("longitude")
+    level.tolerance = about.get("tolerance")
     level.full_clean()
     level.save()
 
@@ -66,7 +68,7 @@ def upload_new_level(request: HttpRequest) -> str:
     old_hints.delete()
 
     # Create new hints.
-    for number, file_ in enumerate(lvl_photos):
+    for number, file_ in enumerate(images):
         filename = str(uuid4()) + extension(file_.name)
         hint = Hint()
         hint.level = level
