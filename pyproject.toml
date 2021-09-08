@@ -5,7 +5,7 @@ description = ""
 authors = ["David Hotham <david.hotham@blueyonder.co.uk>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 Pillow = "^8.1.0"
 django = "^3.2.5"
 djangorestframework = "^3.12.2"
