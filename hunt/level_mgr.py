@@ -37,7 +37,7 @@ def upload_new_level(request: HttpRequest) -> str:
     about_file = next((f for f in files if extension(f.name) == ".json"), None)
     description_file = next((f for f in files if extension(f.name) == ".txt"), None)
     images = [f for f in files if extension(f.name) in (".jpg", ".png")]
-    images.sort(key=lambda x: x.name)
+    images.sort(key=lambda f: f.name.lower())
 
     # Level info and images are mandatory, we can manage without a description.
     if (about_file is None) or (len(images) != HINTS_PER_LEVEL):
