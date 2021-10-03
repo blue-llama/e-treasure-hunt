@@ -40,7 +40,7 @@ def upload_level(level: int, about: str, blurb: str) -> None:
         with open(blurb) as f:
             data["description"] = f.read()
     except FileNotFoundError:
-        print(f"Setting empty description at level {level}")
+        print(f"No blurb at level {level}")
         data["description"] = ""
 
     url = f"{SERVER}/api/levels/{level}"
@@ -86,6 +86,8 @@ def upload_directory(level: int, dir: str) -> None:
     :param level: The level to upload.
     :param dir: A directory, containing about.json, blurb.txt, and five images.
     """
+    print(f"Uploading level {level}")
+
     # Create the level.
     upload_level(
         level,
@@ -109,6 +111,8 @@ def upload_directory(level: int, dir: str) -> None:
     images.sort(key=lambda x: x.lower())
     for hint, image in enumerate(images):
         upload_hint(level, hint, image)
+
+    print(f"Uploaded level {level}")
 
 
 def main() -> None:
