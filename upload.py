@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-import glob
+import fnmatch
 import json
 import os
+import re
 
 import requests
 
@@ -61,7 +62,7 @@ def upload_hint(level: int, hint: int, image: str) -> None:
     :param image: The file containing the hint.
     """
     root, ext = os.path.splitext(image)
-    content_type = CONTENT_TYPES.get(ext)
+    content_type = CONTENT_TYPES.get(ext.lower())
     if content_type is None:
         raise RuntimeError(f"unrecognized extension: {ext}")
 
@@ -95,7 +96,10 @@ def upload_directory(level: int, dir: str) -> None:
     # Find the images.
     images = []
     for extension in CONTENT_TYPES:
-        images.extend(glob.glob(os.path.join(dir, f"*{extension}")))
+        regex = re.compile(fnmatch.translate(f"*{extension}"), re.IGNORECASE)
+        images.extend(
+            [os.path.join(dir, name) for name in os.listdir(dir) if regex.match(name)]
+        )
 
     # Should find exactly the right number - check the file extensions if not.
     if len(images) != HINTS_PER_LEVEL:
