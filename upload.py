@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-import fnmatch
 import json
 import os
-import re
 
 import requests
 
@@ -96,12 +94,11 @@ def upload_directory(level: int, dir: str) -> None:
     )
 
     # Find the images.
-    images = []
-    for extension in CONTENT_TYPES:
-        regex = re.compile(fnmatch.translate(f"*{extension}"), re.IGNORECASE)
-        images.extend(
-            [os.path.join(dir, name) for name in os.listdir(dir) if regex.match(name)]
-        )
+    images = [
+        os.path.join(dir, file)
+        for file in os.listdir(dir)
+        if any(file.lower().endswith(extension) for extension in CONTENT_TYPES)
+    ]
 
     # Should find exactly the right number - check the file extensions if not.
     if len(images) != HINTS_PER_LEVEL:
