@@ -64,7 +64,7 @@ if deployment_type == Deployment.LOCAL:
 elif deployment_type == Deployment.AZURE:
     from azure.identity import DefaultAzureCredential
 
-    DEFAULT_FILE_STORAGE = "hunt.third_party.storage.AzureStorage"
+    DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
     AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
     AZURE_ACCOUNT_NAME = os.environ["AZURE_ACCOUNT_NAME"]
     AZURE_CONTAINER = os.environ["AZURE_CONTAINER"]

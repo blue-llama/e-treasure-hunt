@@ -20,14 +20,8 @@ whitenoise = "^5.2.0"
 # django-storages = { version = "^1.9.1", extras = ["dropbox"] }
 
 # Things needed for azure deployment.
-#
-# If <https://github.com/jschneier/django-storages/pull/805> is ever merged we
-# can use the Azure storage implementation from that project again.
-#
-# django-storages = { version = "^1.9.1", extras = ["azure"] }
 azure-identity = "^1.6.0"
-azure-storage-blob = "^12.8.1"
-django-storages = "^1.9.1"
+django-storages = { version = "^1.12", extras = ["azure"] }
 mssql-django = "^1.0rc1"
 
 [tool.poetry.dev-dependencies]
