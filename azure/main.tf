@@ -3,11 +3,11 @@ terraform {
   required_providers {
     azuread = {
       source  = "hashicorp/azuread"
-      version = "~> 2.0"
+      version = "~> 2.8"
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.74"
+      version = "~> 2.83"
     }
     random = {
       source  = "hashicorp/random"
@@ -78,9 +78,11 @@ resource "azurerm_mssql_server" "treasure" {
   administrator_login          = "sqladmin"
   administrator_login_password = random_password.sql_admin_password.result
   connection_policy            = "Redirect"
+  minimum_tls_version          = "1.2"
   azuread_administrator {
-    login_username = "AzureAD Admin"
-    object_id      = azuread_user.database_admin.object_id
+    login_username              = "AzureAD Admin"
+    object_id                   = azuread_user.database_admin.object_id
+    azuread_authentication_only = true
   }
 }
 
