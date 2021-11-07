@@ -2,6 +2,7 @@
 
 import json
 import os
+import pathlib
 
 import requests
 
@@ -59,10 +60,10 @@ def upload_hint(level: int, hint: int, image: str) -> None:
     :param number: The hint number.  Zero-indexed.
     :param image: The file containing the hint.
     """
-    root, ext = os.path.splitext(image)
-    content_type = CONTENT_TYPES.get(ext.lower())
+    suffix = pathlib.Path(image).suffix
+    content_type = CONTENT_TYPES.get(suffix.lower())
     if content_type is None:
-        raise RuntimeError(f"unrecognized extension: {ext}")
+        raise RuntimeError(f"unrecognized suffix: {suffix}")
 
     url = f"{SERVER}/api/levels/{level}/hints/{hint}"
     with open(image, "rb") as f:
@@ -97,7 +98,7 @@ def upload_directory(level: int, dir: str) -> None:
     images = [
         os.path.join(dir, file)
         for file in os.listdir(dir)
-        if any(file.lower().endswith(extension) for extension in CONTENT_TYPES)
+        if pathlib.Path(file).suffix.lower() in CONTENT_TYPES
     ]
 
     # Should find exactly the right number - check the file extensions if not.
