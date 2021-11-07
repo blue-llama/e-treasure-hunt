@@ -671,6 +671,14 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "types-backports"
+version = "0.1.3"
+description = "Typing stubs for backports"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "types-pytz"
 version = "2021.3.0"
 description = "Typing stubs for pytz"
@@ -729,7 +737,7 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "68653049d0f5ef7990d4ddcf33bf656088f123dac53c5997f13dfbaa151fee86"
+content-hash = "841a2a3c3ddc86413e091fc4568dd38a8e480906df7c10cb66878eb75b931a67"
 
 [metadata.files]
 asgiref = [
@@ -1161,6 +1169,10 @@ toml = [
 tomli = [
     {file = "tomli-1.2.2-py3-none-any.whl", hash = "sha256:f04066f68f5554911363063a30b108d2b5a5b1a010aa8b6132af78489fe3aade"},
     {file = "tomli-1.2.2.tar.gz", hash = "sha256:c6ce0015eb38820eaf32b5db832dbc26deb3dd427bd5f6556cf0acac2c214fee"},
+]
+types-backports = [
+    {file = "types-backports-0.1.3.tar.gz", hash = "sha256:f4b7206c073df88d6200891e3d27506185fd60cda66fb289737b2fa92c0010cf"},
+    {file = "types_backports-0.1.3-py2.py3-none-any.whl", hash = "sha256:dafcd61848081503e738a7768872d1dd6c018401b4d2a1cfb608ea87ec9864b9"},
 ]
 types-pytz = [
     {file = "types-pytz-2021.3.0.tar.gz", hash = "sha256:86a61967834dceeaaf98b6902ed8357efdd262bb8afcaf4bc8ccecf748592778"},
