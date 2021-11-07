@@ -13,7 +13,7 @@ from hunt.third_party.apimixin import AllowPUTAsCreateMixin
 EXTENSIONS = {"image/jpeg": ".jpg", "image/png": ".png"}
 
 
-class HintSerializer(serializers.HyperlinkedModelSerializer):  # type: ignore
+class HintSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Hint
         fields = [
@@ -23,7 +23,7 @@ class HintSerializer(serializers.HyperlinkedModelSerializer):  # type: ignore
         ]
 
 
-class LevelSerializer(serializers.HyperlinkedModelSerializer):  # type: ignore
+class LevelSerializer(serializers.HyperlinkedModelSerializer):
     hints = HintSerializer(many=True, read_only=True)
 
     class Meta:
@@ -39,7 +39,7 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):  # type: ignore
         ]
 
 
-class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignore
+class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):
     queryset = Level.objects.all().order_by("number")
     serializer_class = LevelSerializer
     http_method_names = ["delete", "get", "head", "patch", "put"]
@@ -49,7 +49,7 @@ class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignor
         methods=["put"],
         url_path="hints/(?P<number>\\d+)",
         parser_classes=[FormParser, MultiPartParser],
-    )  # type: ignore
+    )
     def save_hint(self, request: Request, pk: str, number: str) -> Response:
         # Check that it's a sensible hint.
         if int(number) >= HINTS_PER_LEVEL:
@@ -58,7 +58,7 @@ class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):  # type: ignor
             )
 
         # Check that we have a file, and that it seems to be an image.
-        upload = next(request.data.values(), None)
+        upload = next(iter(request.data.values()), None)
         if upload is None:
             return Response("no file attached", status=status.HTTP_400_BAD_REQUEST)
 
