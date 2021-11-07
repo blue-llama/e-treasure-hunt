@@ -3,7 +3,6 @@ from functools import wraps
 from typing import Any, Callable
 
 import holidays
-import pytz
 from django.contrib.auth.models import User
 from django.db.models import Max
 from django.http.request import HttpRequest
@@ -11,6 +10,11 @@ from django.http.response import HttpResponse
 from django.template import loader
 
 from hunt.models import AppSetting, Level
+
+try:
+    import zoneinfo
+except ImportError:
+    from backports import zoneinfo
 
 
 class AuthenticatedHttpRequest(HttpRequest):
@@ -27,7 +31,7 @@ def max_level() -> int:
 
 # Are we in (UK) working hours?
 def is_working_hours() -> bool:
-    london = pytz.timezone("Europe/London")
+    london = zoneinfo.ZoneInfo("Europe/London")
     now = datetime.datetime.now(tz=london)
 
     # Prevent access before the start time, if configured.
