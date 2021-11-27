@@ -173,7 +173,6 @@ elif deployment_type == Deployment.AZURE:
             "NAME": os.environ["DBNAME"],
             "Trusted_Connection": "no",
             "OPTIONS": {
-                "driver": "ODBC Driver 17 for SQL Server",
                 "extra_params": "Authentication=ActiveDirectoryMsi",
             },
         }
