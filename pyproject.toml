@@ -44,12 +44,20 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 strict = true
-ignore_missing_imports = true
 plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
 
 [[tool.mypy.overrides]]
 module = "hunt.third_party.*"
 ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = [
+  "django_heroku.*",
+  "geopy.*",
+  "holidays.*",
+  "zoneinfo.*",
+]
+ignore_missing_imports = true
 
 [tool.django-stubs]
 django_settings_module = "treasure.settings"
