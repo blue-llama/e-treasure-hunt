@@ -491,14 +491,14 @@ async = ["aiohttp (>=3.0)", "aiodns"]
 
 [[package]]
 name = "mssql-django"
-version = "1.0"
+version = "1.1"
 description = "Django backend for Microsoft SQL Server"
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-django = ">=2.2,<3.3"
+django = ">=2.2,<4.1"
 pyodbc = ">=3.0"
 pytz = "*"
 
@@ -1119,8 +1119,8 @@ msrest = [
     {file = "msrest-0.6.21.tar.gz", hash = "sha256:72661bc7bedc2dc2040e8f170b6e9ef226ee6d3892e01affd4d26b06474d68d8"},
 ]
 mssql-django = [
-    {file = "mssql-django-1.0.tar.gz", hash = "sha256:d67caf5485605c33ee9c069d2981f6f2eb194e3e91141dee1be700b3a122d473"},
-    {file = "mssql_django-1.0-py3-none-any.whl", hash = "sha256:1b41ee2cf70d1fb9ee485c9205bc543a2a32bda84e6274e9a994119073c053e9"},
+    {file = "mssql-django-1.1.tar.gz", hash = "sha256:abe3abf7b3c3fb2c077110c2e0a41371810b2e42811ff05eda9080aba8ec5b15"},
+    {file = "mssql_django-1.1-py3-none-any.whl", hash = "sha256:e85456a8eeac810e331dd918974c63b0f485c75aaf4ea9632a507b83d439b50e"},
 ]
 mypy = [
     {file = "mypy-0.910-cp35-cp35m-macosx_10_9_x86_64.whl", hash = "sha256:a155d80ea6cee511a3694b108c4494a39f42de11ee4e61e72bc424c490e46457"},
