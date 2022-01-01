@@ -32,10 +32,13 @@ DEBUG = local_deploy
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "insecure" if local_deploy else os.environ["SECRET_KEY"]
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "www.e-treasure-hunt.com"]
+ALLOWED_HOSTS = [] if local_deploy else ["www.e-treasure-hunt.com"]
+CSRF_TRUSTED_ORIGINS = ["https://www.e-treasure-hunt.com"]
+
 app_url = os.getenv("APP_URL")
 if app_url is not None:
     ALLOWED_HOSTS.append(app_url)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{app_url}")
 
 # Extra settings from security check
 SECURE_CONTENT_TYPE_NOSNIFF = True
