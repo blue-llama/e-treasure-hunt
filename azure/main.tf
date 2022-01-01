@@ -19,6 +19,7 @@ terraform {
 provider "azuread" {}
 provider "azurerm" {
   features {}
+  storage_use_azuread = true
 }
 
 resource "random_password" "azuread_password" {
@@ -51,10 +52,7 @@ resource "azurerm_storage_account" "treasure" {
   account_tier              = "Standard"
   min_tls_version           = "TLS1_2"
   enable_https_traffic_only = true
-
-  # WIBNI to disable storage account key access: but terraform doesn't support doing this, and
-  # indeed relies on it being enabled -
-  # <https://github.com/terraform-providers/terraform-provider-azurerm/issues/11460>.
+  shared_access_key_enabled = false
 }
 
 resource "azurerm_storage_container" "media" {
