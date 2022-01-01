@@ -133,7 +133,7 @@ resource "azurerm_app_service" "treasure" {
   https_only = true
 
   site_config {
-    linux_fx_version = "PYTHON|3.8"
+    linux_fx_version = "PYTHON|3.9"
     scm_type         = "LocalGit"
     min_tls_version  = "1.2"
     ftps_state       = "Disabled"
