@@ -31,47 +31,6 @@ appropriate usage limits configured to avoid being charged in case of mis-use.
 You may also wish to employ additional security measures e.g. configuring an
 allowed redirect URI.
 
-## How to deploy using Heroku
-
-### Prerequisites
-
-- Heroku account
-- Heroku CLI installed
-- Dropbox account
-  - an app set up with read/write permission to a specific folder (to hold
-    images), and a corresponding OAuth key.
-  - See <https://www.dropbox.com/developers/apps>.
-
-### Setup
-
-- Create your Heroku app
-- Set the `DEPLOYMENT` environment variable to `HEROKU`
-- Set the `SECRET_KEY` environment variable to a secret string
-- Set the `DROPBOX_OAUTH2_TOKEN` environment variable to your DropBox OAuth token
-- Set the `ARCGIS_API_KEY` environment variable to your ArcGIS API key
-- If you are using Google Maps: Set the `GM_API_KEY` environment variable to your
-  Google API key
-- Set the `APP_URL` environment variable to the root domain for your app (e.g.
-  `e-treasure-hunt.herokuapp.com`)
-- Add a Heroku Postgres add-on to your app
-
-### Deploy
-
-- Deploy the app to Heroku
-- Use the CLI to run `heroku run -a <app_name> python manage.py createsuperuser`
-  and set up an admin user
-
-### Other useful heroku commands
-
-Commands that I have previously searched for, dumped here to jog the memory
-later.
-
-- `heroku git:remote -a <app_name>`
-- `heroku maintenance:on` and `heroku maintenance:off`
-- `heroku ps:scale web=0` and `heroku ps:scale web=1`
-- `heroku pg:reset`
-- `heroku logs --tail -a <app_name>`
-
 ## How to deploy locally
 
 To save on dependency-chasing, a Dockerfile is provided.
@@ -116,6 +75,47 @@ docker run \
 To use Google maps, you will also need to pass `GM_API_KEY` to this container as
 an environment variable.
 
+## How to deploy using Heroku
+
+### Prerequisites
+
+- Heroku account
+- Heroku CLI installed
+- Dropbox account
+  - an app set up with read/write permission to a specific folder (to hold
+    images), and a corresponding OAuth key.
+  - See <https://www.dropbox.com/developers/apps>.
+
+### Setup
+
+- Create your Heroku app
+- Set the `DEPLOYMENT` environment variable to `HEROKU`
+- Set the `SECRET_KEY` environment variable to a secret string
+- Set the `DROPBOX_OAUTH2_TOKEN` environment variable to your DropBox OAuth token
+- Set the `ARCGIS_API_KEY` environment variable to your ArcGIS API key
+- If you are using Google Maps: Set the `GM_API_KEY` environment variable to your
+  Google API key
+- Set the `APP_URL` environment variable to the root domain for your app (e.g.
+  `e-treasure-hunt.herokuapp.com`)
+- Add a Heroku Postgres add-on to your app
+
+### Deploy
+
+- Deploy the app to Heroku
+- Use the CLI to run `heroku run -a <app_name> python manage.py createsuperuser`
+  and set up an admin user
+
+### Other useful heroku commands
+
+Commands that I have previously searched for, dumped here to jog the memory
+later.
+
+- `heroku git:remote -a <app_name>`
+- `heroku maintenance:on` and `heroku maintenance:off`
+- `heroku ps:scale web=0` and `heroku ps:scale web=1`
+- `heroku pg:reset`
+- `heroku logs --tail -a <app_name>`
+
 # Initiating the app
 
 ## Create levels
@@ -133,7 +133,15 @@ an environment variable.
 
 ## Level upload
 
-Levels can be uploaded either through the UI or via a REST API.
+Levels can be uploaded either through a REST API, or via the UI.
+The REST API gives better error messages when things go wrong.
+
+### Level upload through the API
+
+[upload.py](upload.py) contains utilities for uploading levels and hints.
+
+You'll need to update the `PASSWORD` at the top of the file, and then re-arrange
+`main()` as needed to upload your levels.
 
 ### Level upload through the UI
 
@@ -145,24 +153,17 @@ Levels can be uploaded either through the UI or via a REST API.
   image for the final page
 - Navigate to <domain>/home and check your level(s) display correctly
 
-### Level upload through the API
-
-[upload.py](upload.py) contains utilities for uploading levels and hints.
-
-You'll need to update the `PASSWORD` at the top of the file, and then re-arrange
-`main()` as needed to upload your levels.
-
 ### Troubleshooting
 
 The server is not very helpful if you don't get things just right, especially
 via the UI.
 
+- You really do need to upload both the dummy levels 0 and N+1
 - If level upload is failing:
   - Make sure that you are uploading exactly one `.txt` file, one `.json` file
     and five images
   - Make sure that the contents of the JSON file describing the level match the
     example `about.json`
-- You really do need to upload both the dummy levels 0 and N+1
 
 ## Create users
 

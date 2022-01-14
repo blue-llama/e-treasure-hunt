@@ -114,6 +114,7 @@ def upload_directory(level: int, dir: str) -> None:
 
 
 def main() -> None:
+    # Uploads three levels, including the dummy levels 0 and 4.
     upload_directory(level=0, dir="/directory/containing/dummy/level")
     upload_directory(level=1, dir="/directory/containing/level/one")
     upload_directory(level=2, dir="/directory/containing/level/two")
