@@ -3,11 +3,11 @@ terraform {
   required_providers {
     azuread = {
       source  = "hashicorp/azuread"
-      version = "~> 2.13"
+      version = "~> 2.18"
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.90"
+      version = "~> 2.97"
     }
     random = {
       source  = "hashicorp/random"
@@ -69,14 +69,15 @@ resource "random_password" "sql_admin_password" {
 }
 
 resource "azurerm_mssql_server" "treasure" {
-  name                         = "${var.app_name}-sql-server"
-  resource_group_name          = azurerm_resource_group.treasure.name
-  location                     = azurerm_resource_group.treasure.location
-  version                      = "12.0"
-  administrator_login          = "sqladmin"
-  administrator_login_password = random_password.sql_admin_password.result
-  connection_policy            = "Redirect"
-  minimum_tls_version          = "1.2"
+  name                                 = "${var.app_name}-sql-server"
+  resource_group_name                  = azurerm_resource_group.treasure.name
+  location                             = azurerm_resource_group.treasure.location
+  version                              = "12.0"
+  administrator_login                  = "sqladmin"
+  administrator_login_password         = random_password.sql_admin_password.result
+  connection_policy                    = "Redirect"
+  minimum_tls_version                  = "1.2"
+  outbound_network_restriction_enabled = true
   azuread_administrator {
     login_username              = "AzureAD Admin"
     object_id                   = azuread_user.database_admin.object_id
