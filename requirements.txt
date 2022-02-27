@@ -1,7 +1,7 @@
 asgiref==3.5.0 ; python_version >= "3.8" and python_version < "4.0"
 azure-core==1.23.0 ; python_version >= "3.8" and python_version < "4.0"
 azure-identity==1.8.0 ; python_version >= "3.8" and python_version < "4.0"
-azure-storage-blob==12.10.0 ; python_version >= "3.8" and python_version < "4.0"
+azure-storage-blob==12.11.0 ; python_version >= "3.8" and python_version < "4.0"
 backports.zoneinfo==0.2.1 ; python_version >= "3.8" and python_version < "3.9"
 certifi==2021.10.8 ; python_version >= "3.8" and python_version < "4.0"
 cffi==1.15.0 ; python_version >= "3.8" and python_version < "4.0"

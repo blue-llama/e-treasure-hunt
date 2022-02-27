@@ -50,7 +50,7 @@ def is_working_hours() -> bool:
         return False
 
     # Allow access on bank holidays.
-    if now.date() in holidays.CountryHoliday("UK"):
+    if now.date() in holidays.country_holidays("UK"):
         return False
 
     # Prevent access 9:00 - 12:30, and 13:30 - 17:30.
