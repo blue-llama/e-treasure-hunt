@@ -3,11 +3,11 @@ terraform {
   required_providers {
     azuread = {
       source  = "hashicorp/azuread"
-      version = "~> 2.18"
+      version = "~> 2.19"
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.97"
+      version = "~> 3.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -45,14 +45,15 @@ resource "azurerm_resource_group" "treasure" {
 }
 
 resource "azurerm_storage_account" "treasure" {
-  name                      = replace(var.app_name, "/\\W/", "")
-  resource_group_name       = azurerm_resource_group.treasure.name
-  location                  = azurerm_resource_group.treasure.location
-  account_replication_type  = "LRS"
-  account_tier              = "Standard"
-  min_tls_version           = "TLS1_2"
-  enable_https_traffic_only = true
-  shared_access_key_enabled = false
+  name                            = replace(var.app_name, "/\\W/", "")
+  resource_group_name             = azurerm_resource_group.treasure.name
+  location                        = azurerm_resource_group.treasure.location
+  account_replication_type        = "LRS"
+  account_tier                    = "Standard"
+  min_tls_version                 = "TLS1_2"
+  enable_https_traffic_only       = true
+  shared_access_key_enabled       = false
+  allow_nested_items_to_be_public = false
 }
 
 resource "azurerm_storage_container" "media" {
@@ -86,22 +87,18 @@ resource "azurerm_mssql_server" "treasure" {
 }
 
 resource "azurerm_mssql_database" "treasure" {
-  name      = "treasurehunt"
-  server_id = azurerm_mssql_server.treasure.id
-  sku_name  = "Basic"
+  name                                = "treasurehunt"
+  server_id                           = azurerm_mssql_server.treasure.id
+  sku_name                            = "Basic"
+  transparent_data_encryption_enabled = true
 }
 
-resource "azurerm_app_service_plan" "treasure" {
+resource "azurerm_service_plan" "treasure" {
   name                = "${var.app_name}-plan"
   location            = azurerm_resource_group.treasure.location
   resource_group_name = azurerm_resource_group.treasure.name
-  kind                = "Linux"
-  reserved            = true
-
-  sku {
-    tier = "Basic"
-    size = "B1"
-  }
+  os_type             = "Linux"
+  sku_name            = "B1"
 }
 
 resource "random_password" "secret_key" {
@@ -111,11 +108,11 @@ resource "random_password" "secret_key" {
   min_numeric = 1
 }
 
-resource "azurerm_app_service" "treasure" {
+resource "azurerm_linux_web_app" "treasure" {
   name                = var.app_name
   resource_group_name = azurerm_resource_group.treasure.name
   location            = azurerm_resource_group.treasure.location
-  app_service_plan_id = azurerm_app_service_plan.treasure.id
+  service_plan_id     = azurerm_service_plan.treasure.id
 
   app_settings = {
     "APP_URL"            = "${var.app_name}.azurewebsites.net"
@@ -132,11 +129,12 @@ resource "azurerm_app_service" "treasure" {
   https_only = true
 
   site_config {
-    linux_fx_version = "PYTHON|3.9"
-    scm_type         = "LocalGit"
-    min_tls_version  = "1.2"
-    ftps_state       = "Disabled"
-    http2_enabled    = true
+    minimum_tls_version = "1.2"
+    ftps_state          = "Disabled"
+    http2_enabled       = true
+    application_stack {
+      python_version = "3.9"
+    }
   }
 
   identity {
@@ -147,22 +145,23 @@ resource "azurerm_app_service" "treasure" {
 resource "azurerm_role_assignment" "storage_contributor" {
   scope                = azurerm_storage_account.treasure.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = azurerm_app_service.treasure.identity.0.principal_id
+  principal_id         = azurerm_linux_web_app.treasure.identity.0.principal_id
 }
 
 # Run terraform apply twice, first with the more permissive block, and then with the targeted rules.
 #
 # Only make this change after using Cloud Shell to grant permissions to the app service identity,
 # per instructions given by the outputs.
-#
+
 # resource "azurerm_mssql_firewall_rule" "treasure" {
 #   name             = "Allow Azure services"
 #   server_id        = azurerm_mssql_server.treasure.id
 #   start_ip_address = "0.0.0.0"
 #   end_ip_address   = "0.0.0.0"
 # }
+
 resource "azurerm_mssql_firewall_rule" "treasure" {
-  for_each         = toset(azurerm_app_service.treasure.possible_outbound_ip_address_list)
+  for_each         = toset(azurerm_linux_web_app.treasure.possible_outbound_ip_address_list)
   name             = "app-service-${each.key}"
   server_id        = azurerm_mssql_server.treasure.id
   start_ip_address = each.key
