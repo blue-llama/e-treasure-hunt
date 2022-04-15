@@ -51,10 +51,6 @@ strict = true
 plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
 
 [[tool.mypy.overrides]]
-module = "hunt.third_party.*"
-ignore_errors = true
-
-[[tool.mypy.overrides]]
 module = [
   "django_heroku.*",
   "geopy.*",

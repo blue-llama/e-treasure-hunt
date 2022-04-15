@@ -1,17 +1,26 @@
+from typing import TYPE_CHECKING, Any
+
 from django.http import Http404
 from rest_framework import status
-from rest_framework.request import clone_request
+from rest_framework.request import Request, clone_request
 from rest_framework.response import Response
+
+if TYPE_CHECKING:
+    from rest_framework.viewsets import GenericViewSet
+
+    _Base = GenericViewSet
+else:
+    _Base = object
 
 
 # https://gist.github.com/tomchristie/a2ace4577eff2c603b1b
-class AllowPUTAsCreateMixin(object):
+class AllowPUTAsCreateMixin(_Base):
     """
     The following mixin class may be used in order to support PUT-as-create
     behavior for incoming requests.
     """
 
-    def update(self, request, *args, **kwargs):
+    def update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         partial = kwargs.pop("partial", False)
         instance = self.get_object_or_none()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -27,11 +36,11 @@ class AllowPUTAsCreateMixin(object):
         serializer.save()
         return Response(serializer.data)
 
-    def partial_update(self, request, *args, **kwargs):
+    def partial_update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         kwargs["partial"] = True
         return self.update(request, *args, **kwargs)
 
-    def get_object_or_none(self):
+    def get_object_or_none(self) -> Any:
         try:
             return self.get_object()
         except Http404:
