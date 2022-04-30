@@ -2,6 +2,7 @@ import json
 import os
 from uuid import uuid4
 
+from django.core.files.uploadedfile import UploadedFile
 from django.http.request import HttpRequest
 
 from hunt.constants import HINTS_PER_LEVEL
@@ -27,16 +28,16 @@ def upload_new_level(request: HttpRequest) -> str:
     except Level.DoesNotExist:
         level = Level(number=lvl_num)
 
-    def extension(filename: str) -> str:
+    def extension(file: UploadedFile) -> str:
         """Return normalized filename extension"""
-        (_root, extension) = os.path.splitext(filename)
+        (_root, extension) = os.path.splitext(file.name)
         return extension.lower()
 
     # Gather up the needed information.
     files = request.FILES.getlist("files")
-    about_file = next((f for f in files if extension(f.name) == ".json"), None)
-    description_file = next((f for f in files if extension(f.name) == ".txt"), None)
-    images = [f for f in files if extension(f.name) in (".jpg", ".png")]
+    about_file = next((f for f in files if extension(f) == ".json"), None)
+    description_file = next((f for f in files if extension(f) == ".txt"), None)
+    images = [f for f in files if extension(f) in (".jpg", ".png")]
     images.sort(key=lambda f: f.name.lower())
 
     # Level info and images are mandatory, we can manage without a description.
@@ -68,11 +69,11 @@ def upload_new_level(request: HttpRequest) -> str:
     old_hints.delete()
 
     # Create new hints.
-    for number, file_ in enumerate(images):
-        filename = str(uuid4()) + extension(file_.name)
+    for number, file in enumerate(images):
+        filename = str(uuid4()) + extension(file)
         hint = Hint()
         hint.level = level
         hint.number = number
-        hint.image.save(filename, file_)
+        hint.image.save(filename, file)
 
     return "/level-mgmt?success=True&next=" + str(int(lvl_num) + 1)
