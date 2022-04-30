@@ -2,7 +2,7 @@
 
 import json
 import os
-import pathlib
+from pathlib import Path
 
 import requests
 
@@ -20,23 +20,25 @@ CONTENT_TYPES = {
 }
 
 
-def upload_level(level: int, about: str, blurb: str) -> None:
+def upload_level_without_hints(level: int, dir: Path) -> None:
     """
     Upload a level, without creating any of its hints.
 
     :param level: The level to upload.
-    :param about: The file containing the JSON description of the level.
-    :param blurb: The file containing the level blurb (shown on the _next_ level).
+    :param dir: A directory containing about.json and (optionally) blurb.txt.
+                The blurb, if present, is shown on the _next_ level.
     """
-    with open(about) as f:
+    about = dir / "about.json"
+    with open(about, encoding="utf-8") as f:
         data = json.load(f)
 
     data["number"] = level
 
     # It's OK for there to be no blurb, but we report it in case that wasn't what was
     # intended.
+    blurb = dir / "blurb.txt"
     try:
-        with open(blurb) as f:
+        with open(blurb, encoding="utf-8") as f:
             data["description"] = f.read()
     except FileNotFoundError:
         print(f"No blurb at level {level}")
@@ -52,7 +54,7 @@ def upload_level(level: int, about: str, blurb: str) -> None:
     r.raise_for_status()
 
 
-def upload_hint(level: int, hint: int, image: str) -> None:
+def upload_hint(level: int, hint: int, image: Path) -> None:
     """
     Upload a hint.
 
@@ -60,7 +62,7 @@ def upload_hint(level: int, hint: int, image: str) -> None:
     :param number: The hint number.  Zero-indexed.
     :param image: The file containing the hint.
     """
-    suffix = pathlib.Path(image).suffix
+    suffix = image.suffix
     content_type = CONTENT_TYPES.get(suffix.lower())
     if content_type is None:
         raise RuntimeError(f"unrecognized suffix: {suffix}")
@@ -68,7 +70,9 @@ def upload_hint(level: int, hint: int, image: str) -> None:
     url = f"{SERVER}/api/levels/{level}/hints/{hint}"
     with open(image, "rb") as f:
         r = requests.put(
-            url, auth=(USERNAME, PASSWORD), files={"hint": (image, f, content_type)}
+            url,
+            auth=(USERNAME, PASSWORD),
+            files={"hint": (image.name, f, content_type)},
         )
 
     if not r.ok:
@@ -78,27 +82,25 @@ def upload_hint(level: int, hint: int, image: str) -> None:
     r.raise_for_status()
 
 
-def upload_directory(level: int, dir: str) -> None:
+def upload_directory(level: int, dir: Path) -> None:
     """
     Upload a level from a directory, creating all of its hints.
 
     :param level: The level to upload.
-    :param dir: A directory, containing about.json, blurb.txt, and five images.
+    :param dir: A directory containing five images, about.json and (optionally)
+                blurb.txt.
+                The blurb, if present, is shown on the _next_ level.
     """
     print(f"Uploading level {level}")
 
     # Create the level.
-    upload_level(
-        level,
-        about=os.path.join(dir, "about.json"),
-        blurb=os.path.join(dir, "blurb.txt"),
-    )
+    upload_level_without_hints(level, dir)
 
     # Find the images.
     images = [
-        os.path.join(dir, file)
+        dir / file
         for file in os.listdir(dir)
-        if pathlib.Path(file).suffix.lower() in CONTENT_TYPES
+        if Path(file).suffix.lower() in CONTENT_TYPES
     ]
 
     # Should find exactly the right number - check the file extensions if not.
@@ -106,7 +108,7 @@ def upload_directory(level: int, dir: str) -> None:
         raise RuntimeError(f"Found {len(images)} images in {dir}")
 
     # Upload them.
-    images.sort(key=lambda x: x.lower())
+    images.sort(key=lambda x: x.name.lower())
     for hint, image in enumerate(images):
         upload_hint(level, hint, image)
 
@@ -115,11 +117,11 @@ def upload_directory(level: int, dir: str) -> None:
 
 def main() -> None:
     # Uploads three levels, including the dummy levels 0 and 4.
-    upload_directory(level=0, dir="/directory/containing/dummy/level")
-    upload_directory(level=1, dir="/directory/containing/level/one")
-    upload_directory(level=2, dir="/directory/containing/level/two")
-    upload_directory(level=3, dir="/directory/containing/level/three")
-    upload_directory(level=4, dir="/directory/containing/dummy/level")
+    upload_directory(level=0, dir=Path("/directory/containing/dummy/level"))
+    upload_directory(level=1, dir=Path("/directory/containing/level/one"))
+    upload_directory(level=2, dir=Path("/directory/containing/level/two"))
+    upload_directory(level=3, dir=Path("/directory/containing/level/three"))
+    upload_directory(level=4, dir=Path("/directory/containing/dummy/level"))
 
 
 if __name__ == "__main__":
