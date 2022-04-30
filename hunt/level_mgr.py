@@ -36,20 +36,20 @@ def upload_new_level(request: HttpRequest) -> str:
     # Gather up the needed information.
     files = request.FILES.getlist("files")
     about_file = next((f for f in files if extension(f) == ".json"), None)
-    description_file = next((f for f in files if extension(f) == ".txt"), None)
+    blurb = next((f for f in files if extension(f) == ".txt"), None)
     images = [f for f in files if extension(f) in (".jpg", ".png")]
     images.sort(key=lambda f: f.name.lower())
 
     # Level info and images are mandatory, we can manage without a description.
-    if (about_file is None) or (len(images) != HINTS_PER_LEVEL):
+    if about_file is None or len(images) != HINTS_PER_LEVEL:
         return fail_str
 
     # Read level info, and read or default level description.
     about = json.load(about_file)
     lines = (
         []
-        if description_file is None
-        else [line.decode("utf-8") for line in description_file.readlines()]
+        if blurb is None
+        else [line.decode("utf-8") for line in blurb.readlines()]
     )
     description = "".join(line for line in lines if line.strip())
 
@@ -76,4 +76,4 @@ def upload_new_level(request: HttpRequest) -> str:
         hint.number = number
         hint.image.save(filename, file)
 
-    return "/level-mgmt?success=True&next=" + str(int(lvl_num) + 1)
+    return f"/level-mgmt?success=True&next={int(lvl_num) + 1}"

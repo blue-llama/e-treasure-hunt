@@ -63,10 +63,10 @@ def look_for_level(request: AuthenticatedHttpRequest) -> str:
             advance_level(user)
 
         # Redirect to the new level.
-        return "/level/" + str(search_level + 1)
+        return f"/level/{search_level + 1}"
 
     # Redirect to a failure page.
-    return "/nothing-here?lvl=" + str(search_level)
+    return f"/nothing-here?lvl={search_level}"
 
 
 def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:

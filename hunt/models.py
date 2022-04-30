@@ -81,13 +81,11 @@ class HuntEvent(models.Model):
     level = models.IntegerField()
 
     def __str__(self) -> str:
-        string_rep = "At " + str(self.time) + " " + self.user.get_username() + " "
-
-        if self.type == HuntEvent.HINT_REQ:
-            string_rep += "requested a hint on level " + str(self.level)
-        elif self.type == HuntEvent.CLUE_ADV:
-            string_rep += "progressed to level " + str(self.level)
-        else:
-            string_rep += "saw a hint on level " + str(self.level)
-
-        return string_rep
+        TEXT = {
+            HuntEvent.HINT_REQ: "requested a hint on",
+            HuntEvent.HINT_REL: "saw a hint on",
+            HuntEvent.CLUE_ADV: "progressed to",
+        }
+        user = self.user.get_username()
+        text = f"At {self.time} {user} {TEXT[self.type]} level {self.level}"
+        return text
