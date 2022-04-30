@@ -116,13 +116,14 @@ resource "azurerm_linux_web_app" "treasure" {
 
   app_settings = {
     "APP_URL"            = "${var.app_name}.azurewebsites.net"
+    "ARCGIS_API_KEY"     = var.arcgis_api_key
     "AZURE_ACCOUNT_NAME" = azurerm_storage_account.treasure.name
     "AZURE_CONTAINER"    = azurerm_storage_container.media.name
     "DBHOST"             = azurerm_mssql_server.treasure.fully_qualified_domain_name
     "DBNAME"             = azurerm_mssql_database.treasure.name
     "DEPLOYMENT"         = "AZURE"
-    "ARCGIS_API_KEY"     = var.arcgis_api_key
     "GM_API_KEY"         = var.google_maps_api_key
+    "PRE_BUILD_COMMAND"  = "prebuild.sh"
     "SECRET_KEY"         = random_password.secret_key.result
   }
 
