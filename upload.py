@@ -82,7 +82,7 @@ def upload_hint(level: int, hint: int, image: Path) -> None:
     r.raise_for_status()
 
 
-def upload_directory(level: int, dir: Path) -> None:
+def upload_level(level: int, dir: Path) -> None:
     """
     Upload a level from a directory, creating all of its hints.
 
@@ -117,11 +117,11 @@ def upload_directory(level: int, dir: Path) -> None:
 
 def main() -> None:
     # Uploads three levels, including the dummy levels 0 and 4.
-    upload_directory(level=0, dir=Path("/directory/containing/dummy/level"))
-    upload_directory(level=1, dir=Path("/directory/containing/level/one"))
-    upload_directory(level=2, dir=Path("/directory/containing/level/two"))
-    upload_directory(level=3, dir=Path("/directory/containing/level/three"))
-    upload_directory(level=4, dir=Path("/directory/containing/dummy/level"))
+    upload_level(level=0, dir=Path("/directory/containing/dummy/level"))
+    upload_level(level=1, dir=Path("/directory/containing/level/one"))
+    upload_level(level=2, dir=Path("/directory/containing/level/two"))
+    upload_level(level=3, dir=Path("/directory/containing/level/three"))
+    upload_level(level=4, dir=Path("/directory/containing/dummy/level"))
 
 
 if __name__ == "__main__":
