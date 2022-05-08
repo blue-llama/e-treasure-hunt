@@ -65,10 +65,10 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 if deployment_type == Deployment.LOCAL:
     DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 elif deployment_type == Deployment.AZURE:
-    from azure.identity import DefaultAzureCredential
+    from azure.identity import ManagedIdentityCredential
 
     DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
-    AZURE_TOKEN_CREDENTIAL = DefaultAzureCredential()
+    AZURE_TOKEN_CREDENTIAL = ManagedIdentityCredential()
     AZURE_ACCOUNT_NAME = os.environ["AZURE_ACCOUNT_NAME"]
     AZURE_CONTAINER = os.environ["AZURE_CONTAINER"]
     AZURE_URL_EXPIRATION_SECS = 900
