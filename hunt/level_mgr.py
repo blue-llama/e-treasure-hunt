@@ -47,9 +47,7 @@ def upload_new_level(request: HttpRequest) -> str:
     # Read level info, and read or default level description.
     about = json.load(about_file)
     lines = (
-        []
-        if blurb is None
-        else [line.decode("utf-8") for line in blurb.readlines()]
+        [] if blurb is None else [line.decode("utf-8") for line in blurb.readlines()]
     )
     description = "".join(line for line in lines if line.strip())
 
