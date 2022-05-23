@@ -47,7 +47,11 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
-enable_error_code = ["ignore-without-code"]
+enable_error_code = [
+  "ignore-without-code",
+  "redundant-expr",
+  "truthy-bool",
+]
 show_error_codes = true
 strict = true
 plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
