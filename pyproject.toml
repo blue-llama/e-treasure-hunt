@@ -6,7 +6,7 @@ authors = ["David Hotham <david.hotham@blueyonder.co.uk>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-Pillow = "^9.1.0"
+Pillow = "^9.1.1"
 "backports.zoneinfo" = { version = "^0.2.1", python = "<3.9" }
 django = "^4.0.4"
 djangorestframework = "^3.13.1"
