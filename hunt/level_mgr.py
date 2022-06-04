@@ -1,5 +1,6 @@
 import json
 import os
+from typing import List, cast
 from uuid import uuid4
 
 from django.core.files.uploadedfile import UploadedFile
@@ -7,6 +8,10 @@ from django.http.request import HttpRequest
 
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
+
+
+class NamedFile(UploadedFile):
+    name: str
 
 
 def upload_new_level(request: HttpRequest) -> str:
@@ -28,13 +33,14 @@ def upload_new_level(request: HttpRequest) -> str:
     except Level.DoesNotExist:
         level = Level(number=lvl_num)
 
-    def extension(file: UploadedFile) -> str:
+    def extension(file: NamedFile) -> str:
         """Return normalized filename extension"""
         (_root, extension) = os.path.splitext(file.name)
         return extension.lower()
 
     # Gather up the needed information.
-    files = request.FILES.getlist("files")
+    uploaded_files: List[UploadedFile] = request.FILES.getlist("files", default=[])
+    files = [cast(NamedFile, f) for f in uploaded_files if f.name is not None]
     about_file = next((f for f in files if extension(f) == ".json"), None)
     blurb = next((f for f in files if extension(f) == ".txt"), None)
     images = [f for f in files if extension(f) in (".jpg", ".png")]
