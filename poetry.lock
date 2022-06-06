@@ -354,7 +354,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "holidays"
-version = "0.14"
+version = "0.14.2"
 description = "Generate and work with holidays in Python"
 category = "main"
 optional = false
@@ -821,7 +821,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "whitenoise"
-version = "6.1.0"
+version = "6.2.0"
 description = "Radically simplified static file serving for WSGI applications"
 category = "main"
 optional = false
@@ -833,7 +833,7 @@ brotli = ["brotli"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "3d99fb55ed705daca3ffc159871bca36f8a8f3fc6dc970b5be6a4b17ec93eff5"
+content-hash = "ac817c1a7e2445c398a7a46d6be6bcc6b1af1364c95086c10afe539807e13df0"
 
 [metadata.files]
 asgiref = [
@@ -1044,8 +1044,8 @@ hijri-converter = [
     {file = "hijri_converter-2.2.4-py3-none-any.whl", hash = "sha256:5ed4f4c284626e3916cd770e09346d5cc319e2a7762c22357838864908fd6e6d"},
 ]
 holidays = [
-    {file = "holidays-0.14-py3-none-any.whl", hash = "sha256:fde54284edb61a99d4fa58c9ad0e977626043ab160fd5b803975926a6387b7c5"},
-    {file = "holidays-0.14.tar.gz", hash = "sha256:9130633ce7c9683aa3cbb85ebb6be58ca4de14e8b68af4ce38737b7f4a8bb357"},
+    {file = "holidays-0.14.2-py3-none-any.whl", hash = "sha256:441156949b1c41f08bb08ef8e79fcadfd76d2dd7837f49d7bfc6a572fc442c93"},
+    {file = "holidays-0.14.2.tar.gz", hash = "sha256:0e70fd174804aea1c870b151319faebcd5cdb0d955b78230434e1afd1778498e"},
 ]
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
@@ -1338,6 +1338,6 @@ urllib3 = [
     {file = "urllib3-1.26.9.tar.gz", hash = "sha256:aabaf16477806a5e1dd19aa41f8c2b7950dd3c746362d7e3223dbe6de6ac448e"},
 ]
 whitenoise = [
-    {file = "whitenoise-6.1.0-py3-none-any.whl", hash = "sha256:2067fe9008a3cd7d0d75f75c9240b54f5f59996ca285cbeab18fc1e89949e30d"},
-    {file = "whitenoise-6.1.0.tar.gz", hash = "sha256:6ccc6d1ad6fb688a398ea65d97db47f018ea0be7da75e146e8f2e837a04ba590"},
+    {file = "whitenoise-6.2.0-py3-none-any.whl", hash = "sha256:8e9c600a5c18bd17655ef668ad55b5edf6c24ce9bdca5bf607649ca4b1e8e2c2"},
+    {file = "whitenoise-6.2.0.tar.gz", hash = "sha256:8fa943c6d4cd9e27673b70c21a07b0aa120873901e099cd46cab40f7cc96d567"},
 ]

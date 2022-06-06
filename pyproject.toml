@@ -12,8 +12,8 @@ django = "^4.0.5"
 djangorestframework = "^3.13.1"
 geopy = "^2.2.0"
 gunicorn = "^20.1.0"
-holidays = "^0.14"
-whitenoise = "^6.1.0"
+holidays = "^0.14.2"
+whitenoise = "^6.2.0"
 
 # Things needed for heroku deployment.
 # django-heroku = "^0.3.1"
