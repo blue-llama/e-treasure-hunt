@@ -14,6 +14,7 @@ terraform {
       version = "~> 3.2"
     }
   }
+  backend "local" {}
 }
 
 provider "azuread" {}
