@@ -93,9 +93,6 @@ def upload_level(level: int, dir: Path) -> None:
     """
     print(f"Uploading level {level}")
 
-    # Create the level.
-    upload_level_without_hints(level, dir)
-
     # Find the images.
     images = [
         dir / file
@@ -107,7 +104,10 @@ def upload_level(level: int, dir: Path) -> None:
     if len(images) != HINTS_PER_LEVEL:
         raise RuntimeError(f"Found {len(images)} images in {dir}")
 
-    # Upload them.
+    # Create the level.
+    upload_level_without_hints(level, dir)
+
+    # Upload the hints.
     images.sort(key=lambda x: x.name.lower())
     for hint, image in enumerate(images):
         upload_hint(level, hint, image)
