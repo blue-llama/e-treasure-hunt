@@ -63,20 +63,11 @@ resource "azurerm_storage_container" "media" {
   container_access_type = "private"
 }
 
-resource "random_password" "sql_admin_password" {
-  length      = 16
-  min_lower   = 1
-  min_upper   = 1
-  min_numeric = 1
-}
-
 resource "azurerm_mssql_server" "treasure" {
   name                                 = "${var.app_name}-sql-server"
   resource_group_name                  = azurerm_resource_group.treasure.name
   location                             = azurerm_resource_group.treasure.location
   version                              = "12.0"
-  administrator_login                  = "sqladmin"
-  administrator_login_password         = random_password.sql_admin_password.result
   connection_policy                    = "Redirect"
   minimum_tls_version                  = "1.2"
   outbound_network_restriction_enabled = true
