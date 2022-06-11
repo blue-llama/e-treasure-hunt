@@ -19,8 +19,7 @@ from typing import Any, Dict
 # Where is the app being deployed?
 class Deployment(Enum):
     LOCAL = 1
-    HEROKU = 2
-    AZURE = 3
+    AZURE = 2
 
 
 deployment_type = Deployment[os.getenv("DEPLOYMENT", "LOCAL")]
@@ -43,7 +42,7 @@ if app_url is not None:
 # Extra settings from security check
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
-SECURE_SSL_REDIRECT = deployment_type == Deployment.HEROKU
+SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = not local_deploy
 CSRF_COOKIE_SECURE = not local_deploy
 X_FRAME_OPTIONS = "DENY"
@@ -72,10 +71,6 @@ elif deployment_type == Deployment.AZURE:
     AZURE_ACCOUNT_NAME = os.environ["AZURE_ACCOUNT_NAME"]
     AZURE_CONTAINER = os.environ["AZURE_CONTAINER"]
     AZURE_URL_EXPIRATION_SECS = 900
-elif deployment_type == Deployment.HEROKU:
-    DEFAULT_FILE_STORAGE = "storages.backends.dropbox.DropBoxStorage"
-    DROPBOX_OAUTH2_TOKEN = os.environ["DROPBOX_OAUTH2_TOKEN"]
-    DROPBOX_ROOT_PATH = "/"
 
 # Application definition
 INSTALLED_APPS = [
@@ -180,7 +175,3 @@ elif deployment_type == Deployment.AZURE:
             },
         }
     }
-elif deployment_type == Deployment.HEROKU:
-    import django_heroku
-
-    django_heroku.settings(locals(), logging=False)

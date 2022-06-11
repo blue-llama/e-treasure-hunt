@@ -29,8 +29,9 @@ def max_level() -> int:
     return max_level
 
 
-# Are we in (UK) working hours?
-def is_working_hours() -> bool:
+# Should players be locked out?  True before the hunt starts, and during UK working
+# hours.
+def players_are_locked_out() -> bool:
     london = zoneinfo.ZoneInfo("Europe/London")
     now = datetime.datetime.now(tz=london)
 
@@ -61,15 +62,16 @@ def is_working_hours() -> bool:
     if datetime.time(13, 30) < clock < datetime.time(17, 30):
         return True
 
-    # We don't work other times.
+    # Allow access.
     return False
 
 
-# Decorator that prevents most users from accessing the site during working hours.
-def not_in_working_hours(f: RequestHandler) -> RequestHandler:
+# Decorator that prevents players from accessing the site when they should be locked
+# out.
+def no_players_during_lockout(f: RequestHandler) -> RequestHandler:
     @wraps(f)
     def wrapper(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if (not request.user.is_staff) and is_working_hours():
+        if not request.user.is_staff and players_are_locked_out():
             template = loader.get_template("work-time.html").render({}, request)
             return HttpResponse(template)
 

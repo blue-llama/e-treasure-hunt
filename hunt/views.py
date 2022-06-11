@@ -11,12 +11,12 @@ from hunt.hint_request import maybe_release_hint, prepare_next_hint, request_hin
 from hunt.level_mgr import upload_new_level
 from hunt.levels import list_levels, look_for_level, maybe_load_level
 from hunt.models import AppSetting, HuntEvent
-from hunt.utils import AuthenticatedHttpRequest, max_level, not_in_working_hours
+from hunt.utils import AuthenticatedHttpRequest, max_level, no_players_during_lockout
 
 
 # Send users to the hunt and admins to management.
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def go_home(request: HttpRequest) -> HttpResponse:
     if request.user.is_staff:
         return redirect("/mgmt")
@@ -45,7 +45,7 @@ def get_hunt_events(request: HttpRequest) -> HttpResponse:
 
 # Hunt homepage.
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def home(request: AuthenticatedHttpRequest) -> HttpResponse:
     template = loader.get_template("welcome.html")
 
@@ -59,7 +59,7 @@ def home(request: AuthenticatedHttpRequest) -> HttpResponse:
 
 # Level page.
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def level(request: AuthenticatedHttpRequest, level: int) -> HttpResponse:
     # Release a hint, if appropriate.
     user = request.user
@@ -76,7 +76,7 @@ def level(request: AuthenticatedHttpRequest, level: int) -> HttpResponse:
 
 # Error page.
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def oops(request: AuthenticatedHttpRequest) -> HttpResponse:
     # Shouldn't be here. Show an error page.
     template = loader.get_template("oops.html")
@@ -88,7 +88,7 @@ def oops(request: AuthenticatedHttpRequest) -> HttpResponse:
 
 # Map (or alt map).
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def map(request: AuthenticatedHttpRequest) -> HttpResponse:
     # If we're configured to use the alt map, do so.
     settings = None
@@ -115,7 +115,7 @@ def map(request: AuthenticatedHttpRequest) -> HttpResponse:
 
 # Alt map.
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def alt_map(request: AuthenticatedHttpRequest) -> HttpResponse:
     template = loader.get_template("alternate-map.html")
     arcgis_api_key = os.environ.get("ARCGIS_API_KEY")
@@ -125,21 +125,21 @@ def alt_map(request: AuthenticatedHttpRequest) -> HttpResponse:
 
 # Level list.
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def levels(request: AuthenticatedHttpRequest) -> HttpResponse:
     return HttpResponse(list_levels(request))
 
 
 # Search request endpoint.
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def do_search(request: AuthenticatedHttpRequest) -> HttpResponse:
     return redirect(look_for_level(request))
 
 
 # Coordinate search page.
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def search(request: HttpRequest) -> HttpResponse:
     lvl = request.GET.get("lvl")
 
@@ -151,7 +151,7 @@ def search(request: HttpRequest) -> HttpResponse:
 
 # Nothing here.
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def nothing(request: AuthenticatedHttpRequest) -> HttpResponse:
     template = loader.get_template("nothing.html")
 
@@ -165,7 +165,7 @@ def nothing(request: AuthenticatedHttpRequest) -> HttpResponse:
 
 # Request a hint.
 @login_required
-@not_in_working_hours
+@no_players_during_lockout
 def hint(request: AuthenticatedHttpRequest) -> HttpResponse:
     return redirect(request_hint(request))
 

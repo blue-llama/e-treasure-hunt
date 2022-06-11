@@ -14,7 +14,10 @@ generate revenue.
 
 # Deploying the app
 
-You can either deploy this app hosted (on Heroku) or locally.
+The live version of this app is deployed on Azure, via the terraform definitions
+in `azure/main.tf`.
+
+You can also deploy locally, details below.
 
 Either way, you will need an [ArcGIS for Developers
 account](https://developers.arcgis.com/en/plans) and API key.
@@ -74,47 +77,6 @@ docker run \
 
 To use Google maps, you will also need to pass `GM_API_KEY` to this container as
 an environment variable.
-
-## How to deploy using Heroku
-
-### Prerequisites
-
-- Heroku account
-- Heroku CLI installed
-- Dropbox account
-  - an app set up with read/write permission to a specific folder (to hold
-    images), and a corresponding OAuth key.
-  - See <https://www.dropbox.com/developers/apps>.
-
-### Setup
-
-- Create your Heroku app
-- Set the `DEPLOYMENT` environment variable to `HEROKU`
-- Set the `SECRET_KEY` environment variable to a secret string
-- Set the `DROPBOX_OAUTH2_TOKEN` environment variable to your DropBox OAuth token
-- Set the `ARCGIS_API_KEY` environment variable to your ArcGIS API key
-- If you are using Google Maps: Set the `GM_API_KEY` environment variable to your
-  Google API key
-- Set the `APP_URL` environment variable to the root domain for your app (e.g.
-  `e-treasure-hunt.herokuapp.com`)
-- Add a Heroku Postgres add-on to your app
-
-### Deploy
-
-- Deploy the app to Heroku
-- Use the CLI to run `heroku run -a <app_name> python manage.py createsuperuser`
-  and set up an admin user
-
-### Other useful heroku commands
-
-Commands that I have previously searched for, dumped here to jog the memory
-later.
-
-- `heroku git:remote -a <app_name>`
-- `heroku maintenance:on` and `heroku maintenance:off`
-- `heroku ps:scale web=0` and `heroku ps:scale web=1`
-- `heroku pg:reset`
-- `heroku logs --tail -a <app_name>`
 
 # Initiating the app
 
