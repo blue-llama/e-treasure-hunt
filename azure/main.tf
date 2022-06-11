@@ -14,7 +14,12 @@ terraform {
       version = "~> 3.2"
     }
   }
-  backend "local" {}
+  backend "azurerm" {
+    storage_account_name = "treasurebackend"
+    container_name       = "terraformstate"
+    key                  = "e-treasure-hunt"
+    use_azuread_auth     = true
+  }
 }
 
 provider "azuread" {}
