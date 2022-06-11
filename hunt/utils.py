@@ -1,3 +1,4 @@
+import contextlib
 import datetime
 from functools import wraps
 from typing import Any, Callable
@@ -37,11 +38,9 @@ def players_are_locked_out() -> bool:
 
     # Prevent access before the start time, if configured.
     start = None
-    try:
+    with contextlib.suppress(AppSetting.DoesNotExist):
         settings = AppSetting.objects.get(active=True)
         start = settings.start_time
-    except AppSetting.DoesNotExist:
-        pass
 
     if start is not None and now < start:
         return True

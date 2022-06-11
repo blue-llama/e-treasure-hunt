@@ -1,3 +1,4 @@
+import contextlib
 import csv
 import os
 
@@ -92,10 +93,8 @@ def oops(request: AuthenticatedHttpRequest) -> HttpResponse:
 def map(request: AuthenticatedHttpRequest) -> HttpResponse:
     # If we're configured to use the alt map, do so.
     settings = None
-    try:
+    with contextlib.suppress(AppSetting.DoesNotExist):
         settings = AppSetting.objects.get(active=True)
-    except AppSetting.DoesNotExist:
-        pass
 
     use_alternative_map = False if settings is None else settings.use_alternative_map
     if use_alternative_map:
@@ -183,10 +182,7 @@ def mgmt(request: HttpRequest) -> HttpResponse:
 @user_passes_test(lambda u: u.is_staff)
 def level_mgmt(request: HttpRequest) -> HttpResponse:
     template = loader.get_template("level-mgmt.html")
-
-    next_level = request.GET.get("next")
-    if next_level is None:
-        next_level = "1"
+    next_level = request.GET.get("next", 1)
 
     context = {"success": request.GET.get("success"), "next": next_level}
     return HttpResponse(template.render(context, request))
