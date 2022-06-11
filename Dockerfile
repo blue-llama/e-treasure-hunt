@@ -8,7 +8,8 @@ RUN /root/.local/bin/poetry export -f requirements.txt -o requirements.txt
 FROM python:3.9
 
 RUN apt-get update && \
-    apt-get install --yes unixodbc-dev
+    apt-get install --yes --no-install-recommends unixodbc-dev && \
+    rm -fr /var/lib/apt/lists/*
 
 COPY --from=exporter /requirements.txt /
 RUN pip install --no-cache-dir -r requirements.txt && rm requirements.txt
