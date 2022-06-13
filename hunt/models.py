@@ -33,13 +33,13 @@ class Level(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=5000, default="", blank=True)
     latitude = models.DecimalField(
-        max_digits=10,
-        decimal_places=7,
+        max_digits=7,
+        decimal_places=5,
         validators=[MinValueValidator(-90), MaxValueValidator(90)],
     )
     longitude = models.DecimalField(
-        max_digits=10,
-        decimal_places=7,
+        max_digits=8,
+        decimal_places=5,
         validators=[MinValueValidator(-180), MaxValueValidator(180)],
     )
     tolerance = models.IntegerField()
