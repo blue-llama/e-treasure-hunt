@@ -2,22 +2,22 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.terraform.io/hashicorp/azuread" {
-  version     = "2.23.0"
+  version     = "2.24.0"
   constraints = "~> 2.22"
   hashes = [
-    "h1:iQ64/VfpKwPXdei/lIssdVi0dQpH/AVI6Yr8bJAgTYk=",
-    "zh:03e4f3411aea9d8255cbc894af573282afe342909c0aa705dfc75a4c3de7a1f9",
-    "zh:0b071dbdc508a507ccbe9db91a68b3a134b4bfd1cae2813afb57195011acbf04",
+    "h1:YCJDUITeyRaeHnB+vr0fQjg/nEZYkqsrI4OZX9/+Arc=",
+    "zh:0597c80ef33b1fe1b73996c23ac48abdd8f3bfa49eec1fa83f08240b7ea384dd",
+    "zh:0b66db5259690b68305c0e716df26f3ef76b5d61f485092f21c2aa9f1bbdab92",
     "zh:1c3e89cf19118fc07d7b04257251fc9897e722c16e0a0df7b07fcd261f8c12e7",
-    "zh:2784c2c312c15df4b07e50ec1341f7b1ccc0640e34351bdd378e7b383f6667e8",
-    "zh:48c75c6307fc2253cbc2c134a0b610b80f50d5a9302f5f91ec67c199f758f1c5",
-    "zh:628913510b3ff7ad7d2ebb77ad3903a8eaaa2475a6ff6f76ff08f7aa08a109df",
-    "zh:7c83be29ea627ca66008c012d6baae38b3a8944b7cdd67db1d4d1b128b5c882b",
-    "zh:8aaa8e2d4104c698427a74912124b2bdb8d2b0eb733d6fbf63f8406d139b8dcb",
-    "zh:91dd761b32c0dba0112c4feca114e5f8ee5f3a77aa92d7e6e053cac7d9bf98d0",
-    "zh:a2daca3b31751348d4b1b1d505796af8b80dba6781095c6f8b150d301735d9f5",
-    "zh:f4855d1213ac983a57c4c190f7844fb76afbbd2aea65df993f761277a2cef357",
-    "zh:fa5c68105467e5249a9b01e791804a59840c3ac69170f4afbc1172064f899d84",
+    "zh:2ed28053d212951ab501e28cd8bbc450c2961ba4fbf196215b70ebf142b00da0",
+    "zh:445d50f3e2d6a64ba610f7c9cb949e20007183ba02cd6e69143d83f578943bad",
+    "zh:6f81b03c6ffa301d3323ffc65e8d0d30d53cd7d1e76884cf2f682c71f2c6e0d7",
+    "zh:7e5a62dbc55a555c07a0270582dee1a5dde8e1d207020166bd779ca24d2cff41",
+    "zh:95d0abe1a4d19e9518ee37249b951af83e784d268c8718444db52b3667e25e73",
+    "zh:9e2852fc45f255903ae8c4fd1485eb695e58d8a7c319b055a0361c3d6c1c309d",
+    "zh:cf6aa18652e46ac544171025e6ef8c2b437b45aef03950c8188d63a493eb50f0",
+    "zh:d058a1dc4b152ab69814d24b476a7cdc4e1679ebcd24052c2ab771c285a496a5",
+    "zh:e7745c3d17d0dc2dc7d0bd78f2b186cfbcc272ed0295a86435b72dc6b6299f01",
   ]
 }
 
