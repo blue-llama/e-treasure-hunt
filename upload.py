@@ -45,7 +45,7 @@ def upload_level_without_hints(level: int, dir: Path) -> None:
         data["description"] = ""
 
     url = f"{SERVER}/api/levels/{level}"
-    r = requests.put(url, auth=(USERNAME, PASSWORD), json=data)
+    r = requests.put(url, auth=(USERNAME, PASSWORD), json=data, timeout=5)
 
     if not r.ok:
         print(f"Error uploading level {level}")
@@ -73,6 +73,7 @@ def upload_hint(level: int, hint: int, image: Path) -> None:
             url,
             auth=(USERNAME, PASSWORD),
             files={"hint": (image.name, f, content_type)},
+            timeout=5,
         )
 
     if not r.ok:
