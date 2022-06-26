@@ -4,10 +4,11 @@ from typing import TYPE_CHECKING, Any
 
 from django.http import Http404
 from rest_framework import status
-from rest_framework.request import Request, clone_request
+from rest_framework.request import clone_request
 from rest_framework.response import Response
 
 if TYPE_CHECKING:
+    from rest_framework.request import Request
     from rest_framework.viewsets import GenericViewSet
 
     _Base = GenericViewSet
