@@ -10,10 +10,12 @@ from django.utils import timezone
 
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import HuntEvent, HuntInfo
-from hunt.utils import AuthenticatedHttpRequest, max_level
+from hunt.utils import max_level
 
 if TYPE_CHECKING:
     from django.contrib.auth.models import User
+
+    from hunt.utils import AuthenticatedHttpRequest
 
 
 def request_hint(request: AuthenticatedHttpRequest) -> str:

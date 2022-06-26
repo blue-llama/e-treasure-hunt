@@ -14,10 +14,12 @@ from hunt.hint_request import maybe_release_hint, prepare_next_hint, request_hin
 from hunt.level_mgr import upload_new_level
 from hunt.levels import list_levels, look_for_level, maybe_load_level
 from hunt.models import AppSetting, HuntEvent
-from hunt.utils import AuthenticatedHttpRequest, max_level, no_players_during_lockout
+from hunt.utils import max_level, no_players_during_lockout
 
 if TYPE_CHECKING:
     from django.http.request import HttpRequest
+
+    from hunt.utils import AuthenticatedHttpRequest
 
 
 # Send users to the hunt and admins to management.

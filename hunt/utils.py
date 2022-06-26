@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING, Any, Callable
 
 import holidays
 from django.db.models import Max
-from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.template import loader
 
@@ -20,10 +19,10 @@ except ImportError:
 
 if TYPE_CHECKING:
     from django.contrib.auth.models import User
+    from django.http.request import HttpRequest
 
-
-class AuthenticatedHttpRequest(HttpRequest):
-    user: User
+    class AuthenticatedHttpRequest(HttpRequest):
+        user: User
 
 
 RequestHandler = Callable[..., HttpResponse]
