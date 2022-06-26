@@ -24,8 +24,7 @@ if TYPE_CHECKING:
     class AuthenticatedHttpRequest(HttpRequest):
         user: User
 
-
-RequestHandler = Callable[..., HttpResponse]
+    RequestHandler = Callable[..., HttpResponse]
 
 
 def max_level() -> int:
