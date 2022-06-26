@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import datetime
+import zoneinfo
 from functools import wraps
 from typing import TYPE_CHECKING, Any, Callable
 
@@ -11,11 +12,6 @@ from django.http.response import HttpResponse
 from django.template import loader
 
 from hunt.models import AppSetting, Level
-
-try:
-    import zoneinfo
-except ImportError:
-    from backports import zoneinfo  # type: ignore[no-redef]
 
 if TYPE_CHECKING:
     from django.contrib.auth.models import User
