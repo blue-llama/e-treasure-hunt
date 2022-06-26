@@ -29,7 +29,7 @@ If you are using Google Maps you will need a Google Cloud account with Places
 and Maps JavaScript APIs enabled, and an API key.
 See <https://console.cloud.google.com/apis/dashboard>.
 
-NOTE: these API key are passed to clients, so you must ensure you have
+NOTE: these API keys are passed to clients, so you must ensure you have
 appropriate usage limits configured to avoid being charged in case of mis-use.
 You may also wish to employ additional security measures e.g. configuring an
 allowed redirect URI.
@@ -107,13 +107,13 @@ You'll need to update the `PASSWORD` at the top of the file, and then re-arrange
 
 ### Level upload through the UI
 
-- Navigate to <domain>/mgmt
+- Navigate to /mgmt
 - Upload a dummy level 0 using the dummy level files - replace blurb.txt and the
   level name in about.json with text for the start of the hunt
 - Upload levels 1-N of the hunt
 - Upload a dummy level N+1 using the dummy level files - replace clue with an
   image for the final page
-- Navigate to <domain>/home and check your level(s) display correctly
+- Navigate to /home and check your level(s) display correctly
 
 ### Troubleshooting
 
@@ -129,5 +129,5 @@ via the UI.
 
 ## Create users
 
-- Add a User object via <domain>/admin
-- Pass the username and password to the teams and they can begin the hunt!
+- Add User objects via /admin
+- Pass usernames and passwords to the teams and they can begin the hunt!
