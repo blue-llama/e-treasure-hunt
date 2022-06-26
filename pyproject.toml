@@ -67,11 +67,5 @@ module = [
 ]
 ignore_missing_imports = true
 
-[[tool.mypy.overrides]]
-module = [
-  "hunt.utils",
-]
-warn_unused_ignores = false
-
 [tool.django-stubs]
 django_settings_module = "treasure.settings"
