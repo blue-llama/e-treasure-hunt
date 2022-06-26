@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 import contextlib
 import datetime
 from functools import wraps
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any, Callable
 
 import holidays
-from django.contrib.auth.models import User
 from django.db.models import Max
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
@@ -15,7 +16,10 @@ from hunt.models import AppSetting, Level
 try:
     import zoneinfo
 except ImportError:
-    from backports import zoneinfo
+    from backports import zoneinfo  # type: ignore[no-redef]
+
+if TYPE_CHECKING:
+    from django.contrib.auth.models import User
 
 
 class AuthenticatedHttpRequest(HttpRequest):

@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 import contextlib
 import csv
 import os
+from typing import TYPE_CHECKING
 
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import redirect
 from django.template import loader
@@ -13,6 +15,9 @@ from hunt.level_mgr import upload_new_level
 from hunt.levels import list_levels, look_for_level, maybe_load_level
 from hunt.models import AppSetting, HuntEvent
 from hunt.utils import AuthenticatedHttpRequest, max_level, no_players_during_lockout
+
+if TYPE_CHECKING:
+    from django.http.request import HttpRequest
 
 
 # Send users to the hunt and admins to management.

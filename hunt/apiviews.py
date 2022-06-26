@@ -1,14 +1,19 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from uuid import uuid4
 
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.request import Request
 from rest_framework.response import Response
 
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
 from hunt.third_party.apimixin import AllowPUTAsCreateMixin
+
+if TYPE_CHECKING:
+    from rest_framework.request import Request
 
 EXTENSIONS = {"image/jpeg": ".jpg", "image/png": ".png"}
 

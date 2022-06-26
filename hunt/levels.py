@@ -1,4 +1,7 @@
-from django.contrib.auth.models import User
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from django.template import loader
 from django.utils import timezone
 from geopy import Point, distance
@@ -6,6 +9,9 @@ from geopy import Point, distance
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import HuntEvent, Level
 from hunt.utils import AuthenticatedHttpRequest, max_level
+
+if TYPE_CHECKING:
+    from django.contrib.auth.models import User
 
 
 def advance_level(user: User) -> None:
