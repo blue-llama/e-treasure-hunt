@@ -5,17 +5,15 @@ import os
 from typing import TYPE_CHECKING, cast
 from uuid import uuid4
 
-from django.core.files.uploadedfile import UploadedFile
-
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
 
 if TYPE_CHECKING:
+    from django.core.files.uploadedfile import UploadedFile
     from django.http.request import HttpRequest
 
-
-class NamedFile(UploadedFile):
-    name: str
+    class NamedFile(UploadedFile):
+        name: str
 
 
 def upload_new_level(request: HttpRequest) -> str:
@@ -44,7 +42,7 @@ def upload_new_level(request: HttpRequest) -> str:
 
     # Gather up the needed information.
     uploaded_files: list[UploadedFile] = request.FILES.getlist("files", default=[])
-    files = [cast(NamedFile, f) for f in uploaded_files if f.name is not None]
+    files = [cast("NamedFile", f) for f in uploaded_files if f.name is not None]
     about_file = next((f for f in files if extension(f) == ".json"), None)
     blurb = next((f for f in files if extension(f) == ".txt"), None)
     images = [f for f in files if extension(f) in (".jpg", ".png")]
