@@ -1,4 +1,6 @@
-from typing import Any, Type
+from __future__ import annotations
+
+from typing import Any
 
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -21,7 +23,7 @@ class HuntInfo(models.Model):
 
 @receiver(post_save, sender=User)
 def create_hunt_info(
-    sender: Type[User], instance: User, created: bool, **kwargs: Any
+    sender: type[User], instance: User, created: bool, **kwargs: Any
 ) -> None:
     if created:
         HuntInfo.objects.create(user=instance)

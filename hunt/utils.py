@@ -4,7 +4,7 @@ import contextlib
 import datetime
 import zoneinfo
 from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import holidays
 from django.db.models import Max
@@ -14,6 +14,8 @@ from django.template import loader
 from hunt.models import AppSetting, Level
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from django.contrib.auth.models import User
     from django.http.request import HttpRequest
 

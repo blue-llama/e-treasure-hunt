@@ -9,11 +9,12 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
+from __future__ import annotations
 
 import os
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 
 # Where is the app being deployed?
@@ -156,7 +157,7 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
 }
 
-DATABASES: Dict[str, Any]
+DATABASES: dict[str, Any]
 if deployment_type == Deployment.LOCAL:
     DATABASES = {
         "default": {
