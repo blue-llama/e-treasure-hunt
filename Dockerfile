@@ -20,7 +20,7 @@ RUN apt-get update && \
       --output install-poetry.py \
       https://install.python-poetry.org && \
     python3 install-poetry.py && \
-    /root/.local/bin/poetry export \
+    POETRY_VIRTUALENVS_CREATE=false /root/.local/bin/poetry export \
       -f requirements.txt \
       -o requirements.txt && \
     python3 install-poetry.py --uninstall && \
@@ -33,6 +33,7 @@ RUN apt-get update && \
       curl \
       g++  \
       unixodbc-dev && \
+    rm -fr /root/.cache && \
     apt-get clean
 
 WORKDIR /usr/src/app
