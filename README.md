@@ -15,7 +15,7 @@ generate revenue.
 # Deploying the app
 
 The live version of this app is deployed on Azure, via the terraform definitions
-in `azure/main.tf`.
+in [azure/main.tf](azure/main.tf).
 
 You can also deploy locally, details below.
 
@@ -30,7 +30,7 @@ and Maps JavaScript APIs enabled, and an API key.
 See <https://console.cloud.google.com/apis/dashboard>.
 
 NOTE: these API keys are passed to clients, so you must ensure you have
-appropriate usage limits configured to avoid being charged in case of mis-use.
+appropriate usage limits configured to avoid being charged in case of misuse.
 You may also wish to employ additional security measures e.g. configuring an
 allowed redirect URI.
 
@@ -84,11 +84,12 @@ an environment variable.
 
 - You can use the content of `dummy_files.zip` as a template
 - `about.json` contains the name and location for the level (the name is displayed
-  on the _next_ level page, so can be the location) - tolerance is in meters
+  on the _next_ level page, so can be the location).
+  Tolerance is in metres
 - `blurb.txt` contains the description for the level (displayed on the next level
   page)
 - `clue.png` is the first image - the dummy file contains a background
-- `hint1.png`-`hint4.png` are the hints, in order
+- `hint1.png` - `hint4.png` are the hints, in order
   - The five images must be in alphabetical order, but otherwise the exact
     filenames are not important
   - `.png` and `.jpg` are acceptable formats
@@ -108,8 +109,8 @@ You'll need to update the `PASSWORD` at the top of the file, and then re-arrange
 ### Level upload through the UI
 
 - Navigate to /mgmt
-- Upload a dummy level 0 using the dummy level files - replace blurb.txt and the
-  level name in about.json with text for the start of the hunt
+- Upload a dummy level 0 using the dummy level files - replace `blurb.txt` and the
+  level name in `about.json` with text for the start of the hunt
 - Upload levels 1-N of the hunt
 - Upload a dummy level N+1 using the dummy level files - replace clue with an
   image for the final page
