@@ -306,7 +306,7 @@ pyflakes = ">=2.4.0,<2.5.0"
 
 [[package]]
 name = "flake8-type-checking"
-version = "2.0.4"
+version = "2.0.6"
 description = "A flake8 plugin for managing type-checking imports & forward references"
 category = "dev"
 optional = false
@@ -1043,8 +1043,8 @@ flake8 = [
     {file = "flake8-4.0.1.tar.gz", hash = "sha256:806e034dda44114815e23c16ef92f95c91e4c71100ff52813adf7132a6ad870d"},
 ]
 flake8-type-checking = [
-    {file = "flake8-type-checking-2.0.4.tar.gz", hash = "sha256:2979d85ff7bf617ef486157f72469507636947d10186e73d478a28e1f4bb63c7"},
-    {file = "flake8_type_checking-2.0.4-py3-none-any.whl", hash = "sha256:1bbbad617a1dea8b70c22dc52af436a8a4fc734c6054d8e2610919387a838c4c"},
+    {file = "flake8-type-checking-2.0.6.tar.gz", hash = "sha256:dfeeaccd3fc2f748efd83b4fe2f8301c70719c768b28b04242c23b89d9278290"},
+    {file = "flake8_type_checking-2.0.6-py3-none-any.whl", hash = "sha256:08ad303ef954d10de5f64f21798f66f599d617e11b6d36604bc145fea7c0276d"},
 ]
 geographiclib = [
     {file = "geographiclib-1.52-py3-none-any.whl", hash = "sha256:8f441c527b0b8a26cd96c965565ff0513d1e4d9952b704bf449409e5015c77b7"},
