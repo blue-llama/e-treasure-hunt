@@ -16,7 +16,7 @@ whitenoise = "^6.2.0"
 
 # Things needed for azure deployment.
 azure-identity = "^1.10.0"
-django-storages = { version = "^1.12.3", extras = ["azure"] }
+django-storages = { version = "^1.13.1", extras = ["azure"] }
 mssql-django = "^1.1.3"
 
 [tool.poetry.dev-dependencies]
