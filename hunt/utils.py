@@ -69,7 +69,9 @@ def players_are_locked_out() -> bool:
 # out.
 def no_players_during_lockout(f: RequestHandler) -> RequestHandler:
     @wraps(f)
-    def wrapper(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+    def wrapper(
+        request: AuthenticatedHttpRequest, *args: Any, **kwargs: Any
+    ) -> HttpResponse:
         if not request.user.is_staff and players_are_locked_out():
             template = loader.get_template("work-time.html").render({}, request)
             return HttpResponse(template)
