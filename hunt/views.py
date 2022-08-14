@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 # Send users to the hunt and admins to management.
 @login_required
 @no_players_during_lockout
-def go_home(request: HttpRequest) -> HttpResponse:
+def go_home(request: AuthenticatedHttpRequest) -> HttpResponse:
     if request.user.is_staff:
         return redirect("/mgmt")
 
@@ -146,7 +146,7 @@ def do_search(request: AuthenticatedHttpRequest) -> HttpResponse:
 # Coordinate search page.
 @login_required
 @no_players_during_lockout
-def search(request: HttpRequest) -> HttpResponse:
+def search(request: AuthenticatedHttpRequest) -> HttpResponse:
     lvl = request.GET.get("lvl")
 
     template = loader.get_template("search.html")
