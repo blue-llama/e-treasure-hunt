@@ -141,7 +141,12 @@ def list_levels(request: AuthenticatedHttpRequest) -> str:
     user = request.user
     team_level = max_level() if user.is_staff else user.huntinfo.level
 
-    levels = list(range(1, team_level + 1))
+    done_levels = Level.objects.filter(number__gt=0, number__lt=team_level).order_by(
+        "number"
+    )
+    levels = [{"number": level.number, "name": level.name} for level in done_levels]
+    levels.append({"number": team_level, "name": "Latest level"})
+
     template = loader.get_template("levels.html")
     context = {"team_level": team_level, "levels": levels}
 

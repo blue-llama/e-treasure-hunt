@@ -3,10 +3,10 @@
 <h1>Unlocked Levels</h1>
 <div class="level-list">
   {% for level in levels %}
-  <a class="gobutton" href="/level/{{ level }}">
+  <a class="gobutton" href="/level/{{ level.number }}">
     <div style="display: flex">
       <div class="level-label">LEVEL</div>
-      {{ level }}
+      {{ level.number}}: {{ level.name }}
     </div>
   </a>
   {% endfor %}
