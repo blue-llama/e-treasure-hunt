@@ -11,7 +11,7 @@ django = "^4.0.7"
 djangorestframework = "^3.13.1"
 geopy = "^2.2.0"
 gunicorn = "^20.1.0"
-holidays = "^0.14.2"
+holidays = "^0.15"
 whitenoise = "^6.2.0"
 
 # Things needed for azure deployment.
