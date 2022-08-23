@@ -19,7 +19,7 @@ RUN apt-get update && \
       --location \
       --output install-poetry.py \
       https://install.python-poetry.org && \
-    python3 install-poetry.py --version 1.2.0b3 && \
+    python3 install-poetry.py --version 1.2.0rc1 && \
     POETRY_VIRTUALENVS_CREATE=false /root/.local/bin/poetry export \
       -f requirements.txt \
       -o requirements.txt && \
