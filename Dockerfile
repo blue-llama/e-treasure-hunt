@@ -2,8 +2,6 @@ FROM python:3.9-slim AS builder
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-COPY pyproject.toml poetry.lock /
-
 RUN apt-get update && \
     apt-get install \
       --yes \
@@ -20,6 +18,8 @@ RUN apt-get update && \
 
 ENV VIRTUAL_ENV=/opt/venv \
     PATH="/opt/venv/bin:$PATH"
+
+COPY pyproject.toml poetry.lock /
 
 RUN /root/.local/bin/poetry install --only=main
 
