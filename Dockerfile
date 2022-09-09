@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.9-slim AS builder
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -8,11 +8,7 @@ RUN apt-get update && \
     apt-get install \
       --yes \
       --no-install-recommends \
-      curl \
-      g++ \
-      unixodbc \
-      unixodbc-dev && \
-    rm -fr /var/lib/apt/lists/* && \
+      curl && \
     curl \
       --silent \
       --show-error \
@@ -20,23 +16,18 @@ RUN apt-get update && \
       --output install-poetry.py \
       https://install.python-poetry.org && \
     python3 install-poetry.py && \
-    POETRY_VIRTUALENVS_CREATE=false /root/.local/bin/poetry export \
-      -f requirements.txt \
-      -o requirements.txt && \
-    python3 install-poetry.py --uninstall && \
-    rm install-poetry.py && \
-    pip install --no-cache-dir -r requirements.txt && \
-    rm requirements.txt && \
-    apt-get purge \
-      --yes \
-      --auto-remove \
-      curl \
-      g++  \
-      unixodbc-dev && \
-    rm -fr /root/.cache && \
-    apt-get clean
+    python3 -m venv /opt/venv
+
+ENV VIRTUAL_ENV=/opt/venv \
+    PATH="/opt/venv/bin:$PATH"
+
+RUN /root/.local/bin/poetry install --only=main
+
+FROM python:3.9-slim
+
+COPY --from=builder /opt/venv /opt/venv
 
 WORKDIR /usr/src/app
 EXPOSE 8000
-ENTRYPOINT ["python", "manage.py"]
+ENTRYPOINT ["/opt/venv/bin/python", "manage.py"]
 CMD ["runserver", "0.0.0.0:8000"]
