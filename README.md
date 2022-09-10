@@ -97,24 +97,24 @@ an environment variable.
 ## Level upload
 
 Levels can be uploaded either through a REST API, or via the UI.
-The REST API gives better error messages when things go wrong.
+The REST API is recommended: it gives much better error messages when things go
+wrong.
+
+In addition to the playable levels 1 through N, you will need to upload levels 0
+and N+1.
+You can use the files in `dummy_files.zip`, updating `blurb.txt` at level 0 with
+text for the start of the hunt.
 
 ### Level upload through the API
 
 [upload.py](upload.py) contains utilities for uploading levels and hints.
 
-You'll need to update the `PASSWORD` at the top of the file, and then re-arrange
-`main()` as needed to upload your levels.
+You'll need to update the `SERVER` and credentials at the top of the file, and
+then re-arrange `main()` as appropriate to upload your levels.
 
 ### Level upload through the UI
 
-- Navigate to /mgmt
-- Upload a dummy level 0 using the dummy level files - replace `blurb.txt` and the
-  level name in `about.json` with text for the start of the hunt
-- Upload levels 1-N of the hunt
-- Upload a dummy level N+1 using the dummy level files - replace clue with an
-  image for the final page
-- Navigate to /home and check your level(s) display correctly
+This can be done at /mgmt and should be self-explanatory.
 
 ### Troubleshooting
 
