@@ -1,7 +1,5 @@
 FROM python:3.9-slim AS builder
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
 RUN apt-get update && \
     apt-get install \
       --yes \
