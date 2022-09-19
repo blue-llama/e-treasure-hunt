@@ -14,7 +14,7 @@ django-storages = [
 ]
 djangorestframework = "^3.13.1"
 geopy = "^2.2.0"
-holidays = "^0.15"
+holidays = "^0.16"
 whitenoise = "^6.2.0"
 
 # Things needed for azure deployment.
