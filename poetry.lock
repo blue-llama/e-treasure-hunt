@@ -846,7 +846,7 @@ azure = ["azure-identity", "mssql-django"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "7cb73c1df0b3b4e9d3ad517a40242c6291d0e87de3b6baf49bb892b58e26848e"
+content-hash = "0dde889c49ceafdd825ab72a8f8e6fa1245a6e0402f23971ef6d964558142d77"
 
 [metadata.files]
 asgiref = [
