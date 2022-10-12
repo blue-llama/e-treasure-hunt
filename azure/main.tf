@@ -7,7 +7,7 @@ terraform {
     }
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.25"
+      version = "~> 3.27"
     }
     random = {
       source  = "hashicorp/random"
@@ -132,7 +132,7 @@ resource "azurerm_linux_web_app" "treasure" {
     ftps_state          = "Disabled"
     http2_enabled       = true
     application_stack {
-      python_version = "3.9"
+      python_version = "3.10"
     }
   }
 

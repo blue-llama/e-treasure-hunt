@@ -195,10 +195,6 @@ platformdirs = ">=2"
 version = ">=1.1.0"
 markers = "python_full_version < \"3.11.0a7\""
 
-[package.dependencies.typing-extensions]
-version = ">=3.10.0.0"
-markers = "python_version < \"3.10\""
-
 [package.extras]
 colorama = [
     "colorama (>=0.4.3)",
@@ -2666,5 +2662,5 @@ azure = [
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.9"
-content-hash = "65c7277b7c83573be419b39871417457c6c25714141c0892e9e9e4a4027d6acd"
+python-versions = "^3.10"
+content-hash = "294169e936b6b615c7db9ce403b432d1acff129bad73e470054536584857aabf"
