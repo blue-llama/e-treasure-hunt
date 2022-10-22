@@ -74,19 +74,19 @@ six = ">=1.12.0"
 
 [[package]]
 name = "azure-storage-blob"
-version = "12.14.0"
+version = "12.14.1"
 description = "Microsoft Azure Blob Storage Client Library for Python"
 category = "main"
 optional = true
 python-versions = ">=3.7"
 
 [[package.files]]
-file = "azure-storage-blob-12.14.0.zip"
-hash = "sha256:a72dd9923e4b38a552f2bc1749d1fa5b820f497a8fb3cd2d77e7045bbe87bb4d"
+file = "azure-storage-blob-12.14.1.zip"
+hash = "sha256:860d4d82985a4bfc7d3271e71275af330f54f330a754355435a7ba749ccde997"
 
 [[package.files]]
-file = "azure_storage_blob-12.14.0-py3-none-any.whl"
-hash = "sha256:073c9e99154975644b32ed5c900832d8aa3c041b972b2f34ef269760d023e69b"
+file = "azure_storage_blob-12.14.1-py3-none-any.whl"
+hash = "sha256:52b84658e8df7853a3cf1c563814655b5028b979b2a87905b92aa6bb30be240e"
 
 [package.dependencies]
 azure-core = ">=1.24.2,<2.0.0"
@@ -991,19 +991,19 @@ pyflakes = ">=2.5.0,<2.6.0"
 
 [[package]]
 name = "flake8-type-checking"
-version = "2.1.3"
+version = "2.2.0"
 description = "A flake8 plugin for managing type-checking imports & forward references"
 category = "dev"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = ">=3.8"
 
 [[package.files]]
-file = "flake8-type-checking-2.1.3.tar.gz"
-hash = "sha256:a47b790ae6e13cb4c62ea36a3197eaa7b635086544071e3a49d6751f0b6cabe6"
+file = "flake8_type_checking-2.2.0-py3-none-any.whl"
+hash = "sha256:c7d9d7adc6cd635a5a1a7859e5e0140f4f8f1705982a22db45872dd9acd49753"
 
 [[package.files]]
-file = "flake8_type_checking-2.1.3-py3-none-any.whl"
-hash = "sha256:70d198e93c3831b3ae24f6e80f85e3555c19c4eafb39ee4445abb2236c0b6970"
+file = "flake8_type_checking-2.2.0.tar.gz"
+hash = "sha256:f7972fc9102f3f632ace1f4b1c5c20b900b8b7b529f04bb6c1fe0a11801e9658"
 
 [package.dependencies]
 classify-imports = "*"
@@ -1680,19 +1680,19 @@ hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"
 
 [[package]]
 name = "oauthlib"
-version = "3.2.1"
+version = "3.2.2"
 description = "A generic, spec-compliant, thorough implementation of the OAuth request-signing logic"
 category = "main"
 optional = true
 python-versions = ">=3.6"
 
 [[package.files]]
-file = "oauthlib-3.2.1-py3-none-any.whl"
-hash = "sha256:88e912ca1ad915e1dcc1c06fc9259d19de8deacd6fd17cc2df266decc2e49066"
+file = "oauthlib-3.2.2-py3-none-any.whl"
+hash = "sha256:8139f29aac13e25d502680e9e19963e83f16838d48a0d71c287fe40e7067fbca"
 
 [[package.files]]
-file = "oauthlib-3.2.1.tar.gz"
-hash = "sha256:1565237372795bf6ee3e5aba5e2a85bd5a65d0e2aa5c628b9a97b7d7a0da3721"
+file = "oauthlib-3.2.2.tar.gz"
+hash = "sha256:9859c40929662bec5d64f34d01c99e093149682a3f38915dc0655d5a633dd918"
 
 [package.extras]
 rsa = [
@@ -2017,19 +2017,19 @@ test = [
 
 [[package]]
 name = "portalocker"
-version = "2.5.1"
+version = "2.6.0"
 description = "Wraps the portalocker recipe for easy usage"
 category = "main"
 optional = true
 python-versions = ">=3.5"
 
 [[package.files]]
-file = "portalocker-2.5.1-py2.py3-none-any.whl"
-hash = "sha256:400bae275366e7b840d4baad0654c6ec5994e07c40c423d78e9e1340279b8352"
+file = "portalocker-2.6.0-py2.py3-none-any.whl"
+hash = "sha256:102ed1f2badd8dec9af3d732ef70e94b215b85ba45a8d7ff3c0003f19b442f4e"
 
 [[package.files]]
-file = "portalocker-2.5.1.tar.gz"
-hash = "sha256:ae8e9cc2660da04bf41fa1a0eef7e300bb5e4a5869adfb1a6d8551632b559b2b"
+file = "portalocker-2.6.0.tar.gz"
+hash = "sha256:964f6830fb42a74b5d32bce99ed37d8308c1d7d44ddf18f3dd89f4680de97b39"
 
 [package.dependencies.pywin32]
 version = ">=226"
@@ -2101,43 +2101,36 @@ hash = "sha256:491feb020dca48ccc562a8c0cbe8df07ee13078df59813b83959cbdada312ea3"
 
 [[package]]
 name = "pyjwt"
-version = "2.5.0"
+version = "2.6.0"
 description = "JSON Web Token implementation in Python"
 category = "main"
 optional = true
 python-versions = ">=3.7"
 
 [[package.files]]
-file = "PyJWT-2.5.0-py3-none-any.whl"
-hash = "sha256:8d82e7087868e94dd8d7d418e5088ce64f7daab4b36db654cbaedb46f9d1ca80"
+file = "PyJWT-2.6.0-py3-none-any.whl"
+hash = "sha256:d83c3d892a77bbb74d3e1a2cfa90afaadb60945205d1095d9221f04466f64c14"
 
 [[package.files]]
-file = "PyJWT-2.5.0.tar.gz"
-hash = "sha256:e77ab89480905d86998442ac5788f35333fa85f65047a534adc38edf3c88fc3b"
+file = "PyJWT-2.6.0.tar.gz"
+hash = "sha256:69285c7e31fc44f68a1feb309e948e0df53259d579295e6cfe2b1792329f05fd"
 
 [package.dependencies.cryptography]
-version = ">=3.3.1"
-optional = true
-markers = "extra == \"crypto\""
-
-[package.dependencies.types-cryptography]
-version = ">=3.3.21"
+version = ">=3.4.0"
 optional = true
 markers = "extra == \"crypto\""
 
 [package.extras]
 crypto = [
-    "cryptography (>=3.3.1)",
-    "types-cryptography (>=3.3.21)",
+    "cryptography (>=3.4.0)",
 ]
 dev = [
     "coverage[toml] (==5.0.4)",
-    "cryptography (>=3.3.1)",
+    "cryptography (>=3.4.0)",
     "pre-commit",
     "pytest (>=6.0.0,<7.0.0)",
     "sphinx (>=4.5.0,<5.0.0)",
     "sphinx-rtd-theme",
-    "types-cryptography (>=3.3.21)",
     "zope.interface",
 ]
 docs = [
@@ -2255,19 +2248,19 @@ six = ">=1.5"
 
 [[package]]
 name = "pytz"
-version = "2022.4"
+version = "2022.5"
 description = "World timezone definitions, modern and historical"
 category = "main"
 optional = false
 python-versions = "*"
 
 [[package.files]]
-file = "pytz-2022.4-py2.py3-none-any.whl"
-hash = "sha256:2c0784747071402c6e99f0bafdb7da0fa22645f06554c7ae06bf6358897e9c91"
+file = "pytz-2022.5-py2.py3-none-any.whl"
+hash = "sha256:335ab46900b1465e714b4fda4963d87363264eb662aab5e65da039c25f1f5b22"
 
 [[package.files]]
-file = "pytz-2022.4.tar.gz"
-hash = "sha256:48ce799d83b6f8aab2020e369b627446696619e79645419610b9facd909b3174"
+file = "pytz-2022.5.tar.gz"
+hash = "sha256:c4d88f472f54d615e9cd582a5004d1e5f624854a6a27a6211591c251f22a6914"
 
 [[package]]
 name = "pywin32"
@@ -2453,22 +2446,6 @@ file = "types_backports-0.1.3-py2.py3-none-any.whl"
 hash = "sha256:dafcd61848081503e738a7768872d1dd6c018401b4d2a1cfb608ea87ec9864b9"
 
 [[package]]
-name = "types-cryptography"
-version = "3.3.23"
-description = "Typing stubs for cryptography"
-category = "main"
-optional = true
-python-versions = "*"
-
-[[package.files]]
-file = "types-cryptography-3.3.23.tar.gz"
-hash = "sha256:b85c45fd4d3d92e8b18e9a5ee2da84517e8fff658e3ef5755c885b1c2a27c1fe"
-
-[[package.files]]
-file = "types_cryptography-3.3.23-py3-none-any.whl"
-hash = "sha256:913b3e66a502edbf4bfc3bb45e33ab476040c56942164a7ff37bd1f0ef8ef783"
-
-[[package]]
 name = "types-markdown"
 version = "3.4.2.1"
 description = "Typing stubs for Markdown"
@@ -2486,19 +2463,19 @@ hash = "sha256:b2333f6f4b8f69af83de359e10a097e4a3f14bbd6d2484e1829d9b0ec56fa0cb"
 
 [[package]]
 name = "types-pytz"
-version = "2022.4.0.0"
+version = "2022.5.0.0"
 description = "Typing stubs for pytz"
 category = "dev"
 optional = false
 python-versions = "*"
 
 [[package.files]]
-file = "types-pytz-2022.4.0.0.tar.gz"
-hash = "sha256:17d66e4b16e80ceae0787726f3a22288df7d3f9fdebeb091dc64b92c0e4ea09d"
+file = "types-pytz-2022.5.0.0.tar.gz"
+hash = "sha256:0c163b15d3e598e6cc7074a99ca9ec72b25dc1b446acc133b827667af0b7b09a"
 
 [[package.files]]
-file = "types_pytz-2022.4.0.0-py3-none-any.whl"
-hash = "sha256:950b0f3d64ed5b03a3e29c1e38fe2be8371c933c8e97922d0352345336eb8af4"
+file = "types_pytz-2022.5.0.0-py3-none-any.whl"
+hash = "sha256:a8e1fe6a1b270fbfaf2553b20ad0f1316707cc320e596da903bb17d7373fed2d"
 
 [[package]]
 name = "types-pyyaml"
@@ -2537,19 +2514,19 @@ types-urllib3 = "<1.27"
 
 [[package]]
 name = "types-urllib3"
-version = "1.26.25"
+version = "1.26.25.1"
 description = "Typing stubs for urllib3"
 category = "dev"
 optional = false
 python-versions = "*"
 
 [[package.files]]
-file = "types-urllib3-1.26.25.tar.gz"
-hash = "sha256:5aef0e663724eef924afa8b320b62ffef2c1736c1fa6caecfc9bc6c8ae2c3def"
+file = "types-urllib3-1.26.25.1.tar.gz"
+hash = "sha256:a948584944b2412c9a74b9cf64f6c48caf8652cb88b38361316f6d15d8a184cd"
 
 [[package.files]]
-file = "types_urllib3-1.26.25-py3-none-any.whl"
-hash = "sha256:c1d78cef7bd581e162e46c20a57b2e1aa6ebecdcf01fd0713bb90978ff3e3427"
+file = "types_urllib3-1.26.25.1-py3-none-any.whl"
+hash = "sha256:f6422596cc9ee5fdf68f9d547f541096a20c2dcfd587e37c804c9ea720bf5cb2"
 
 [[package]]
 name = "typing-extensions"
@@ -2663,4 +2640,4 @@ azure = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "294169e936b6b615c7db9ce403b432d1acff129bad73e470054536584857aabf"
+content-hash = "2f75d0d5eea54574edd274807e67fee03417d22ba8c5ae3bbe52e5dc7e8d2b3d"

@@ -6,7 +6,7 @@ authors = ["David Hotham <david.hotham@blueyonder.co.uk>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-django = "^4.0.7"
+django = "^4.0.8"
 django-storages = [
   { version = "^1.13.1" },
   { version = "^1.13.1", extras = ["azure"], markers = "extra == 'azure'" },
@@ -27,7 +27,7 @@ azure = ["azure-identity", "mssql-django"]
 [tool.poetry.group.lint.dependencies]
 black = ">=22.10.0"
 flake8 = ">=5.0.4"
-flake8-type-checking = ">=2.1.3"
+flake8-type-checking = ">=2.2.0"
 isort = ">=5.10.1"
 mypy = ">=0.982"
 
