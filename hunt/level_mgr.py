@@ -17,17 +17,19 @@ if TYPE_CHECKING:
 
 
 def upload_new_level(request: HttpRequest) -> str:
+    failure_redirect = "/level-mgmt?success=False"
+
     if not request.user.has_perm("hunt.add_level"):
-        return "/level-mgmt?success=False"
+        return failure_redirect
 
     if not request.POST:
-        return "/level-mgmt?success=False"
+        return failure_redirect
 
     lvl_num = request.POST.get("lvl-num")
     if lvl_num is None:
-        return "/level-mgmt?success=False"
+        return failure_redirect
 
-    fail_str = "/level-mgmt?success=False&next=" + lvl_num
+    failure_redirect = f"{failure_redirect}&next={lvl_num}"
 
     # Get the existing level, or create a new one.
     try:
@@ -45,12 +47,12 @@ def upload_new_level(request: HttpRequest) -> str:
     files = [cast("NamedFile", f) for f in uploaded_files if f.name is not None]
     about_file = next((f for f in files if extension(f) == ".json"), None)
     blurb = next((f for f in files if extension(f) == ".txt"), None)
-    images = [f for f in files if extension(f) in (".jpg", ".png")]
+    images = [f for f in files if extension(f) in {".jpeg", ".jpg", ".png"}]
     images.sort(key=lambda f: f.name.lower())
 
     # Level info and images are mandatory, we can manage without a description.
     if about_file is None or len(images) != HINTS_PER_LEVEL:
-        return fail_str
+        return failure_redirect
 
     # Read level info, and read or default level description.
     about = json.load(about_file)
