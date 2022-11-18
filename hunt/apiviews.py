@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Generic, TypeVar
 from uuid import uuid4
 
+from django.db.models import Model
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -12,8 +13,18 @@ from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
 from hunt.third_party.apimixin import AllowPUTAsCreateMixin
 
+T = TypeVar("T", bound=Model)
 if TYPE_CHECKING:
     from rest_framework.request import Request
+
+    class ModelViewSet(viewsets.ModelViewSet[T]):
+        pass
+
+else:
+
+    class ModelViewSet(Generic[T], viewsets.ModelViewSet):
+        pass
+
 
 EXTENSIONS = {"image/jpeg": ".jpg", "image/png": ".png"}
 
@@ -44,7 +55,7 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class LevelViewSet(AllowPUTAsCreateMixin, viewsets.ModelViewSet):
+class LevelViewSet(AllowPUTAsCreateMixin, ModelViewSet[Level]):
     queryset = Level.objects.all().order_by("number")
     serializer_class = LevelSerializer
     http_method_names = ["delete", "get", "head", "patch", "put"]

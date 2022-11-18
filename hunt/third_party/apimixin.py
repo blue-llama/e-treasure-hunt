@@ -8,10 +8,11 @@ from rest_framework.request import clone_request
 from rest_framework.response import Response
 
 if TYPE_CHECKING:
+    from django.db.models import Model
     from rest_framework.request import Request
     from rest_framework.viewsets import GenericViewSet
 
-    _Base = GenericViewSet
+    _Base = GenericViewSet[Model]
 else:
     _Base = object
 
