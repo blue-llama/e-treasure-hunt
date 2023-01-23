@@ -60,6 +60,7 @@ resource "azurerm_storage_account" "treasure" {
   enable_https_traffic_only       = true
   shared_access_key_enabled       = false
   allow_nested_items_to_be_public = false
+  default_to_oauth_authentication = true
 }
 
 resource "azurerm_storage_container" "media" {
