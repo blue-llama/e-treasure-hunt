@@ -133,7 +133,7 @@ resource "azurerm_linux_web_app" "treasure" {
     ftps_state          = "Disabled"
     http2_enabled       = true
     application_stack {
-      python_version = "3.10"
+      python_version = "3.11"
     }
   }
 
