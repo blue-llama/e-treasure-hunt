@@ -40,14 +40,11 @@ jobs:
       - name: Install project
         run: poetry install --extras azure
 
-      - name: flake8
-        run: poetry run flake8
-
-      - name: mypy
-        run: poetry run mypy .
-
-      - name: isort
-        run: poetry run isort --check .
+      - name: linting
+        run: poetry run ruff .
 
       - name: black
         run: poetry run black --check .
+
+      - name: mypy
+        run: poetry run mypy .

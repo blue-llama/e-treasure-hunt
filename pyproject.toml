@@ -1,3 +1,7 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "e-treasure-hunt"
 version = "0.1.0"
@@ -26,11 +30,8 @@ azure = ["azure-identity", "mssql-django"]
 
 [tool.poetry.group.lint.dependencies]
 black = ">=22.12.0"
-flake8 = ">=6.0.0"
-flake8-bugbear = ">=23.1.17"
-flake8-type-checking = ">=2.3.0"
-isort = ">=5.10.1"
 mypy = ">=0.991"
+ruff = ">=0.0.237"
 
 [tool.poetry.group.misc.dependencies]
 requests = ">=2.28.1"
@@ -43,14 +44,6 @@ types-requests = ">=2.28.11.5"
 
 [tool.black]
 exclude = "hunt/migrations"
-
-[tool.isort]
-profile = "black"
-skip = "hunt/migrations"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
 files = "."
@@ -80,3 +73,17 @@ ignore_missing_imports = true
 
 [tool.django-stubs]
 django_settings_module = "treasure.settings"
+
+[tool.ruff]
+select = [
+  "B", # flake8-bugbear
+  "E", # pycodestyle
+  "F", # pyflakes
+  "I", # isort
+  "RUF", # ruff
+  "TCH", # flake8-type-checking
+  "W", # pycodestyle
+]
+extend-exclude = [
+  "hunt/migrations",
+]
