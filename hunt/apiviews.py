@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Generic, TypeVar
 from uuid import uuid4
 
-from django.db.models import Model
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -13,8 +12,9 @@ from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
 from hunt.third_party.apimixin import AllowPUTAsCreateMixin
 
-T = TypeVar("T", bound=Model)
+T = TypeVar("T", bound="Model")
 if TYPE_CHECKING:
+    from django.db.models import Model
     from rest_framework.request import Request
 
     class ModelViewSet(viewsets.ModelViewSet[T]):
