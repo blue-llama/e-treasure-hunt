@@ -29,7 +29,7 @@ def upload_level_without_hints(level: int, path: Path) -> None:
                  The blurb, if present, is shown on the _next_ level.
     """
     about = path / "about.json"
-    with open(about, encoding="utf-8") as f:
+    with about.open(encoding="utf-8") as f:
         data = json.load(f)
 
     data["number"] = level
@@ -38,7 +38,7 @@ def upload_level_without_hints(level: int, path: Path) -> None:
     # intended.
     blurb = path / "blurb.txt"
     try:
-        with open(blurb, encoding="utf-8") as f:
+        with blurb.open(encoding="utf-8") as f:
             data["description"] = f.read()
     except FileNotFoundError:
         print(f"No blurb at level {level}")
@@ -68,7 +68,7 @@ def upload_hint(level: int, hint: int, image: Path) -> None:
         raise RuntimeError(f"unrecognized suffix: {suffix}")
 
     url = f"{SERVER}/api/levels/{level}/hints/{hint}"
-    with open(image, "rb") as f:
+    with image.open("rb") as f:
         r = requests.put(
             url,
             auth=(USERNAME, PASSWORD),
