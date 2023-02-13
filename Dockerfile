@@ -1,6 +1,9 @@
+# syntax=docker/dockerfile:1.5
 FROM python:3.11-slim AS builder
 
-RUN apt-get update && \
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt \
+    apt-get update && \
     apt-get install \
       --yes \
       --no-install-recommends \
@@ -17,13 +20,14 @@ RUN apt-get update && \
 ENV VIRTUAL_ENV=/opt/venv \
     PATH="/opt/venv/bin:$PATH"
 
-COPY pyproject.toml poetry.lock /
+COPY --link pyproject.toml poetry.lock /
 
-RUN /root/.local/bin/poetry install --only=main
+RUN --mount=type=cache,target=/root/.cache/pypoetry \
+    /root/.local/bin/poetry install --only=main
 
 FROM python:3.11-slim
 
-COPY --from=builder /opt/venv /opt/venv
+COPY --link --from=builder /opt/venv /opt/venv
 
 WORKDIR /usr/src/app
 EXPOSE 8000

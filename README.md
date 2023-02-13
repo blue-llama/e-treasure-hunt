@@ -39,13 +39,13 @@ allowed redirect URI.
 To save on dependency-chasing, a Dockerfile is provided.
 Build the image:
 
-```
+```bash
 docker build --tag e-treasure-hunt .
 ```
 
 Run database migrations and create the admin user:
 
-```
+```bash
 docker run \
   --user "$EUID":"${GROUPS[0]}" \
   --rm \
@@ -64,13 +64,13 @@ docker run \
 With this setup done you can run the app as below, and should find it in your
 browser at <http://localhost:8000>.
 
-```
-export ARCGIS_API_KEY=<your API key>
+```bash
+export ARCGIS_API_KEY="<your API key>"
 docker run \
   --env ARCGIS_API_KEY \
   --user "$EUID":"${GROUPS[0]}" \
   --rm \
-  --mount type=bind,source=$PWD,target=/usr/src/app \
+  --mount type=bind,source="$PWD",target=/usr/src/app \
   --publish 8000:8000 \
   e-treasure-hunt
 ```
@@ -82,17 +82,17 @@ an environment variable.
 
 ## Create levels
 
-- You can use the content of `dummy_files.zip` as a template
-- `about.json` contains the name and location for the level (the name is displayed
-  on the _next_ level page, so can be the location).
-  Tolerance is in metres
-- `blurb.txt` contains the description for the level (displayed on the next level
-  page)
-- `clue.png` is the first image - the dummy file contains a background
-- `hint1.png` - `hint4.png` are the hints, in order
+- You can use the content of `dummy_files.zip` as a template.
+- `about.json` contains the name and location for the level (the name is
+  displayed on the _next_ level page, so can be the location).
+  Tolerance is in metres.
+- `blurb.txt` contains the description for the level (displayed on the next
+  level page).
+- `clue.png` is the first image - the dummy file contains a background.
+- `hint1.png` - `hint4.png` are the hints, in order.
   - The five images must be in alphabetical order, but otherwise the exact
-    filenames are not important
-  - `.png` and `.jpg` are acceptable formats
+    filenames are not important.
+  - `.png` and `.jpg` are acceptable formats.
 
 ## Level upload
 
@@ -121,14 +121,14 @@ This can be done at /mgmt and should be self-explanatory.
 The server is not very helpful if you don't get things just right, especially
 via the UI.
 
-- You really do need to upload both the dummy levels 0 and N+1
+- You really do need to upload both the dummy levels 0 and N+1.
 - If level upload is failing:
   - Make sure that you are uploading exactly one `.txt` file, one `.json` file
-    and five images
+    and five images.
   - Make sure that the contents of the JSON file describing the level match the
-    example `about.json`
+    example `about.json`.
 
 ## Create users
 
-- Add User objects via /admin
+- Add User objects via /admin.
 - Pass usernames and passwords to the teams and they can begin the hunt!

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-import os
+from pathlib import Path
 from typing import TYPE_CHECKING, cast
 from uuid import uuid4
 
@@ -37,17 +37,16 @@ def upload_new_level(request: HttpRequest) -> str:
     except Level.DoesNotExist:
         level = Level(number=lvl_num)
 
-    def extension(file: NamedFile) -> str:
-        """Return normalized filename extension"""
-        (_root, extension) = os.path.splitext(file.name)
-        return extension.lower()
+    def suffix(file: NamedFile) -> str:
+        """Return normalized filename suffix"""
+        return Path(file.name).suffix.lower()
 
     # Gather up the needed information.
     uploaded_files: list[UploadedFile] = request.FILES.getlist("files", default=[])
     files = [cast("NamedFile", f) for f in uploaded_files if f.name is not None]
-    about_file = next((f for f in files if extension(f) == ".json"), None)
-    blurb = next((f for f in files if extension(f) == ".txt"), None)
-    images = [f for f in files if extension(f) in {".jpeg", ".jpg", ".png"}]
+    about_file = next((f for f in files if suffix(f) == ".json"), None)
+    blurb = next((f for f in files if suffix(f) == ".txt"), None)
+    images = [f for f in files if suffix(f) in {".jpeg", ".jpg", ".png"}]
     images.sort(key=lambda f: f.name.lower())
 
     # Level info and images are mandatory, we can manage without a description.
@@ -78,7 +77,7 @@ def upload_new_level(request: HttpRequest) -> str:
 
     # Create new hints.
     for number, file in enumerate(images):
-        filename = str(uuid4()) + extension(file)
+        filename = str(uuid4()) + suffix(file)
         hint = Hint()
         hint.level = level
         hint.number = number

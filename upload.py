@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import json
-import os
 from pathlib import Path
 
 import requests
@@ -95,11 +94,7 @@ def upload_level(level: int, path: Path) -> None:
     print(f"Uploading level {level}")
 
     # Find the images.
-    images = [
-        path / file
-        for file in os.listdir(path)
-        if Path(file).suffix.lower() in CONTENT_TYPES
-    ]
+    images = [file for file in path.iterdir() if file.suffix.lower() in CONTENT_TYPES]
 
     # Should find exactly the right number - check the file extensions if not.
     if len(images) != HINTS_PER_LEVEL:

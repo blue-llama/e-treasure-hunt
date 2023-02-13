@@ -18,7 +18,7 @@ class HuntInfo(models.Model):
     next_hint_release = models.DateTimeField(null=True, blank=True)
 
     def __str__(self) -> str:
-        return self.user.get_username() + "_hunt"
+        return self.user.get_username()
 
 
 @receiver(post_save, sender=User)
@@ -46,6 +46,9 @@ class Level(models.Model):
     )
     tolerance = models.IntegerField()
 
+    def __str__(self) -> str:
+        return f"Level {self.number}"
+
 
 # Hint
 class Hint(models.Model):
@@ -58,12 +61,18 @@ class Hint(models.Model):
             models.UniqueConstraint(fields=["level", "number"], name="unique hint")
         ]
 
+    def __str__(self) -> str:
+        return f"Level {self.level.number}, hint {self.number}"
+
 
 # App settings. Use Boolean primary key to ensure there's only one active.
 class AppSetting(models.Model):
     active = models.BooleanField(primary_key=True, default=True)
     use_alternative_map = models.BooleanField(default=False)
     start_time = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return f"App setting (active={self.active})"
 
 
 # Event log for the hunt.
