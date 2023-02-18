@@ -5,4 +5,4 @@ POETRY="/home/.local/bin/poetry"
 if [[ ! -f ${POETRY} ]]; then
   curl -sSL https://install.python-poetry.org | python3
 fi
-${POETRY} export -f requirements.txt -o requirements.txt --without-hashes --extras azure
+${POETRY} export --output requirements.txt --extras azure

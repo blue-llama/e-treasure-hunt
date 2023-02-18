@@ -70,16 +70,16 @@ django_settings_module = "treasure.settings"
 
 [tool.ruff]
 select = [
-  "B", # flake8-bugbear
-  "C4", # flake8-comprehensions
-  "DJ", # flake8-django
-  "E", # pycodestyle
-  "F", # pyflakes
-  "I", # isort
+  "B",   # flake8-bugbear
+  "C4",  # flake8-comprehensions
+  "DJ",  # flake8-django
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "I",   # isort
   "PTH", # flake8-use-pathlib
   "RUF", # ruff
   "TCH", # flake8-type-checking
-  "W", # pycodestyle
+  "W",   # pycodestyle
 ]
 extend-exclude = [
   "hunt/migrations",
