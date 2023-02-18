@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, TypeAlias
 
 from django.http import Http404
 from rest_framework import status
@@ -12,9 +12,9 @@ if TYPE_CHECKING:
     from rest_framework.request import Request
     from rest_framework.viewsets import GenericViewSet
 
-    _Base = GenericViewSet[Model]
+    _Base: TypeAlias = GenericViewSet[Model]
 else:
-    _Base = object
+    _Base: TypeAlias = object
 
 
 # https://gist.github.com/tomchristie/a2ace4577eff2c603b1b
