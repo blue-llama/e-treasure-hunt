@@ -4,7 +4,7 @@ import contextlib
 import datetime
 import zoneinfo
 from functools import wraps
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Concatenate, ParamSpec, TypeAlias
 
 import holidays
 from django.db.models import Max
@@ -22,7 +22,10 @@ if TYPE_CHECKING:
     class AuthenticatedHttpRequest(HttpRequest):
         user: User
 
-    RequestHandler = Callable[..., HttpResponse]
+    P = ParamSpec("P")
+    AuthenticatedRequestHandler: TypeAlias = Callable[
+        Concatenate[AuthenticatedHttpRequest, P], HttpResponse
+    ]
 
 
 def max_level() -> int:
@@ -67,10 +70,12 @@ def players_are_locked_out() -> bool:
 
 # Decorator that prevents players from accessing the site when they should be locked
 # out.
-def no_players_during_lockout(f: RequestHandler) -> RequestHandler:
+def no_players_during_lockout(
+    f: AuthenticatedRequestHandler[P],
+) -> AuthenticatedRequestHandler[P]:
     @wraps(f)
     def wrapper(
-        request: AuthenticatedHttpRequest, *args: Any, **kwargs: Any
+        request: AuthenticatedHttpRequest, /, *args: P.args, **kwargs: P.kwargs
     ) -> HttpResponse:
         if not request.user.is_staff and players_are_locked_out():
             template = loader.get_template("work-time.html").render({}, request)
