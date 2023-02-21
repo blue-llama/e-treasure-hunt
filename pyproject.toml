@@ -73,9 +73,12 @@ select = [
   "B",   # flake8-bugbear
   "C4",  # flake8-comprehensions
   "DJ",  # flake8-django
+  "DTZ", # flake8-datetimez
   "E",   # pycodestyle
+  "EXE", # flake8-executable
   "F",   # pyflakes
   "I",   # isort
+  "ISC", # flake8-implicit-string-concat
   "PTH", # flake8-use-pathlib
   "RUF", # ruff
   "TCH", # flake8-type-checking
