@@ -1283,14 +1283,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "whitenoise"
-version = "6.3.0"
+version = "6.4.0"
 description = "Radically simplified static file serving for WSGI applications"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "whitenoise-6.3.0-py3-none-any.whl", hash = "sha256:cf8ecf56d86ba1c734fdb5ef6127312e39e92ad5947fef9033dc9e43ba2777d9"},
-    {file = "whitenoise-6.3.0.tar.gz", hash = "sha256:fe0af31504ab08faa1ec7fc02845432096e40cc1b27e6a7747263d7b30fb51fa"},
+    {file = "whitenoise-6.4.0-py3-none-any.whl", hash = "sha256:599dc6ca57e48929dfeffb2e8e187879bfe2aed0d49ca419577005b7f2cc930b"},
+    {file = "whitenoise-6.4.0.tar.gz", hash = "sha256:a02d6660ad161ff17e3042653c8e3f5ecbb2a2481a006bde125b9efb9a30113a"},
 ]
 
 [package.extras]
@@ -1302,4 +1302,4 @@ azure = ["azure-identity", "mssql-django"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "b221abe2a6616d61632e714a0b4acfa8a6b5eb4ccb60de83e963fbd27b7bdc64"
+content-hash = "3c77cf4eef15f878e411cb955bba21113cd4538ad5b00499eba26604814f1afb"
