@@ -576,14 +576,14 @@ files = [
 
 [[package]]
 name = "holidays"
-version = "0.20"
+version = "0.21"
 description = "Generate and work with holidays in Python"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "holidays-0.20-py3-none-any.whl", hash = "sha256:0a1e99116e45c310beb84e625e71bfa3ae45494905dfeadd55fd000bed710fe4"},
-    {file = "holidays-0.20.tar.gz", hash = "sha256:40befaf8823656900d0b6e5643e589193dbaf3ddb005d9347ba7fef94cce1b0a"},
+    {file = "holidays-0.21-py3-none-any.whl", hash = "sha256:3deb88649ad931e176798b23686798f29215fbf99f56b3f1f4c1e6f0015319ee"},
+    {file = "holidays-0.21.tar.gz", hash = "sha256:e3dece03969056dda9cf52f07676227e7ea042fd22a72ca431203c04029647b6"},
 ]
 
 [package.dependencies]
@@ -592,6 +592,7 @@ hijri-converter = "*"
 korean-lunar-calendar = "*"
 PyMeeus = "*"
 python-dateutil = "*"
+tzdata = {version = "*", markers = "os_name == \"nt\""}
 
 [[package]]
 name = "idna"
@@ -1302,4 +1303,4 @@ azure = ["azure-identity", "mssql-django"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "3c77cf4eef15f878e411cb955bba21113cd4538ad5b00499eba26604814f1afb"
+content-hash = "918a21e637dfc645b189c203cab4d0079962e5faefa458dfb6a862d1ad781b82"
