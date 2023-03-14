@@ -71,7 +71,7 @@ django_settings_module = "treasure.settings"
 [tool.ruff]
 select = [
   "B",   # flake8-bugbear
-  "C4",  # flake8-comprehensions
+  "C40", # flake8-comprehensions
   "DJ",  # flake8-django
   "DTZ", # flake8-datetimez
   "E",   # pycodestyle
