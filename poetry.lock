@@ -567,14 +567,14 @@ files = [
 
 [[package]]
 name = "holidays"
-version = "0.21.13"
+version = "0.22"
 description = "Generate and work with holidays in Python"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "holidays-0.21.13-py3-none-any.whl", hash = "sha256:638d91ad7e8d8d0ef3cdd824fd3544f83e74870474d5c62483ada5d4dddcb0c3"},
-    {file = "holidays-0.21.13.tar.gz", hash = "sha256:f6069b2be62bf3d984b99eb6c7f6c639c2ba1965d2bb561c634617567762dbb6"},
+    {file = "holidays-0.22-py3-none-any.whl", hash = "sha256:3cd50fd2f96789e89430d20ecc8ab166699a2d512ccf2764b78dead89b570258"},
+    {file = "holidays-0.22.tar.gz", hash = "sha256:84f1efbc576255286e1c14462709d560a311cf98a47c3dafb9a7494525d1155a"},
 ]
 
 [package.dependencies]
@@ -1236,4 +1236,4 @@ azure = ["azure-identity", "mssql-django"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "918a21e637dfc645b189c203cab4d0079962e5faefa458dfb6a862d1ad781b82"
+content-hash = "d03bfd6e6d850e9812110b57065103322687ae90c1d0f6b77c4eb4553d541910"
