@@ -71,17 +71,21 @@ django_settings_module = "treasure.settings"
 [tool.ruff]
 select = [
   "B",   # flake8-bugbear
-  "C40", # flake8-comprehensions
+  "C4" , # flake8-comprehensions
   "DJ",  # flake8-django
   "DTZ", # flake8-datetimez
   "E",   # pycodestyle
   "EXE", # flake8-executable
   "F",   # pyflakes
   "I",   # isort
+  "ICN", # flake8-import-conventions
   "ISC", # flake8-implicit-string-concat
+  "PIE", # flake8-pie
   "PTH", # flake8-use-pathlib
   "RUF", # ruff
+  "SIM", # flake8-simplify
   "TCH", # flake8-type-checking
+  "UP",  # pyupgrade
   "W",   # pycodestyle
 ]
 extend-exclude = [
