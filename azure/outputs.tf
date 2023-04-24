@@ -1,5 +1,5 @@
 locals {
-  credential = azurerm_linux_web_app.treasure.site_credential.0
+  credential = nonsensitive(azurerm_linux_web_app.treasure.site_credential.0)
   azuread_password = nonsensitive(azuread_user.database_admin.password)
 }
 

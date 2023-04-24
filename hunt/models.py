@@ -92,11 +92,11 @@ class HuntEvent(models.Model):
     level = models.IntegerField()
 
     def __str__(self) -> str:
-        TEXT = {
+        actions = {
             HuntEvent.HINT_REQ: "requested a hint on",
             HuntEvent.HINT_REL: "saw a hint on",
             HuntEvent.CLUE_ADV: "progressed to",
         }
         user = self.user.get_username()
-        text = f"At {self.time} {user} {TEXT[self.type]} level {self.level}"
+        text = f"At {self.time} {user} {actions[self.type]} level {self.level}"
         return text

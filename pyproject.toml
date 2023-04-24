@@ -80,7 +80,10 @@ select = [
   "I",   # isort
   "ICN", # flake8-import-conventions
   "ISC", # flake8-implicit-string-concat
+  "N",   # pep8-naming
   "PIE", # flake8-pie
+  "PLE", # pylint errors
+  "PLW", # pylint warnings
   "PTH", # flake8-use-pathlib
   "RUF", # ruff
   "SIM", # flake8-simplify
