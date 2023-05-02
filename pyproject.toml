@@ -17,7 +17,7 @@ django-storages = [
 ]
 djangorestframework = "^3.14.0"
 geopy = "^2.3.0"
-holidays = "^0.23"
+holidays = "^0.24"
 pillow = "^9.5.0"
 whitenoise = "^6.4.0"
 
@@ -29,9 +29,9 @@ mssql-django = { version = "^1.2", optional = true }
 azure = ["azure-identity", "mssql-django"]
 
 [tool.poetry.group.lint.dependencies]
-black = ">=22.12.0"
-mypy = ">=0.991"
-ruff = ">=0.0.237"
+black = ">=23.3.0"
+mypy = ">=1.2.0"
+ruff = ">=0.0.262"
 
 [tool.poetry.group.misc.dependencies]
 requests = ">=2.28.1"
@@ -94,3 +94,4 @@ select = [
 extend-exclude = [
   "hunt/migrations",
 ]
+target-version = "py310"
