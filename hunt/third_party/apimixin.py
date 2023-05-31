@@ -24,7 +24,12 @@ class AllowPUTAsCreateMixin(_Base):
     behavior for incoming requests.
     """
 
-    def update(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+    def update(
+        self,
+        request: Request,
+        *args: Any,  # noqa: arg0001
+        **kwargs: Any,
+    ) -> Response:
         partial = kwargs.pop("partial", False)
         instance = self.get_object_or_none()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
