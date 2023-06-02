@@ -61,13 +61,21 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "static"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-if deployment_type == Deployment.LOCAL:
-    DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
-elif deployment_type == Deployment.AZURE:
+
+storage_backends = {
+    Deployment.AZURE: "storages.backends.azure_storage.AzureStorage",
+    Deployment.LOCAL: "django.core.files.storage.FileSystemStorage",
+}
+STORAGES = {
+    "default": {"BACKEND": storage_backends[deployment_type]},
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    },
+}
+
+if deployment_type == Deployment.AZURE:
     from azure.identity import ManagedIdentityCredential
 
-    DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
     AZURE_TOKEN_CREDENTIAL = ManagedIdentityCredential()
     AZURE_ACCOUNT_NAME = os.environ["AZURE_ACCOUNT_NAME"]
     AZURE_CONTAINER = os.environ["AZURE_CONTAINER"]
