@@ -32,7 +32,7 @@ EXTENSIONS = {"image/jpeg": ".jpg", "image/png": ".png"}
 class HintSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Hint
-        fields = [
+        fields = [  # noqa: RUF012
             "level",
             "number",
             "image",
@@ -44,7 +44,7 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Level
-        fields = [
+        fields = [  # noqa: RUF012
             "number",
             "name",
             "description",
@@ -58,7 +58,7 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):
 class LevelViewSet(AllowPUTAsCreateMixin, ModelViewSet[Level]):
     queryset = Level.objects.all().order_by("number")
     serializer_class = LevelSerializer
-    http_method_names = ["delete", "get", "head", "patch", "put"]
+    http_method_names = ["delete", "get", "head", "patch", "put"]  # noqa: RUF012
 
     @action(
         detail=True,

@@ -60,7 +60,7 @@ class Hint(models.Model):
     image = models.ImageField(upload_to="hints")
 
     class Meta:
-        constraints = [
+        constraints = [  # noqa: RUF012
             models.UniqueConstraint(fields=["level", "number"], name="unique hint")
         ]
 
@@ -83,11 +83,11 @@ class HuntEvent(models.Model):
     HINT_REQ = "REQ"
     HINT_REL = "REL"
     CLUE_ADV = "ADV"
-    EVENT_TYPES = [
+    EVENT_TYPES = (
         (HINT_REQ, "Hint requested"),
         (HINT_REL, "Hints released"),
         (CLUE_ADV, "Advanced level"),
-    ]
+    )
 
     time = models.DateTimeField()
     type = models.CharField(max_length=3, choices=EVENT_TYPES)
