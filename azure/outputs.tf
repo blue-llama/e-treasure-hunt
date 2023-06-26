@@ -11,7 +11,7 @@ output "git_remote_url" {
 output "database_commands" {
   value = <<EOT
   sqlcmd \
-    -S ${azurerm_mssql_server.treasure.name}.database.windows.net \
+    -S ${azurerm_mssql_server.treasure.fully_qualified_domain_name} \
     -d ${azurerm_mssql_database.treasure.name} \
     -U ${azuread_user.database_admin.user_principal_name} \
     -P '${local.azuread_password}' \
