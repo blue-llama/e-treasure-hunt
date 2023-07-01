@@ -1,16 +1,16 @@
 from __future__ import annotations
 
+import json
 from typing import TYPE_CHECKING, Generic, TypeVar
 from uuid import uuid4
 
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
-from hunt.third_party.apimixin import AllowPUTAsCreateMixin
 
 T = TypeVar("T", bound="Model")
 if TYPE_CHECKING:
@@ -51,27 +51,43 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class LevelViewSet(AllowPUTAsCreateMixin, ModelViewSet[Level]):
+class LevelViewSet(ModelViewSet[Level]):
     queryset = Level.objects.all().order_by("number")
     serializer_class = LevelSerializer
-    http_method_names = ["delete", "get", "head", "patch", "put"]  # noqa: RUF012
+    http_method_names = [  # noqa: RUF012
+        "delete",
+        "get",
+        "head",
+        "patch",
+        "post",
+        "put",
+    ]
 
     @action(
         detail=True,
-        methods=["put"],
-        url_path="hints/(?P<number>\\d+)",
-        parser_classes=[FormParser, MultiPartParser],
+        methods=["post"],
+        url_path="hint",
+        parser_classes=[MultiPartParser],
     )
-    def save_hint(self, request: Request, pk: str, number: str) -> Response:
-        # Check that it's a sensible hint.
-        if int(number) >= HINTS_PER_LEVEL:
+    def save_hint(self, request: Request, pk: str) -> Response:
+        try:
+            data = request.data["data"]
+            details = json.loads(data)
+            number = details["number"]
+        except (KeyError, ValueError):
+            return Response(
+                "hint number not provided", status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if number >= HINTS_PER_LEVEL:
             return Response(
                 f"Hint {number} is too high", status=status.HTTP_400_BAD_REQUEST
             )
 
         # Check that we have a file, and that it seems to be an image.
-        upload = next(iter(request.data.values()), None)
-        if upload is None:
+        try:
+            upload = request.data["file"]
+        except KeyError:
             return Response("no file attached", status=status.HTTP_400_BAD_REQUEST)
 
         extension = EXTENSIONS.get(upload.content_type)

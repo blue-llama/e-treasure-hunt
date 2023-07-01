@@ -58,7 +58,7 @@ def upload_hint(level: int, hint: int, image: Path) -> None:
     Upload a hint.
 
     :param level: The level that the hint belongs to.  The level must already exist.
-    :param number: The hint number.  Zero-indexed.
+    :param hint: The hint number.  Zero-indexed.
     :param image: The file containing the hint.
     """
     suffix = image.suffix
@@ -66,12 +66,16 @@ def upload_hint(level: int, hint: int, image: Path) -> None:
     if content_type is None:
         raise RuntimeError(f"unrecognized suffix: {suffix}")
 
-    url = f"{SERVER}/api/levels/{level}/hints/{hint}"
+    url = f"{SERVER}/api/levels/{level}/hint"
+    payload = {"number": hint}
     with image.open("rb") as f:
-        r = requests.put(
+        r = requests.post(
             url,
             auth=(USERNAME, PASSWORD),
-            files={"hint": (image.name, f, content_type)},
+            files={  # type: ignore[arg-type]
+                "file": (image.name, f, content_type),
+                "data": (None, json.dumps(payload), "application/json"),
+            },
             timeout=5,
         )
 
