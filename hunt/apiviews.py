@@ -32,11 +32,7 @@ EXTENSIONS = {"image/jpeg": ".jpg", "image/png": ".png"}
 class HintSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Hint
-        fields = [  # noqa: RUF012
-            "level",
-            "number",
-            "image",
-        ]
+        fields = ["number", "image"]  # noqa: RUF012
 
 
 class LevelSerializer(serializers.HyperlinkedModelSerializer):
