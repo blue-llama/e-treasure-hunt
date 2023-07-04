@@ -75,7 +75,7 @@ docker run \
   e-treasure-hunt
 ```
 
-To use Google maps, you will also need to pass `GM_API_KEY` to this container as
+To use Google Maps, you will also need to pass `GM_API_KEY` to this container as
 an environment variable.
 
 # Initiating the app
@@ -105,9 +105,14 @@ and N+1.
 You can use the files in `dummy_files.zip`, updating `blurb.txt` at level 0 with
 text for the start of the hunt.
 
+It is recommended that, prior to attempting upload, that [level_validation.py](admin_scripts/level_validation.py)
+be run over the levels. This will catch numerous formatting problems with the levels before wasting your
+time/bandwidth on server upload, and will also catch several conditions that are not technically errors
+but are undesirable, such as empty README.md files and too-tight tolerances.
+
 ### Level upload through the API
 
-[upload.py](upload.py) contains utilities for uploading levels and hints.
+[upload.py](admin_scripts/upload.py) contains utilities for uploading levels and hints.
 
 You'll need to update the `SERVER` and credentials at the top of the file, and
 then re-arrange `main()` as appropriate to upload your levels.

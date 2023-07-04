@@ -3,3 +3,6 @@
 /media/
 /static/
 /treasure.sqlite
+
+# e.g. Pycharm config
+.idea/
