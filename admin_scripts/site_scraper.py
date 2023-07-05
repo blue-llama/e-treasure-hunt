@@ -43,9 +43,9 @@ def scrape_level(level_num: int) -> str:
     r = requests.get(url, headers={"cookie": COOKIE})
     if r.ok:
         return r.text
-    else:
-        print_err("%d: %s" % (r.status_code, r.text))
-        return ""
+
+    print_err("%d: %s" % (r.status_code, r.text))
+    return ""
 
 
 # Disable type-checking for this function as mypy struggles with bs4 usage
@@ -65,7 +65,7 @@ def parse_level_data_from_html(html_text: str, level_num: int) -> PageLevelData:
 
     hint_elements = body.find_all("img", "hint")
     img_srcs = [hint_element["src"] for hint_element in hint_elements]
-    # print(repr(hint_elements))
+
     return PageLevelData(
         previous_level_name=previous_level_name,
         previous_level_coords=previous_level_coords,
@@ -125,7 +125,6 @@ def main(save_dir: str = ".") -> None:
                 img_filename = f"img{i}.{file_ext}"
                 with (level_directory / img_filename).open("wb") as f:
                     f.write(img_response.content)
-                pass
             else:
                 print_err("%d: %s" % (img_response.status_code, img_response.text))
 

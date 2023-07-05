@@ -10,6 +10,7 @@ import csv
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import TypeAlias
 
 # Start time
 START_TIME = datetime.strptime("2000-01-01 00:00:00+0000", "%Y-%m-%d %H:%M:%S%z")
@@ -24,7 +25,7 @@ TEAM_NAMES: list["TeamName"] = []
 # Path to hunt event csv taken from the website
 CSV_FILE_PATH = r"C:\Users\username\Downloads\hunt.huntevent.csv"
 
-TeamName = str
+TeamName: TypeAlias = str
 
 
 def parse_timestamp(timestamp: str) -> datetime:
