@@ -6,9 +6,11 @@
 
 # Running the CI lints locally
 
-See [linting.yml](.github/workflows/linting.yml) for the list of linting commands run by the CI on Github,
-such as:
+See [linting.yml](.github/workflows/linting.yml) for the list of linting
+commands run by the CI on Github, such as:
 
-`poetry run ruff .`
-`poetry run black --check .`
-`poetry run mypy .`
+```shell
+$ poetry run ruff .
+$ poetry run black --check .
+$ poetry run mypy .
+```
