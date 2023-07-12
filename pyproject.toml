@@ -7,10 +7,6 @@ name = "e-treasure-hunt"
 version = "0.1.0"
 description = ""
 authors = ["David Hotham <david.hotham@blueyonder.co.uk>"]
-packages = [
-  { include = "hunt" },
-  { include = "treasure" },
-]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
