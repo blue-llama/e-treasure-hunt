@@ -11,6 +11,7 @@ from rest_framework.response import Response
 
 from hunt.constants import HINTS_PER_LEVEL
 from hunt.models import Hint, Level
+from hunt.third_party.apimixin import AllowPUTAsCreateMixin
 
 T = TypeVar("T", bound="Model")
 if TYPE_CHECKING:
@@ -51,7 +52,7 @@ class LevelSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class LevelViewSet(ModelViewSet[Level]):
+class LevelViewSet(AllowPUTAsCreateMixin, ModelViewSet[Level]):
     queryset = Level.objects.all().order_by("number")
     serializer_class = LevelSerializer
     http_method_names = [  # noqa: RUF012
