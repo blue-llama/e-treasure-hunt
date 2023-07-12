@@ -27,7 +27,7 @@ class AllowPUTAsCreateMixin(_Base):
     def update(
         self,
         request: Request,
-        *args: Any,  # noqa: arg0001
+        *args: Any,  # noqa: ARG002
         **kwargs: Any,
     ) -> Response:
         partial = kwargs.pop("partial", False)

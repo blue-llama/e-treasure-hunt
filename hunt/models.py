@@ -23,10 +23,10 @@ class HuntInfo(models.Model):
 
 @receiver(post_save, sender=User)
 def create_hunt_info(
-    sender: type[User],  # noqa: arg0001
+    sender: type[User],  # noqa: ARG001
     instance: User,
     created: bool,
-    **kwargs: Any,  # noqa: arg0001
+    **kwargs: Any,  # noqa: ARG001
 ) -> None:
     if created:
         HuntInfo.objects.create(user=instance)
