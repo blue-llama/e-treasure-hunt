@@ -23,7 +23,7 @@ ENV VIRTUAL_ENV=/opt/venv \
 COPY --link pyproject.toml poetry.lock /
 
 RUN --mount=type=cache,target=/root/.cache/pypoetry \
-    /root/.local/bin/poetry install --only=main
+    /root/.local/bin/poetry install --no-root --only=main
 
 FROM python:3.11-slim
 
