@@ -113,3 +113,13 @@ class HuntEvent(models.Model):
         user = self.user.get_username()
         text = f"At {self.time} {user} {actions[self.type]} level {self.level}"
         return text
+
+
+class ChatMessage(models.Model):
+    name = models.CharField(max_length=255)
+    room = models.CharField(max_length=255)
+    content = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("date_added",)

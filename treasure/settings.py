@@ -126,6 +126,7 @@ TEMPLATES = [
     }
 ]
 
+WSGI_APPLICATION = "treasure.wsgi.application"
 ASGI_APPLICATION = "treasure.asgi.application"
 CHANNEL_LAYERS = {
     "default": {

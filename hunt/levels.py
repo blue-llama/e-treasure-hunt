@@ -7,7 +7,7 @@ from django.utils import timezone
 from geopy import Point, distance
 
 from hunt.constants import HINTS_PER_LEVEL
-from hunt.models import HuntEvent, Level
+from hunt.models import HuntEvent, Level, ChatMessage
 from hunt.utils import max_level
 
 if TYPE_CHECKING:
@@ -126,6 +126,7 @@ def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
             "latitude": previous_level.latitude,
             "longitude": previous_level.longitude,
             "is_last": is_last_level,
+            "messages": ChatMessage.objects.filter(room=current_level.number),
         }
     else:
         # Shouldn't be here. Show an error page.

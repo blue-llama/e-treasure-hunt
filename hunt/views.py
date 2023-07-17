@@ -13,7 +13,7 @@ from django.template import loader
 from hunt.hint_request import maybe_release_hint, prepare_next_hint, request_hint
 from hunt.level_mgr import upload_new_level
 from hunt.levels import list_levels, look_for_level, maybe_load_level
-from hunt.models import AppSetting, HuntEvent
+from hunt.models import AppSetting, HuntEvent, ChatMessage
 from hunt.utils import max_level, no_players_during_lockout
 
 if TYPE_CHECKING:
@@ -203,4 +203,9 @@ def add_new_level(request: HttpRequest) -> HttpResponse:
 
 def room(request, room_name):
     username = request.GET.get("username", "Anonymous")
-    return render(request, "room.html", {"room_name": room_name, "username": username})
+    messages = ChatMessage.objects.filter(room=room_name)[:25]
+    return render(
+        request,
+        "room.html",
+        {"room_name": room_name, "username": username, "messages": messages},
+    )

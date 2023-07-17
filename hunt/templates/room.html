@@ -22,6 +22,9 @@
             <div class="column is-6 is-offset-3">
               <div class="box">     
                 <div id="chat-messages">
+                    {% for message in messages %}
+                    <b>{{ message.name }}</b>: {{ message.content }}<br>
+                    {% endfor %}
                 </div>
               </div>
 
