@@ -117,6 +117,7 @@ class HuntEvent(models.Model):
 
 class ChatMessage(models.Model):
     name = models.CharField(max_length=255)
+    team = models.ForeignKey(User, on_delete=models.CASCADE, related_name="+")
     room = models.CharField(max_length=255)
     content = models.TextField()
     date_added = models.DateTimeField(auto_now_add=True)

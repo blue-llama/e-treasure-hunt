@@ -93,7 +93,8 @@
             chatSocket.send(JSON.stringify({
                 'message': message,
                 'username': userName,
-                'room': roomName
+                'room': roomName,
+                'team': "{{ team }}"
             }));
 
             messageInputDom.value = '';

@@ -3,6 +3,7 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer  # The class we're using
 from asgiref.sync import sync_to_async  # Implement later
 from hunt.models import ChatMessage
+from django.contrib.auth.models import User
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -25,8 +26,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = data["message"]
         username = data["username"]
         room = data["room"]
+        team = data["team"]
 
-        await self.save_message(username, room, message)
+        await self.save_message(username, team, room, message)
 
         # Send message to room group
         await self.channel_layer.group_send(
@@ -45,5 +47,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     @sync_to_async
-    def save_message(self, username, room_name, message):
-        ChatMessage.objects.create(name=username, room=room_name, content=message)
+    def save_message(self, username, team, room_name, message):
+        try:
+            team_user = User.objects.get(username=team)
+            ChatMessage.objects.create(
+                name=username,
+                team=team_user,
+                room=room_name,
+                content=message,
+            )
+        except User.objects.DoesNotExist:
+            # We don't know which team made this message, so don't save it
+            pass

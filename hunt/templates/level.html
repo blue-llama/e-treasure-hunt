@@ -57,6 +57,6 @@
   {% endif %}
 </div>
 <div class="chat">
-  {% include "room.html" with room_name=level_number username="Anonymous" %}
+  {% include "room.html" with room_name=chatroom username="Anonymous" team=request.user %}
 </div>
 {% endblock %}
