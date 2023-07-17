@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http.response import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.template import loader
 
 from hunt.hint_request import maybe_release_hint, prepare_next_hint, request_hint
@@ -199,3 +199,8 @@ def level_mgmt(request: HttpRequest) -> HttpResponse:
 @user_passes_test(lambda u: u.is_staff)  # type: ignore[union-attr]
 def add_new_level(request: HttpRequest) -> HttpResponse:
     return redirect(upload_new_level(request))
+
+
+def room(request, room_name):
+    username = request.GET.get("username", "Anonymous")
+    return render(request, "room.html", {"room_name": room_name, "username": username})

@@ -83,6 +83,7 @@ if deployment_type == Deployment.AZURE:
 
 # Application definition
 INSTALLED_APPS = [
+    "daphne",
     "whitenoise.runserver_nostatic",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -93,6 +94,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "storages",
     "hunt",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -124,8 +126,15 @@ TEMPLATES = [
     }
 ]
 
-WSGI_APPLICATION = "treasure.wsgi.application"
-
+ASGI_APPLICATION = "treasure.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

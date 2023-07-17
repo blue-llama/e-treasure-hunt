@@ -16,41 +16,47 @@
 <h3>{{ latitude }}, {{ longitude }}</h3>
 {% endif %}
 
-<div class="story">
-  {% for para in desc_paras %}
-  <p>{{ para }}</p>
-  {% endfor %}
+<div class="content">
+
+  <div class="story">
+    {% for para in desc_paras %}
+    <p>{{ para }}</p>
+    {% endfor %}
+  </div>
+
+  <div class="hints">
+    {% for hint in hints %}
+    <img class="hint" src="{{ hint }}" alt="Hint" />
+    {% endfor %}
+  </div>
+
+  {% if is_last is not True %}
+  <a class="gobutton" href="/map?lvl={{ level_number }}">
+    SEARCH MAP
+  </a>
+  <a class="gobutton" href="/search?lvl={{ level_number }}">
+    SEARCH CO-ORDINATES
+  </a>
+
+  {% if level_number != team_level %}
+  <a class="gobutton" href="/level/{{ level_number|add:"1" }}">
+    NEXT LEVEL
+  </a>
+  {% elif allow_hint %}
+  <a
+    class="gobutton"
+    href="/hint?lvl={{ level_number }}&hint={{ hints|length }}"
+    onclick="return confirm(' Are you sure you want to request a hint?')"
+  >
+    REQUEST HINT
+  </a>
+  {% else %}
+  <div class="gobutton-disabled" title="{{ reason }}">REQUEST HINT</div>
+  <p class="reason">{{ reason }}</p>
+  {% endif %}
+  {% endif %}
 </div>
-
-<div class="hints">
-  {% for hint in hints %}
-  <img class="hint" src="{{ hint }}" alt="Hint" />
-  {% endfor %}
+<div class="chat">
+  {% include "room.html" with room_name=level_number username="Anonymous" %}
 </div>
-
-{% if is_last is not True %}
-<a class="gobutton" href="/map?lvl={{ level_number }}">
-  SEARCH MAP
-</a>
-<a class="gobutton" href="/search?lvl={{ level_number }}">
-  SEARCH CO-ORDINATES
-</a>
-
-{% if level_number != team_level %}
-<a class="gobutton" href="/level/{{ level_number|add:"1" }}">
-  NEXT LEVEL
-</a>
-{% elif allow_hint %}
-<a
-  class="gobutton"
-  href="/hint?lvl={{ level_number }}&hint={{ hints|length }}"
-  onclick="return confirm(' Are you sure you want to request a hint?')"
->
-  REQUEST HINT
-</a>
-{% else %}
-<div class="gobutton-disabled" title="{{ reason }}">REQUEST HINT</div>
-<p class="reason">{{ reason }}</p>
-{% endif %}
-{% endif %}
 {% endblock %}
