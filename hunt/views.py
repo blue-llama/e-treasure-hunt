@@ -199,13 +199,3 @@ def level_mgmt(request: HttpRequest) -> HttpResponse:
 @user_passes_test(lambda u: u.is_staff)  # type: ignore[union-attr]
 def add_new_level(request: HttpRequest) -> HttpResponse:
     return redirect(upload_new_level(request))
-
-
-def room(request, room_name):
-    username = request.GET.get("username", "Anonymous")
-    messages = ChatMessage.objects.filter(room=room_name)[:25]
-    return render(
-        request,
-        "room.html",
-        {"room_name": room_name, "username": username, "messages": messages},
-    )

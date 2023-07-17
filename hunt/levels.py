@@ -130,7 +130,7 @@ def maybe_load_level(request: AuthenticatedHttpRequest, level_num: int) -> str:
             "chatroom": chatroom_name,
             "messages": ChatMessage.objects.filter(
                 room=chatroom_name, team=request.user
-            ),
+            )[:25],
         }
     else:
         # Shouldn't be here. Show an error page.

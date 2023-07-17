@@ -41,7 +41,6 @@ urlpatterns = [
     path("level-mgmt", views.level_mgmt, name="level-mgmt"),
     path("add-level", views.add_new_level, name="new-level"),
     path("api/", include(router.urls)),
-    path("chat/<str:room_name>/", views.room, name="room"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
