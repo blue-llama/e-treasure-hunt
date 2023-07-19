@@ -54,16 +54,29 @@ def validate_format() -> None:
                 with (dir_path / "about.json").open() as f:
                     check_json(f, filename)
 
-            if not (dir_path / "readme.md").exists():
+            readme_path: Path | None = None
+            for possible_readme_filename in (
+                "readme.md",
+                "README.md",
+                "README.txt",
+                "readme.txt",
+            ):
+                possible_readme_path = dir_path / possible_readme_filename
+                if possible_readme_path.exists():
+                    readme_path = possible_readme_path
+                    # Assume only one readme exists
+                    break
+
+            if readme_path is None:
                 print("No readme in", filename)
 
             if not (dir_path / "blurb.txt").exists():
                 print("No blurb in", filename)
 
             # Check readme is bigger than blurb
-            if (dir_path / "blurb.txt").exists() and (dir_path / "readme.md").exists():
+            if (dir_path / "blurb.txt").exists() and readme_path is not None:
                 blurb_size = os.path.getsize(dir_path / "blurb.txt")
-                readme_size = os.path.getsize(dir_path / "readme.md")
+                readme_size = os.path.getsize(readme_path)
                 if blurb_size > readme_size:
                     print("Blurb is bigger than readme for", filename)
 
