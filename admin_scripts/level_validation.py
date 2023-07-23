@@ -77,8 +77,8 @@ def validate_format() -> None:
 
             # Check readme is bigger than blurb
             if (dir_path / "blurb.txt").exists() and readme_path is not None:
-                blurb_size = os.path.getsize(dir_path / "blurb.txt")
-                readme_size = os.path.getsize(readme_path)
+                blurb_size = (dir_path / "blurb.txt").stat().st_size
+                readme_size = readme_path.stat().st_size
                 if blurb_size > readme_size:
                     print("Blurb is bigger than readme for", filename)
 
@@ -99,7 +99,7 @@ def validate_format() -> None:
                 # Check the images aren't too big or bad things will happen to the
                 # upload. We don't want a repeat of the Wawrinka incident.
                 for image in images:
-                    image_size = os.path.getsize(image)
+                    image_size = image.stat().st_size
                     if image_size > 3 * 1000 * 1000:  # ~3 MB
                         print(
                             "Image",
