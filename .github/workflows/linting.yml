@@ -40,7 +40,7 @@ jobs:
       - name: Install project
         run: poetry install --extras azure
 
-      - name: linting
+      - name: ruff
         run: poetry run ruff .
 
       - name: black
