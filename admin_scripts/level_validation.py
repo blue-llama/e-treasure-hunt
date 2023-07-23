@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Clientside validator for levels
 
 Some of these checks just make sure that the hunt website won't reject the upload
