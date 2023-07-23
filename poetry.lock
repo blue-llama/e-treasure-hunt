@@ -1245,4 +1245,4 @@ azure = ["azure-identity", "mssql-django"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10"
-content-hash = "c797213dedd53e06a49bdbdae4fa9d9e9e7dd177b8c6128235994c1931aaf0ab"
+content-hash = "284374c2d9dfdef4debd7e47219f5037ea65412d700809bbfd4f9be228063e0c"

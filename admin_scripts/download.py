@@ -28,7 +28,6 @@ class Level(BaseModel):
 
 
 class Page(BaseModel):
-    count: int
     next: HttpUrl | None = None
     results: list[Level] = []
 
@@ -97,7 +96,7 @@ if __name__ == "__main__":
         "--target",
         type=Path,
         default=Path("download"),
-        help="Path in which to save levels",
+        help="Directory in which to save levels",
     )
     args = parser.parse_args()
 

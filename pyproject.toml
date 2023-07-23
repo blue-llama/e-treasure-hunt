@@ -38,7 +38,7 @@ mypy = ">=1.2.0"
 ruff = ">=0.0.262"
 
 [tool.poetry.group.misc.dependencies]
-requests = ">=2.28.1"
+requests = "^2.28.1"
 pydantic = "^2.0.3"
 
 [tool.poetry.group.types.dependencies]
