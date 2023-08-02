@@ -71,8 +71,6 @@ def upload_new_level(request: HttpRequest) -> str:
 
     # Delete old hints.
     old_hints = level.hints.all()
-    for old_hint in old_hints:
-        old_hint.image.delete()
     old_hints.delete()
 
     # Create new hints.

@@ -108,7 +108,8 @@ class LevelViewSet(AllowPUTAsCreateMixin, ModelViewSet[Level]):
         created = False
         try:
             hint = level.hints.get(number=number)
-            hint.image.delete()
+            if hint.image:
+                hint.image.delete()
         except Hint.DoesNotExist:
             hint = Hint(level=level, number=number)
             created = True
