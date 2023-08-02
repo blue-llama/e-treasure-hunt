@@ -75,10 +75,8 @@ def upload_new_level(request: HttpRequest) -> str:
 
     # Create new hints.
     for number, file in enumerate(images):
-        filename = str(uuid4()) + suffix(file)
-        hint = Hint()
-        hint.level = level
-        hint.number = number
+        hint = Hint(level=level, number=number)
+        filename = f"{uuid4()}{suffix(file)}"
         hint.image.save(filename, file)
 
     return f"/level-mgmt?success=True&next={int(lvl_num) + 1}"
