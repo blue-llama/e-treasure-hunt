@@ -124,3 +124,6 @@ class ChatMessage(models.Model):
 
     class Meta:
         ordering = ("date_added",)
+
+    def __str__(self) -> str:
+        return f"Room: {self.room}, User: {self.name}, Message: {self.content}"

@@ -8,17 +8,18 @@ https://docs.djangoproject.com/en/2.2/howto/deployment/wsgi/
 """
 
 import os
+
+from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+from channels.security.websocket import AllowedHostsOriginValidator
 from django.core.asgi import get_asgi_application
 
-# Daphne requires we run this function before importing anything else
+# Daphne requires we run this function before importing anything from the hunt
+# application
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "treasure.settings")
 app = get_asgi_application()
 
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-from channels.security.websocket import AllowedHostsOriginValidator
-from hunt.chat import routing
-
+from hunt.chat import routing  # noqa
 
 application = ProtocolTypeRouter(
     {

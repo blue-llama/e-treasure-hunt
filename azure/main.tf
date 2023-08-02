@@ -14,12 +14,6 @@ terraform {
       version = "~> 3.5"
     }
   }
-  backend "azurerm" {
-    storage_account_name = "treasurebackend"
-    container_name       = "terraformstate"
-    key                  = "e-treasure-hunt"
-    use_azuread_auth     = true
-  }
 }
 
 provider "azurerm" {
@@ -90,6 +84,20 @@ resource "azurerm_mssql_database" "treasure" {
   transparent_data_encryption_enabled = true
 }
 
+resource "azurerm_redis_cache" "cache" {
+  name                  = "${var.app_name}-cache"
+  location              = var.region
+  resource_group_name   = azurerm_resource_group.treasure.name
+  capacity            = 0
+  family              = "C"
+  sku_name            = "Basic"
+  enable_non_ssl_port = false
+  minimum_tls_version = "1.2"
+
+  redis_configuration {
+  }
+}
+
 resource "azurerm_service_plan" "treasure" {
   name                = "${var.app_name}-plan"
   location            = azurerm_resource_group.treasure.location
@@ -122,6 +130,8 @@ resource "azurerm_linux_web_app" "treasure" {
     GM_API_KEY         = var.google_maps_api_key
     PRE_BUILD_COMMAND  = "prebuild.sh"
     SECRET_KEY         = random_password.secret_key.result
+    CACHE_PASSWORD     = azurerm_redis_cache.cache.primary_access_key
+    CACHE_URL          = azurerm_redis_cache.cache.hostname
   }
 
   https_only = true
@@ -131,6 +141,7 @@ resource "azurerm_linux_web_app" "treasure" {
     minimum_tls_version = "1.2"
     ftps_state          = "Disabled"
     http2_enabled       = true
+    app_command_line    = "daphne -b 0.0.0.0 treasure.asgi:application"
     application_stack {
       python_version = "3.11"
     }
@@ -152,17 +163,17 @@ resource "azurerm_role_assignment" "storage_contributor" {
 # Only make this change after using Cloud Shell to grant permissions to the app service identity,
 # per instructions given by the outputs.
 
-# resource "azurerm_mssql_firewall_rule" "treasure" {
-#   name             = "Allow Azure services"
-#   server_id        = azurerm_mssql_server.treasure.id
-#   start_ip_address = "0.0.0.0"
-#   end_ip_address   = "0.0.0.0"
-# }
-
 resource "azurerm_mssql_firewall_rule" "treasure" {
-  for_each         = toset(azurerm_linux_web_app.treasure.possible_outbound_ip_address_list)
-  name             = "app-service-${each.key}"
+  name             = "Allow Azure services"
   server_id        = azurerm_mssql_server.treasure.id
-  start_ip_address = each.key
-  end_ip_address   = each.key
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "0.0.0.0"
 }
+
+# resource "azurerm_mssql_firewall_rule" "treasure" {
+#   for_each         = toset(azurerm_linux_web_app.treasure.possible_outbound_ip_address_list)
+#   name             = "app-service-${each.key}"
+#   server_id        = azurerm_mssql_server.treasure.id
+#   start_ip_address = each.key
+#   end_ip_address   = each.key
+# }

@@ -1,4 +1,5 @@
 from django.urls import path
+
 from hunt.chat import consumers
 
 websocket_urlpatterns = [

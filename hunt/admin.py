@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from hunt.models import AppSetting, Hint, HuntEvent, HuntInfo, Level, ChatMessage
+from hunt.models import AppSetting, ChatMessage, Hint, HuntEvent, HuntInfo, Level
 
 # Register your models here.
 admin.site.register(AppSetting)
