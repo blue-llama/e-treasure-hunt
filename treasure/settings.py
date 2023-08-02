@@ -128,14 +128,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "treasure.wsgi.application"
 ASGI_APPLICATION = "treasure.asgi.application"
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
-        },
-    },
-}
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -184,6 +177,14 @@ if deployment_type == Deployment.LOCAL:
             "NAME": "treasure.sqlite",
         }
     }
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("localhost", 6379)],
+            },
+        },
+    }
 elif deployment_type == Deployment.AZURE:
     DATABASES = {
         "default": {
@@ -195,4 +196,14 @@ elif deployment_type == Deployment.AZURE:
                 "extra_params": "Authentication=ActiveDirectoryMsi",
             },
         }
+    }
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [
+                    f"rediss://:{os.environ['CACHEPASSWORD']}@{os.environ['CACHEURL']}:6380/0"
+                ],
+            },
+        },
     }
