@@ -5,7 +5,7 @@ from typing import Any
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
 
@@ -66,6 +66,16 @@ class Hint(models.Model):
 
     def __str__(self) -> str:
         return f"Level {self.level.number}, hint {self.number}"
+
+
+@receiver(pre_delete, sender=Hint)
+def hint_delete(
+    sender: type[Hint],  # noqa: ARG001
+    instance: Hint,
+    **kwargs: Any,  # noqa: ARG001
+) -> None:
+    if instance.image:
+        instance.image.delete(False)
 
 
 # App settings. Use Boolean primary key to ensure there's only one active.
