@@ -59,10 +59,12 @@
 
 <script>
     const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+    var ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
     var userName = ""
 
     const chatSocket = new WebSocket(
-        'wss://'
+        ws_scheme
+        + '://'
         + window.location.host
         + '/ws/'
         + roomName
