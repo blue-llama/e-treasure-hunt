@@ -202,7 +202,7 @@ elif deployment_type == Deployment.AZURE:
             "BACKEND": "channels_redis.core.RedisChannelLayer",
             "CONFIG": {
                 "hosts": [
-                    f"rediss://:{os.environ['CACHEPASSWORD']}@{os.environ['CACHEURL']}:6380/0"
+                    f"rediss://:{os.environ['CACHE_PASSWORD']}@{os.environ['CACHE_URL']}:6380/0"
                 ],
             },
         },

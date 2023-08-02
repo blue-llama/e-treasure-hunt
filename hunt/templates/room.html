@@ -1,139 +1,131 @@
 <!DOCTYPE html>
 
-<html>
-  <head>
-    <meta charset="utf-8"/>
-    <title>Chatty</title>
-  </head>
+<div class="container">
+  <div class="columns is-multiline">
+    <div class="column is-full">
+      <section class="hero is-primary">
+        <div class="hero-body">
+          <p class="title">Chat</p>
+        </div>
+      </section>
+    </div>
 
-  <body>
-    <section class="section">
-      <div class="container">
-        <div class="columns is-multiline">
-            <div class="column is-6 is-offset-3">
-              <section class="hero is-primary">
-                <div class="hero-body">
-                  <p class="title">Chatty</p>
-                  <p class="subtitle">A simple chat built with Django, Channels and Redis</p>
-                </div>
-              </section>
-            </div>
+    <div class="column is-full">
+      <div class="box">     
+        <div id="chat-messages" style="max-height: 300px; overflow-y: scroll;">
+            {% for message in messages %}
+            <b>{{ message.name }}</b>: {{ message.content }}<br>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
 
-            <div class="column is-6 is-offset-3">
-              <div class="box">     
-                <div id="chat-messages" style="max-height: 300px; overflow-y: scroll;">
-                    {% for message in messages %}
-                    <b>{{ message.name }}</b>: {{ message.content }}<br>
-                    {% endfor %}
-                </div>
-              </div>
-
-              <div id="chat" hidden>
-                <div class="field">
-                    <div class="control">
-                      <input class="input" type="text" placeholder="Message" id="chat-message-input">
-                    </div>
-                  </div>
-    
-                  <div class="field">
-                    <div class="control">
-                      <a class="button is-info" id="chat-message-submit">Submit</a>
-                    </div>
-                  </div>
-              </div>
-
-              <div id="username">
-                <div class="field">
-                    <div class="control">
-                      <input class="input" type="text" placeholder="Anonymous" id="username-input">
-                    </div>
-                  </div>
-    
-                  <div class="field">
-                    <div class="control">
-                      <a class="button is-info" id="username-submit">Set Username</a>
-                    </div>
-                  </div>
-              </div>
-              <small id="username-display" class="has-text-grey-light">Your username: Unknown</small>
-            </div>
+    <div class="column is-full">
+      <div id="chat" hidden>
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" placeholder="Message" id="chat-message-input">
           </div>
-       </div>
-    </section>
+        </div>
 
-    {{ room_name|json_script:"json-roomname" }}
+        <div class="field">
+          <div class="control">
+            <a class="button is-info" id="chat-message-submit">Submit</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <script>
-        const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
-        var userName = ""
+    <div class="column is-full">
+      <div id="username">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" placeholder="Anonymous" id="username-input">
+          </div>
+        </div>
 
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/'
-            + roomName
-            + '/'
-        );
+        <div class="field">
+          <div class="control">
+            <a class="button is-info" id="username-submit">Set Username</a>
+          </div>
+        </div>
+      </div>
+      <small id="username-display" class="has-text-grey-light">Your username: Unknown</small>
+    </div>
+  </div>
+</div>
 
-        chatSocket.onmessage = function(e) {
-            console.log('onMessage');
-        };
+{{ room_name|json_script:"json-roomname" }}
 
-        chatSocket.onclose = function(e) {
-            console.error('The socket closed unexpectedly');
-        };
+<script>
+    const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+    var userName = ""
 
-        chatSocket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/'
+        + roomName
+        + '/'
+    );
 
-            if (data.message) {
-                document.querySelector('#chat-messages').innerHTML += ('<b>' + data.username + '</b>: ' + data.message + '<br>');
-            } else {
-                alert('The message was empty!')
-            }
-            scrollToBottom();
-        };
+    chatSocket.onmessage = function(e) {
+        console.log('onMessage');
+    };
 
-        document.querySelector('#username-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {
-                document.querySelector('#chat-message-submit').click();
-            }
-        };
-        document.querySelector('#username-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {
-                document.querySelector('#username-submit').click();
-            }
-        };
+    chatSocket.onclose = function(e) {
+        console.error('The socket closed unexpectedly');
+    };
 
-        document.querySelector('#chat-message-submit').onclick = function(e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
 
-            chatSocket.send(JSON.stringify({
-                'message': message,
-                'username': userName,
-                'room': roomName,
-                'team': "{{ team }}"
-            }));
-
-            messageInputDom.value = '';
-        };  
-        
-        document.querySelector('#username-submit').onclick = function(e) {
-            userName = document.querySelector('#username-input').value;
-            document.querySelector('#chat').removeAttribute("hidden");
-            document.querySelector('#username').setAttribute("hidden", true);
-            document.querySelector('#username-display').innerHTML = "Your username: " + userName
-            document.querySelector('#chat-message-input').focus();
-        };
-
-        scrollToBottom();
-
-        function scrollToBottom() {
-            let objDiv = document.getElementById("chat-messages");
-            objDiv.scrollTop = objDiv.scrollHeight;
+        if (data.message) {
+            document.querySelector('#chat-messages').innerHTML += ('<b>' + data.username + '</b>: ' + data.message + '<br>');
+        } else {
+            alert('The message was empty!')
         }
-    </script>
-  </body>
-</html>
+        scrollToBottom();
+    };
+
+    document.querySelector('#username-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+    document.querySelector('#username-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {
+            document.querySelector('#username-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': userName,
+            'room': roomName,
+            'team': "{{ team }}"
+        }));
+
+        messageInputDom.value = '';
+    };  
+    
+    document.querySelector('#username-submit').onclick = function(e) {
+        userName = document.querySelector('#username-input').value;
+        document.querySelector('#chat').removeAttribute("hidden");
+        document.querySelector('#username').setAttribute("hidden", true);
+        document.querySelector('#username-display').innerHTML = "Your username: " + userName
+        document.querySelector('#chat-message-input').focus();
+    };
+
+    scrollToBottom();
+
+    function scrollToBottom() {
+        let objDiv = document.getElementById("chat-messages");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
+</script>
