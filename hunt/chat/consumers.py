@@ -1,14 +1,14 @@
 import json
 
-from asgiref.sync import sync_to_async  # Implement later
-from channels.generic.websocket import AsyncWebsocketConsumer  # The class we're using
+from asgiref.sync import sync_to_async
+from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import User
-
+from typing import Any
 from hunt.models import ChatMessage
 
 
-class ChatConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
+class ChatConsumer(AsyncWebsocketConsumer):  # type: ignore[misc]
+    async def connect(self) -> None:
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = "chat_%s" % self.room_name
 
@@ -17,12 +17,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-    async def disconnect(self, _close_code):
+    async def disconnect(self, close_code: int) -> None:
         # Leave room group
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     # Receive message from WebSocket
-    async def receive(self, text_data):
+    async def receive(self, text_data: str) -> None:
         data = json.loads(text_data)
         message = data["message"]
         username = data["username"]
@@ -38,7 +38,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     # Receive message from room group
-    async def chat_message(self, event):
+    async def chat_message(self, event: dict[Any, Any]) -> None:
         message = event["message"]
         username = event["username"]
 
@@ -48,7 +48,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     @sync_to_async
-    def save_message(self, username, team, room_name, message):
+    def save_message(
+        self, username: str, team: str, room_name: str, message: str
+    ) -> None:
         try:
             team_user = User.objects.get(username=team)
             ChatMessage.objects.create(
@@ -57,6 +59,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 room=room_name,
                 content=message,
             )
-        except User.objects.DoesNotExist:
+        except User.DoesNotExist:
             # We don't know which team made this message, so don't save it
             pass
