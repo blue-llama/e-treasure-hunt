@@ -14,6 +14,12 @@ terraform {
       version = "~> 3.5"
     }
   }
+  backend "azurerm" {
+    storage_account_name = "treasurebackend"
+    container_name       = "terraformstate"
+    key                  = "e-treasure-hunt"
+    use_azuread_auth     = true
+  }
 }
 
 provider "azurerm" {
@@ -163,17 +169,17 @@ resource "azurerm_role_assignment" "storage_contributor" {
 # Only make this change after using Cloud Shell to grant permissions to the app service identity,
 # per instructions given by the outputs.
 
-resource "azurerm_mssql_firewall_rule" "treasure" {
-  name             = "Allow Azure services"
-  server_id        = azurerm_mssql_server.treasure.id
-  start_ip_address = "0.0.0.0"
-  end_ip_address   = "0.0.0.0"
-}
-
 # resource "azurerm_mssql_firewall_rule" "treasure" {
-#   for_each         = toset(azurerm_linux_web_app.treasure.possible_outbound_ip_address_list)
-#   name             = "app-service-${each.key}"
+#   name             = "Allow Azure services"
 #   server_id        = azurerm_mssql_server.treasure.id
-#   start_ip_address = each.key
-#   end_ip_address   = each.key
+#   start_ip_address = "0.0.0.0"
+#   end_ip_address   = "0.0.0.0"
 # }
+
+resource "azurerm_mssql_firewall_rule" "treasure" {
+  for_each         = toset(azurerm_linux_web_app.treasure.possible_outbound_ip_address_list)
+  name             = "app-service-${each.key}"
+  server_id        = azurerm_mssql_server.treasure.id
+  start_ip_address = each.key
+  end_ip_address   = each.key
+}
