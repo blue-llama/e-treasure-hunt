@@ -1,9 +1,10 @@
 import json
+from typing import Any
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import User
-from typing import Any
+
 from hunt.models import ChatMessage
 
 
@@ -17,7 +18,10 @@ class ChatConsumer(AsyncWebsocketConsumer):  # type: ignore[misc]
 
         await self.accept()
 
-    async def disconnect(self, close_code: int) -> None:
+    async def disconnect(
+        self,
+        code: int,  # noqa: ARG002
+    ) -> None:
         # Leave room group
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
